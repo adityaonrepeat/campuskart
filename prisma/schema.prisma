@@ -23,19 +23,24 @@ model User {
   displayUsername String?
   avatarUrl       String?
   image           String?
+  phone           String?
   collegeId       String
   role            Role      @default(USER)
   lastSeen        DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  college        College                  @relation(fields: [collegeId], references: [id])
-  sessions       Session[]
-  accounts       Account[]
-  listings       Listing[]
-  sentMessages   Message[]                @relation("SentMessages")
-  conversations  ConversationParticipant[]
-  moderationLogs ModerationLog[]
+  college              College                   @relation(fields: [collegeId], references: [id])
+  sessions             Session[]
+  accounts             Account[]
+  listings             Listing[]
+  sentMessages         Message[]                 @relation("SentMessages")
+  conversations        ConversationParticipant[]
+  moderationLogs       ModerationLog[]
+  store                Store?                    @relation("StoreOwner")
+  archivedStores       Store[]                   @relation("StoreArchivedBy")
+  storeReviews         StoreReview[]             @relation("StoreReviewAuthor")
+  archivedReviews      StoreReview[]             @relation("StoreReviewArchivedBy")
 
   @@index([collegeId])
 }
@@ -98,6 +103,7 @@ model College {
 
   users          User[]
   listings       Listing[]
+  stores         Store[]
   moderationLogs ModerationLog[]
 
   @@index([name])
@@ -138,26 +144,31 @@ model Listing {
   status      ListingStatus   @default(ACTIVE)
   sellerId    String
   collegeId   String
+  storeId     String?         // set when posted as a store listing — excluded from main feed
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
   seller        User           @relation(fields: [sellerId], references: [id])
   college       College        @relation(fields: [collegeId], references: [id])
+  store         Store?         @relation(fields: [storeId], references: [id], onDelete: SetNull)
   conversations Conversation[]
 
   @@index([collegeId, status])
   @@index([sellerId])
   @@index([category])
+  @@index([storeId])
 }
 
 model Conversation {
   id            String    @id @default(cuid())
   listingId     String?
+  storeId       String?
   collegeId     String
   lastMessageAt DateTime?
   createdAt     DateTime  @default(now())
 
-  listing      Listing?                 @relation(fields: [listingId], references: [id], onDelete: SetNull)
+  listing      Listing?                  @relation(fields: [listingId], references: [id], onDelete: SetNull)
+  store        Store?                    @relation(fields: [storeId], references: [id], onDelete: SetNull)
   participants ConversationParticipant[]
   messages     Message[]
 
@@ -207,4 +218,77 @@ model ModerationLog {
   @@index([moderatorId])
   @@index([collegeId])
   @@index([createdAt(sort: Desc)])
+}
+
+// ─── Campus Stores ─────────────────────────────────────────────────────────────
+
+enum StoreCategory {
+  FOOD_DRINKS
+  STATIONERY
+  CLOTHING
+  ELECTRONICS
+  SERVICES
+  HEALTH_BEAUTY
+  BOOKS
+  OTHER
+}
+
+enum StoreStatus {
+  PENDING   // awaiting admin verification — not visible to students
+  ACTIVE    // verified, publicly visible
+  ARCHIVED  // hidden by admin
+}
+
+model Store {
+  id           String        @id @default(cuid())
+  name         String
+  description  String
+  phone        String?
+  whatsapp     String?
+  category     StoreCategory
+  images       String[]
+  location     String?       // campus location text (e.g. "Block C, Ground Floor")
+  mapUrl       String?       // Google Maps share URL added by owner
+  hours        String?       // free-text hours (e.g. "Mon–Fri 9 am–7 pm")
+  quickReplies String[]      // owner-defined quick-reply buttons in chat
+  isVerified   Boolean       @default(false)
+  status       StoreStatus   @default(PENDING)
+  ownerId      String        @unique   // one store per user — enforced at DB level
+  collegeId    String
+  archivedAt   DateTime?
+  archivedById String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  owner         User           @relation("StoreOwner", fields: [ownerId], references: [id])
+  college       College        @relation(fields: [collegeId], references: [id])
+  archivedBy    User?          @relation("StoreArchivedBy", fields: [archivedById], references: [id])
+  listings      Listing[]
+  reviews       StoreReview[]
+  conversations Conversation[]
+
+  @@index([collegeId, status])
+  @@index([category])
+  @@index([createdAt(sort: Desc)])
+}
+
+model StoreReview {
+  id           String    @id @default(cuid())
+  storeId      String
+  userId       String
+  rating       Int       // 1–5
+  body         String?
+  isArchived   Boolean   @default(false)
+  archivedAt   DateTime?
+  archivedById String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  store      Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  user       User   @relation("StoreReviewAuthor", fields: [userId], references: [id])
+  archivedBy User?  @relation("StoreReviewArchivedBy", fields: [archivedById], references: [id])
+
+  @@unique([storeId, userId])   // one review per user per store
+  @@index([storeId])
+  @@index([userId])
 }

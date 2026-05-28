@@ -14,6 +14,7 @@ async function fetchListings(
   const params = new URLSearchParams();
   if (filters.category) params.set("category", filters.category);
   if (filters.search) params.set("search", filters.search);
+  if (filters.storeId) params.set("storeId", filters.storeId);
   if (pageParam) params.set("cursor", pageParam);
   if (filters.limit) params.set("limit", String(filters.limit));
 

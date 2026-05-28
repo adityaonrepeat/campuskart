@@ -81,4 +81,5 @@ export interface ListingFilters {
   search?: string;
   cursor?: string;
   limit?: number;
+  storeId?: string; // when set, fetches listings for a specific store (bypasses main feed)
 }

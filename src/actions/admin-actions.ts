@@ -60,3 +60,97 @@ export async function moderateListing(
   revalidatePath(`/listings/${listingId}`);
   return { success: true, data: { id: listingId } };
 }
+
+// ─── Store admin/mod actions ───────────────────────────────────────────────────
+
+export async function verifyStore(
+  storeId: string
+): Promise<ApiResponse<{ id: string }>> {
+  const user = await getModerator();
+  if (!user) return { success: false, error: "Forbidden" };
+
+  const store = await db.store.findUnique({
+    where: { id: storeId },
+    select: { id: true, collegeId: true },
+  });
+  if (!store) return { success: false, error: "Store not found" };
+
+  if (user.role === "MODERATOR" && store.collegeId !== user.collegeId) {
+    return { success: false, error: "Forbidden" };
+  }
+
+  await db.store.update({
+    where: { id: storeId },
+    data: { isVerified: true, status: "ACTIVE" },
+  });
+
+  revalidatePath("/admin/stores");
+  revalidatePath("/stores");
+  revalidatePath(`/stores/${storeId}`);
+  return { success: true, data: { id: storeId } };
+}
+
+// Moderator → archives (soft delete). Admin → hard deletes.
+export async function removeStore(
+  storeId: string
+): Promise<ApiResponse<{ id: string }>> {
+  const user = await getModerator();
+  if (!user) return { success: false, error: "Forbidden" };
+
+  const store = await db.store.findUnique({
+    where: { id: storeId },
+    select: { id: true, collegeId: true },
+  });
+  if (!store) return { success: false, error: "Store not found" };
+
+  if (user.role === "MODERATOR" && store.collegeId !== user.collegeId) {
+    return { success: false, error: "Forbidden" };
+  }
+
+  if (user.role === "ADMIN") {
+    await db.store.delete({ where: { id: storeId } });
+  } else {
+    await db.store.update({
+      where: { id: storeId },
+      data: {
+        status: "ARCHIVED",
+        archivedAt: new Date(),
+        archivedById: user.id,
+      },
+    });
+  }
+
+  revalidatePath("/admin/stores");
+  revalidatePath("/stores");
+  return { success: true, data: { id: storeId } };
+}
+
+// Moderator → archives review. Admin → hard deletes.
+export async function removeStoreReview(
+  reviewId: string
+): Promise<ApiResponse<{ id: string }>> {
+  const user = await getModerator();
+  if (!user) return { success: false, error: "Forbidden" };
+
+  const review = await db.storeReview.findUnique({
+    where: { id: reviewId },
+    select: { id: true, store: { select: { collegeId: true } } },
+  });
+  if (!review) return { success: false, error: "Review not found" };
+
+  if (user.role === "MODERATOR" && review.store.collegeId !== user.collegeId) {
+    return { success: false, error: "Forbidden" };
+  }
+
+  if (user.role === "ADMIN") {
+    await db.storeReview.delete({ where: { id: reviewId } });
+  } else {
+    await db.storeReview.update({
+      where: { id: reviewId },
+      data: { isArchived: true, archivedAt: new Date(), archivedById: user.id },
+    });
+  }
+
+  revalidatePath("/admin/stores");
+  return { success: true, data: { id: reviewId } };
+}

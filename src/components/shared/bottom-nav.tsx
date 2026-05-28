@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingBag, MessageSquare, ClipboardList, User, ShieldCheck } from "lucide-react";
+import { ShoppingBag, MessageSquare, Store, User, ShieldCheck } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
@@ -29,8 +29,8 @@ type NavItem = { href: string; label: string; icon: LucideIcon };
 
 const BASE_NAV_ITEMS: NavItem[] = [
   { href: "/listings", label: "Browse", icon: ShoppingBag },
+  { href: "/stores", label: "Stores", icon: Store },
   { href: "/chat", label: "Chat", icon: MessageSquare },
-  { href: "/orders", label: "Orders", icon: ClipboardList },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
@@ -39,7 +39,7 @@ export function BottomNav({ showAdmin = false }: { showAdmin?: boolean }) {
   const totalUnread = useTotalUnread();
 
   const navItems: NavItem[] = showAdmin
-    ? [...BASE_NAV_ITEMS, { href: "/admin/listings", label: "Admin", icon: ShieldCheck }]
+    ? [...BASE_NAV_ITEMS, { href: "/admin/stores", label: "Admin", icon: ShieldCheck }]
     : BASE_NAV_ITEMS;
 
   return (

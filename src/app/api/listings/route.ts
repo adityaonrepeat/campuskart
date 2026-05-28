@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const category = searchParams.get("category") ?? undefined;
   const search = searchParams.get("search") ?? undefined;
+  const storeId = searchParams.get("storeId") ?? undefined;
   const cursor = searchParams.get("cursor") ?? undefined;
   const limit = Math.min(
     Math.max(1, parseInt(searchParams.get("limit") ?? "", 10) || PAGE_SIZE),
@@ -62,8 +63,9 @@ export async function GET(request: NextRequest) {
     });
   }
 
+  // storeId present → fetch that store's listings; absent → main feed (no store listings)
   const where: Prisma.ListingWhereInput = {
-    collegeId: session.user.collegeId,
+    ...(storeId ? { storeId } : { collegeId: session.user.collegeId, storeId: null }),
     status: "ACTIVE",
     ...(category && VALID_CATEGORIES.has(category)
       ? {
