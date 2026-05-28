@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Better Auth required models ─────────────────────────────────────────────
+
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  emailVerified   Boolean   @default(false)
+  name            String
+  username        String    @unique
+  displayUsername String?
+  avatarUrl       String?
+  image           String?
+  collegeId       String
+  role            Role      @default(USER)
+  lastSeen        DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  college        College                  @relation(fields: [collegeId], references: [id])
+  sessions       Session[]
+  accounts       Account[]
+  listings       Listing[]
+  sentMessages   Message[]                @relation("SentMessages")
+  conversations  ConversationParticipant[]
+  moderationLogs ModerationLog[]
+
+  @@index([collegeId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+}
+
+// ─── App models ───────────────────────────────────────────────────────────────
+
+model College {
+  id    String @id @default(cuid())
+  name  String @unique
+  city  String
+  state String
+
+  users          User[]
+  listings       Listing[]
+  moderationLogs ModerationLog[]
+
+  @@index([name])
+}
+
+enum ListingCategory {
+  BOOKS
+  ELECTRONICS
+  CLOTHING
+  FURNITURE
+  NOTES
+  SPORTS
+  OTHER
+}
+
+enum ItemCondition {
+  NEW
+  LIKE_NEW
+  GOOD
+  FAIR
+  POOR
+}
+
+enum ListingStatus {
+  ACTIVE
+  SOLD
+  ARCHIVED
+}
+
+model Listing {
+  id          String          @id @default(cuid())
+  title       String
+  description String
+  price       Float
+  images      String[]
+  category    ListingCategory
+  condition   ItemCondition
+  status      ListingStatus   @default(ACTIVE)
+  sellerId    String
+  collegeId   String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  seller        User           @relation(fields: [sellerId], references: [id])
+  college       College        @relation(fields: [collegeId], references: [id])
+  conversations Conversation[]
+
+  @@index([collegeId, status])
+  @@index([sellerId])
+  @@index([category])
+}
+
+model Conversation {
+  id            String    @id @default(cuid())
+  listingId     String?
+  collegeId     String
+  lastMessageAt DateTime?
+  createdAt     DateTime  @default(now())
+
+  listing      Listing?                 @relation(fields: [listingId], references: [id], onDelete: SetNull)
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@index([collegeId, lastMessageAt(sort: Desc)])
+}
+
+model ConversationParticipant {
+  id             String    @id @default(cuid())
+  conversationId String
+  userId         String
+  lastReadAt     DateTime?
+  hiddenAt       DateTime?
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+  content        String
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("SentMessages", fields: [senderId], references: [id])
+
+  @@index([conversationId, createdAt])
+}
+
+model ModerationLog {
+  id           String   @id @default(cuid())
+  moderatorId  String
+  listingId    String
+  listingTitle String
+  sellerName   String
+  collegeId    String
+  reason       String?
+  createdAt    DateTime @default(now())
+
+  moderator User    @relation(fields: [moderatorId], references: [id])
+  college   College @relation(fields: [collegeId], references: [id])
+
+  @@index([moderatorId])
+  @@index([collegeId])
+  @@index([createdAt(sort: Desc)])
+}
