@@ -8,12 +8,16 @@ const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
   display: "swap",
+  style: ["normal", "italic"],
+  axes: ["opsz", "SOFT", "WONK"],
 });
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
   display: "swap",
+  style: ["normal", "italic"],
+  axes: ["opsz"],
 });
 
 const geistMono = Geist_Mono({
@@ -34,6 +38,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${fraunces.variable} ${dmSans.variable} ${geistMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">
