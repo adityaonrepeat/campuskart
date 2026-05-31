@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import AppHeader from "@/components/AppHeader";
 import { ListingDetailView } from "@/components/listings/listing-detail";
 
 interface PageProps {
@@ -34,9 +35,15 @@ export default async function ListingDetailPage({ params }: PageProps) {
   }
 
   return (
-    <ListingDetailView
-      listing={listing}
-      currentUserId={session.user.id}
-    />
+    <>
+      <AppHeader
+        user={{ name: session.user.name ?? "User", avatarUrl: session.user.avatarUrl }}
+        forceScrolled
+      />
+      <ListingDetailView
+        listing={listing}
+        currentUserId={session.user.id}
+      />
+    </>
   );
 }

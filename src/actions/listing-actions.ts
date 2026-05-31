@@ -91,6 +91,7 @@ export async function createListing(
       images: data.images,
       category: data.category,
       condition: data.condition,
+      listingType: data.listingType,
       sellerId: user.id,
       collegeId: user.collegeId,
     },

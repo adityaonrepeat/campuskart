@@ -23,6 +23,7 @@ export const createListingSchema = z.object({
     "OTHER",
   ]),
   condition: z.enum(["NEW", "LIKE_NEW", "GOOD", "FAIR", "POOR"]),
+  listingType: z.enum(["FIXED_PRICE", "BIDDING"]),
   images: z
     .array(z.string().url("Invalid image URL"))
     .min(1, "At least one image is required")
@@ -48,8 +49,10 @@ const listingCardValidator = Prisma.validator<Prisma.ListingDefaultArgs>()({
     category: true,
     condition: true,
     status: true,
+    listingType: true,
     createdAt: true,
     seller: { select: { id: true, name: true, avatarUrl: true } },
+    college: { select: { name: true } },
   },
 });
 
@@ -82,4 +85,9 @@ export interface ListingFilters {
   cursor?: string;
   limit?: number;
   storeId?: string; // when set, fetches listings for a specific store (bypasses main feed)
+  condition?: string;
+  priceMin?: number;
+  priceMax?: number;
+  sort?: string; // "newest" | "price_asc" | "price_desc"
+  tab?: string; // "all" | "bidding" | "buynow"
 }

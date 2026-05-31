@@ -18,6 +18,8 @@ const VALID_CATEGORIES = new Set([
   "OTHER",
 ]);
 
+const VALID_CONDITIONS = new Set(["NEW", "LIKE_NEW", "GOOD", "FAIR", "POOR"]);
+
 export async function GET(request: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
@@ -33,6 +35,11 @@ export async function GET(request: NextRequest) {
     Math.max(1, parseInt(searchParams.get("limit") ?? "", 10) || PAGE_SIZE),
     50
   );
+  const condition = searchParams.get("condition") ?? undefined;
+  const priceMin = searchParams.get("priceMin") ? Number(searchParams.get("priceMin")) : undefined;
+  const priceMax = searchParams.get("priceMax") ? Number(searchParams.get("priceMax")) : undefined;
+  const sort = searchParams.get("sort") ?? "newest";
+  const tab = searchParams.get("tab") ?? "all";
 
   // Composite cursor: "<createdAt ISO>|<id>" — prevents items with the same
   // millisecond timestamp from being silently dropped across pages.
@@ -51,7 +58,8 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  if (cursorDate && cursorId) {
+  // Cursor pagination only applies to newest sort
+  if (sort === "newest" && cursorDate && cursorId) {
     andConditions.push({
       OR: [
         { createdAt: { lt: new Date(cursorDate) } },
@@ -63,10 +71,25 @@ export async function GET(request: NextRequest) {
     });
   }
 
+  if (priceMin !== undefined && !isNaN(priceMin)) {
+    andConditions.push({ price: { gte: priceMin } });
+  }
+  if (priceMax !== undefined && !isNaN(priceMax)) {
+    andConditions.push({ price: { lte: priceMax } });
+  }
+
+  const listingTypeFilter: Prisma.ListingWhereInput =
+    tab === "bidding"
+      ? { listingType: "BIDDING" }
+      : tab === "buynow"
+        ? { listingType: "FIXED_PRICE" }
+        : {};
+
   // storeId present → fetch that store's listings; absent → main feed (no store listings)
   const where: Prisma.ListingWhereInput = {
     ...(storeId ? { storeId } : { collegeId: session.user.collegeId, storeId: null }),
     status: "ACTIVE",
+    ...listingTypeFilter,
     ...(category && VALID_CATEGORIES.has(category)
       ? {
           category: category as
@@ -79,13 +102,28 @@ export async function GET(request: NextRequest) {
             | "OTHER",
         }
       : {}),
+    ...(condition && VALID_CONDITIONS.has(condition)
+      ? {
+          condition: condition as "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | "POOR",
+        }
+      : {}),
     ...(andConditions.length > 0 ? { AND: andConditions } : {}),
   };
 
+  const orderBy: Prisma.ListingOrderByWithRelationInput[] =
+    sort === "price_asc"
+      ? [{ price: "asc" }]
+      : sort === "price_desc"
+        ? [{ price: "desc" }]
+        : [{ createdAt: "desc" }, { id: "desc" }];
+
+  // For price sorts use a higher limit since we skip cursor pagination
+  const effectiveLimit = sort === "newest" ? limit : 50;
+
   const listings = await db.listing.findMany({
     where,
-    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-    take: limit + 1,
+    orderBy,
+    take: effectiveLimit + 1,
     select: {
       id: true,
       title: true,
@@ -94,15 +132,17 @@ export async function GET(request: NextRequest) {
       category: true,
       condition: true,
       status: true,
+      listingType: true,
       createdAt: true,
       seller: { select: { id: true, name: true, avatarUrl: true } },
+      college: { select: { name: true } },
     },
   });
 
-  const hasMore = listings.length > limit;
-  const items = hasMore ? listings.slice(0, limit) : listings;
+  const hasMore = listings.length > effectiveLimit;
+  const items = hasMore ? listings.slice(0, effectiveLimit) : listings;
   const nextCursor =
-    hasMore && items.length > 0
+    sort === "newest" && hasMore && items.length > 0
       ? `${items[items.length - 1].createdAt.toISOString()}|${items[items.length - 1].id}`
       : null;
 
