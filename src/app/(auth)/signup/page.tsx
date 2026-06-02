@@ -1,13 +1,12 @@
-import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { LoginForm } from "@/components/auth/login-form";
+import { RegisterForm } from "@/components/auth/register-form";
 import AppLogo from "@/components/ui/AppLogo";
 
 export const metadata = {
-  title: "Log In — CampusKart",
-  description: "Sign in to browse listings, chat with sellers, and discover what's available at your college.",
-  alternates: { canonical: "/login" },
+  title: "Join CampusKart — Create Account",
+  description: "Create your free student account to browse and buy campus listings. Verified students only.",
+  alternates: { canonical: "/signup" },
 };
 
 const SOCIAL_AVATARS = [
@@ -17,13 +16,13 @@ const SOCIAL_AVATARS = [
 ];
 
 const FEATURES = [
-  { icon: "🔒", text: "College-scoped — only your campus sees your listings" },
-  { icon: "💬", text: "Real-time chat with buyers and sellers" },
-  { icon: "🏪", text: "Campus stores, food, and services in one place" },
+  { icon: "🎓", text: "Verified students only — safe campus community" },
+  { icon: "💬", text: "In-app chat with sellers, no phone numbers needed" },
+  { icon: "📍", text: "Campus self-pickup, no shipping hassle" },
   { icon: "⭐", text: "Ratings and reviews on every deal" },
 ];
 
-export default function LoginPage() {
+export default function SignUpPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left Panel — Brand Visual */}
@@ -53,11 +52,11 @@ export default function LoginPage() {
           {/* Main text */}
           <div className="flex-1 flex flex-col justify-center">
             <h1 className="font-display text-5xl xl:text-6xl font-semibold text-white leading-[0.95] mb-6">
-              Welcome back.<br />
-              <span className="italic font-normal text-accent-light">Your campus awaits.</span>
+              Your campus.<br />
+              <span className="italic font-normal text-accent-light">Your deals.</span>
             </h1>
             <p className="text-white/60 text-lg font-light leading-relaxed max-w-sm mb-10">
-              Sign in to browse listings, chat with sellers, and discover what&apos;s available at your college right now.
+              Join 28,400+ verified students buying and selling on campus — all picked up right where you live and study.
             </p>
 
             {/* Feature bullets */}
@@ -91,16 +90,14 @@ export default function LoginPage() {
 
       {/* Right Panel — Form */}
       <div className="flex-1 flex flex-col justify-center items-center px-6 py-12 bg-white overflow-y-auto min-h-screen">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md py-4">
           {/* Mobile logo */}
           <Link href="/" className="flex items-center gap-2 mb-8 lg:hidden">
             <AppLogo size={32} />
             <span className="font-display text-lg font-semibold text-primary">CampusKart</span>
           </Link>
 
-          <Suspense>
-            <LoginForm />
-          </Suspense>
+          <RegisterForm />
         </div>
       </div>
     </div>
