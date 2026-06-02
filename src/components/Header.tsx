@@ -77,7 +77,7 @@ export default function Header({ forceScrolled = false }: { forceScrolled?: bool
               Log In
             </Link>
             <Link
-              href="/register"
+              href="/signup"
               className="btn-shimmer text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-[0_2px_12px_rgba(79,70,229,0.20)] hover:shadow-accent-md transition-shadow duration-300"
             >
               Join Free
@@ -141,7 +141,7 @@ export default function Header({ forceScrolled = false }: { forceScrolled?: bool
               Log In
             </Link>
             <Link
-              href="/register"
+              href="/signup"
               onClick={() => setMobileOpen(false)}
               className="btn-shimmer text-white text-center py-3 rounded-xl font-semibold text-sm shadow-[0_2px_12px_rgba(79,70,229,0.20)]"
             >

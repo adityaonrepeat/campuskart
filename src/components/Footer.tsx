@@ -28,7 +28,7 @@ export default function Footer() {
           <div>
             <h4 className="text-white text-xs font-semibold uppercase tracking-[0.15em] mb-4">Account</h4>
             <ul className="space-y-2.5 text-sm">
-              <li><Link href="/register" className="hover:text-white transition-colors">Sign Up Free</Link></li>
+              <li><Link href="/signup" className="hover:text-white transition-colors">Sign Up Free</Link></li>
               <li><Link href="/login" className="hover:text-white transition-colors">Log In</Link></li>
               <li><Link href="/#how-it-works" className="hover:text-white transition-colors">How It Works</Link></li>
             </ul>
