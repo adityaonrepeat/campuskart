@@ -50,15 +50,17 @@ export default async function PublicProfilePage({ params }: PageProps) {
       category: true,
       condition: true,
       status: true,
+      listingType: true,
       createdAt: true,
       seller: { select: { id: true, name: true, avatarUrl: true } },
+      college: { select: { name: true } },
     },
     orderBy: { createdAt: "desc" },
     take: 20,
   });
 
   return (
-    <div className="py-6 space-y-6">
+    <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
       {/* Profile header */}
       <div className="flex items-start gap-4">
         <UserAvatar name={profileUser.name} avatarUrl={profileUser.avatarUrl} size="xl" />
@@ -66,10 +68,12 @@ export default async function PublicProfilePage({ params }: PageProps) {
         <div className="flex-1 min-w-0">
           <h1 className="text-xl font-bold truncate">{profileUser.name}</h1>
           <p className="text-sm text-muted-foreground">@{profileUser.username}</p>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            {profileUser.college.name}
-            {profileUser.college.city ? `, ${profileUser.college.city}` : ""}
-          </p>
+          {profileUser.college && (
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {profileUser.college.name}
+              {profileUser.college.city ? `, ${profileUser.college.city}` : ""}
+            </p>
+          )}
 
           <div className="flex items-center gap-4 mt-3">
             <div className="text-center">

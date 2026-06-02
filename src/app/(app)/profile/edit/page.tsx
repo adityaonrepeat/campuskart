@@ -12,7 +12,7 @@ export default async function ProfileEditPage() {
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },
-    select: { name: true, username: true, avatarUrl: true },
+    select: { name: true, username: true, avatarUrl: true, bio: true },
   });
 
   if (!user) redirect("/login");
