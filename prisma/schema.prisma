@@ -22,15 +22,16 @@ model User {
   username        String    @unique
   displayUsername String?
   avatarUrl       String?
+  bio             String?
   image           String?
   phone           String?
-  collegeId       String
+  collegeId       String?
   role            Role      @default(USER)
   lastSeen        DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  college              College                   @relation(fields: [collegeId], references: [id])
+  college              College?                  @relation(fields: [collegeId], references: [id])
   sessions             Session[]
   accounts             Account[]
   listings             Listing[]
@@ -133,6 +134,11 @@ enum ListingStatus {
   ARCHIVED
 }
 
+enum ListingType {
+  FIXED_PRICE
+  BIDDING
+}
+
 model Listing {
   id          String          @id @default(cuid())
   title       String
@@ -142,6 +148,7 @@ model Listing {
   category    ListingCategory
   condition   ItemCondition
   status      ListingStatus   @default(ACTIVE)
+  listingType ListingType     @default(FIXED_PRICE)
   sellerId    String
   collegeId   String
   storeId     String?         // set when posted as a store listing — excluded from main feed
@@ -153,7 +160,7 @@ model Listing {
   store         Store?         @relation(fields: [storeId], references: [id], onDelete: SetNull)
   conversations Conversation[]
 
-  @@index([collegeId, status])
+  @@index([collegeId, status, listingType])
   @@index([sellerId])
   @@index([category])
   @@index([storeId])
@@ -251,6 +258,7 @@ model Store {
   mapUrl       String?       // Google Maps share URL added by owner
   hours        String?       // free-text hours (e.g. "Mon–Fri 9 am–7 pm")
   quickReplies String[]      // owner-defined quick-reply buttons in chat
+  tags         String[]      // searchable food/item tags e.g. ["biryani", "chicken"]
   isVerified   Boolean       @default(false)
   status       StoreStatus   @default(PENDING)
   ownerId      String        @unique   // one store per user — enforced at DB level

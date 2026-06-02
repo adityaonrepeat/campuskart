@@ -5,7 +5,15 @@ import { Pool } from "pg";
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
 function createPrismaClient() {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL! });
+  // Neon free-tier auto-suspends the compute after ~5 min idle. The first query
+  // after a cold start can briefly fail with "Can't reach database server".
+  // keepAlive holds sockets warm and a finite connect timeout fails fast/clearly
+  // instead of hanging, so the next request (post wake-up) succeeds.
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL!,
+    keepAlive: true,
+    connectionTimeoutMillis: 10_000,
+  });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
 }
