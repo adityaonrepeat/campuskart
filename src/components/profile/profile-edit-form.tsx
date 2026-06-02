@@ -1,35 +1,28 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, X } from "lucide-react";
-import Image from "next/image";
-import { generateUploadButton } from "@uploadthing/react";
+import { Loader2 } from "lucide-react";
 import { updateProfile } from "@/actions/profile-actions";
 import { updateProfileSchema, type UpdateProfileInput } from "@/types/profile";
-import { UserAvatar } from "@/components/shared/user-avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { OurFileRouter } from "@/lib/uploadthing";
-
-const UploadButton = generateUploadButton<OurFileRouter>();
+import { Textarea } from "@/components/ui/textarea";
 
 interface ProfileEditFormProps {
   initialValues: {
     name: string;
     username: string;
     avatarUrl: string | null;
+    bio: string | null;
   };
 }
 
 export function ProfileEditForm({ initialValues }: ProfileEditFormProps) {
   const router = useRouter();
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(initialValues.avatarUrl);
-  const [isUploading, setIsUploading] = useState(false);
 
   const {
     register,
@@ -41,11 +34,12 @@ export function ProfileEditForm({ initialValues }: ProfileEditFormProps) {
       name: initialValues.name,
       username: initialValues.username,
       avatarUrl: initialValues.avatarUrl ?? "",
+      bio: initialValues.bio ?? "",
     },
   });
 
   async function onSubmit(values: UpdateProfileInput) {
-    const result = await updateProfile({ ...values, avatarUrl: avatarUrl ?? "" });
+    const result = await updateProfile(values);
 
     if (!result.success) {
       if (result.code === "USERNAME_TAKEN") {
@@ -63,51 +57,6 @@ export function ProfileEditForm({ initialValues }: ProfileEditFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {/* Avatar */}
-      <div className="space-y-3">
-        <Label>Profile photo</Label>
-        <div className="flex items-center gap-4">
-          {avatarUrl ? (
-            <div className="relative h-20 w-20 rounded-full overflow-hidden border shrink-0">
-              <Image src={avatarUrl} alt="Avatar" fill className="object-cover" sizes="80px" />
-              <button
-                type="button"
-                onClick={() => setAvatarUrl(null)}
-                className="absolute top-0 right-0 rounded-full bg-black/60 p-0.5 text-white hover:bg-black/80 transition-colors"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </div>
-          ) : (
-            <UserAvatar
-              name={initialValues.name}
-              avatarUrl={null}
-              size="xl"
-              className="shrink-0"
-            />
-          )}
-
-          <UploadButton
-            endpoint="avatarUpload"
-            disabled={isUploading}
-            onUploadBegin={() => setIsUploading(true)}
-            onClientUploadComplete={(res) => {
-              setIsUploading(false);
-              if (res[0]) setAvatarUrl(res[0].ufsUrl ?? res[0].url);
-            }}
-            onUploadError={(err) => {
-              setIsUploading(false);
-              toast.error(`Upload failed: ${err.message}`);
-            }}
-            appearance={{
-              button: "text-sm px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors font-medium",
-              allowedContent: "hidden",
-            }}
-            content={{ button: isUploading ? "Uploading…" : "Change photo" }}
-          />
-        </div>
-      </div>
-
       {/* Name */}
       <div className="space-y-1.5">
         <Label htmlFor="name">Display name</Label>
@@ -137,16 +86,32 @@ export function ProfileEditForm({ initialValues }: ProfileEditFormProps) {
         </p>
       </div>
 
+      {/* Bio */}
+      <div className="space-y-1.5">
+        <Label htmlFor="bio">Bio <span className="text-muted-foreground font-normal text-xs">(optional)</span></Label>
+        <Textarea
+          id="bio"
+          placeholder="Tell buyers a little about yourself…"
+          rows={3}
+          className="resize-none"
+          {...register("bio")}
+        />
+        {errors.bio && (
+          <p className="text-sm text-destructive">{errors.bio.message}</p>
+        )}
+        <p className="text-xs text-muted-foreground">Max 200 characters.</p>
+      </div>
+
       <div className="flex gap-3 pt-2">
         <Button
           type="button"
           variant="outline"
           onClick={() => router.back()}
-          disabled={isSubmitting || isUploading}
+          disabled={isSubmitting}
         >
           Cancel
         </Button>
-        <Button type="submit" disabled={isSubmitting || isUploading}>
+        <Button type="submit" disabled={isSubmitting}>
           {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Save changes
         </Button>

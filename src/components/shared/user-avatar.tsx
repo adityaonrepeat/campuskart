@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getInitials } from "@/lib/utils";
 
 interface UserAvatarProps {
   name: string;
@@ -16,22 +16,13 @@ const SIZE_MAP = {
   xl: { container: "h-20 w-20", icon: "h-10 w-10", text: "text-xl" },
 } as const;
 
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
-}
-
 export function UserAvatar({ name, avatarUrl, size = "md", className }: UserAvatarProps) {
   const { container, icon, text } = SIZE_MAP[size];
 
   return (
     <div
       className={cn(
-        "relative rounded-full overflow-hidden bg-muted flex items-center justify-center shrink-0",
+        "relative rounded-full overflow-hidden bg-accent-muted flex items-center justify-center shrink-0",
         container,
         className
       )}
@@ -45,7 +36,7 @@ export function UserAvatar({ name, avatarUrl, size = "md", className }: UserAvat
           sizes="(max-width: 768px) 80px, 80px"
         />
       ) : name ? (
-        <span className={cn("font-semibold text-muted-foreground select-none", text)}>
+        <span className={cn("font-semibold text-accent select-none", text)}>
           {getInitials(name)}
         </span>
       ) : (

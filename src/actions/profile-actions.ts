@@ -21,7 +21,7 @@ export async function updateProfile(
     return { success: false, error: parsed.error.issues[0].message };
   }
 
-  const { name, username, avatarUrl } = parsed.data;
+  const { name, username, avatarUrl, bio } = parsed.data;
 
   // Unique username check — exclude current user
   if (username !== session.user.username) {
@@ -40,6 +40,7 @@ export async function updateProfile(
       name,
       username,
       ...(avatarUrl !== undefined && { avatarUrl: avatarUrl || null }),
+      bio: bio || null,
     },
     select: { id: true, name: true, username: true, avatarUrl: true },
   });
