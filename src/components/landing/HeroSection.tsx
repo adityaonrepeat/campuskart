@@ -60,7 +60,7 @@ export default function HeroSection() {
         style={{ transform: `translateY(${parallaxY}px)`, willChange: 'transform' }}>
         
         <AppImage
-          src="https://img.rocket.new/generatedImages/rocket_gen_img_1a512b40c-1774988726905.png"
+          src="/hero-banner.png"
           alt="Students on a vibrant college campus lawn, warm afternoon light, busy walkways, lush green trees, airy open space"
           fill
           priority

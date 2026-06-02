@@ -8,7 +8,7 @@ const STORES = [
   id: 1,
   name: "The Campus Grind",
   type: "Café & Beverages",
-  image: "https://img.rocket.new/generatedImages/rocket_gen_img_11e0d44fa-1772381439865.png",
+  image: "/campus-stores.png",
   alt: 'Warm cozy campus café with coffee cups, wooden furniture, bright natural light streaming in',
   rating: 4.7,
   reviews: 84,
