@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 import { UTApi } from "uploadthing/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { checkImagesAreSafe } from "@/lib/moderation";
 import {
   createStoreSchema,
   updateStoreSchema,
@@ -16,6 +15,13 @@ import type { Store, StoreReview } from "@prisma/client";
 import type { CreateStoreInput, UpdateStoreInput, CreateReviewInput } from "@/types/store";
 
 const utapi = new UTApi();
+
+const DEFAULT_QUICK_REPLIES = [
+  "Order confirmed ✅",
+  "Yes, available!",
+  "Sold out ❌",
+  "Have to wait ⏳",
+];
 
 async function getAuthUser() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -41,28 +47,6 @@ export async function createStore(
 
   const data = parsed.data;
 
-  if (data.images.length > 0) {
-    let moderation: { safe: boolean };
-    try {
-      moderation = await checkImagesAreSafe(data.images);
-    } catch {
-      await utapi.deleteFiles(data.imageKeys);
-      return {
-        success: false,
-        error: "Image moderation is temporarily unavailable. Please try again shortly.",
-        code: "MODERATION_UNAVAILABLE",
-      };
-    }
-    if (!moderation.safe) {
-      await utapi.deleteFiles(data.imageKeys);
-      return {
-        success: false,
-        error: "One or more images were flagged as inappropriate.",
-        code: "IMAGE_FLAGGED",
-      };
-    }
-  }
-
   const store = await db.store.create({
     data: {
       name: data.name,
@@ -73,7 +57,8 @@ export async function createStore(
       location: data.location,
       mapUrl: data.mapUrl,
       hours: data.hours,
-      quickReplies: data.quickReplies,
+      quickReplies: DEFAULT_QUICK_REPLIES,
+      tags: data.tags,
       images: data.images,
       ownerId: user.id,
       collegeId: user.collegeId,
@@ -105,28 +90,6 @@ export async function updateStore(
 
   const data = parsed.data;
 
-  if (data.images && data.images.length > 0) {
-    let moderation: { safe: boolean };
-    try {
-      moderation = await checkImagesAreSafe(data.images);
-    } catch {
-      if (data.imageKeys?.length) await utapi.deleteFiles(data.imageKeys);
-      return {
-        success: false,
-        error: "Image moderation is temporarily unavailable. Please try again shortly.",
-        code: "MODERATION_UNAVAILABLE",
-      };
-    }
-    if (!moderation.safe) {
-      if (data.imageKeys?.length) await utapi.deleteFiles(data.imageKeys);
-      return {
-        success: false,
-        error: "One or more images were flagged as inappropriate.",
-        code: "IMAGE_FLAGGED",
-      };
-    }
-  }
-
   const store = await db.store.update({
     where: { id: storeId },
     data: {
@@ -138,7 +101,7 @@ export async function updateStore(
       ...(data.location !== undefined && { location: data.location }),
       ...(data.mapUrl !== undefined && { mapUrl: data.mapUrl }),
       ...(data.hours !== undefined && { hours: data.hours }),
-      ...(data.quickReplies !== undefined && { quickReplies: data.quickReplies }),
+      ...(data.tags !== undefined && { tags: data.tags }),
       ...(data.images !== undefined && { images: data.images }),
     },
   });

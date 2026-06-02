@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const category = searchParams.get("category") ?? undefined;
   const search = searchParams.get("search") ?? undefined;
+  const tag = searchParams.get("tag") ?? undefined;
   const cursor = searchParams.get("cursor") ?? undefined;
   const limit = Math.min(
     Math.max(1, parseInt(searchParams.get("limit") ?? "", 10) || PAGE_SIZE),
@@ -45,8 +46,13 @@ export async function GET(request: NextRequest) {
       OR: [
         { name: { contains: search, mode: "insensitive" } },
         { description: { contains: search, mode: "insensitive" } },
+        { tags: { has: search } },
       ],
     });
+  }
+
+  if (tag) {
+    andConditions.push({ tags: { hasSome: [tag] } });
   }
 
   if (cursorDate && cursorId) {
@@ -79,6 +85,7 @@ export async function GET(request: NextRequest) {
       images: true,
       location: true,
       hours: true,
+      tags: true,
       isVerified: true,
       status: true,
       collegeId: true,
