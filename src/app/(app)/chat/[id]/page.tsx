@@ -5,8 +5,9 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getInitials } from "@/lib/utils";
 import { ChatThread } from "@/components/chat/chat-thread";
-import { OnlineBadge } from "@/components/chat/online-badge";
+import { OnlineBadge, OnlineStatusText } from "@/components/chat/online-badge";
 
 export default async function ChatThreadPage({
   params,
@@ -22,7 +23,8 @@ export default async function ChatThreadPage({
   const conv = await db.conversation.findUnique({
     where: { id },
     include: {
-      listing: { select: { title: true, status: true } },
+      listing: { select: { id: true, title: true, status: true, images: true } },
+      store: { select: { id: true, name: true, images: true } },
       participants: {
         include: {
           user: { select: { id: true, name: true, avatarUrl: true, username: true } },
@@ -39,54 +41,111 @@ export default async function ChatThreadPage({
   const other = conv.participants.find((p) => p.userId !== session.user.id);
   if (!other) notFound();
 
+  // A conversation is anchored to either a store or a listing.
+  // For stores, the header title (the store name) is self-explanatory, so we show
+  // the store as the peer. For listings, the peer is the other person and we show a
+  // "Re:" item chip so the user knows *which* item they're discussing among several.
+  const peerName = conv.store ? conv.store.name : other.user.name;
+  const peerImage = conv.store ? (conv.store.images?.[0] ?? null) : other.user.avatarUrl;
+
+  const itemChip = !conv.store && conv.listing
+    ? {
+        label: conv.listing.title,
+        image: conv.listing.images?.[0] ?? null,
+        status: conv.listing.status !== "ACTIVE" ? conv.listing.status.toLowerCase() : null,
+      }
+    : null;
+
+  const viewLink = conv.store
+    ? { href: `/stores/${conv.store.id}`, action: "View Store" }
+    : conv.listing
+      ? { href: `/listings/${conv.listing.id}`, action: "View Listing" }
+      : null;
+
   return (
-    <div className="-mx-4 flex flex-col" style={{ height: "calc(100dvh - 80px)" }}>
-      {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3 border-b bg-background shrink-0">
+    <>
+      {/* Thread header */}
+      <div className="flex items-center gap-3 p-4 border-b border-border shrink-0">
+        {/* Back — mobile only */}
         <Link
           href="/chat"
-          className="text-muted-foreground hover:text-foreground transition-colors"
+          className="sm:hidden text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />
         </Link>
+
+        {/* Avatar */}
         <div className="relative shrink-0">
-          <div className="h-9 w-9 rounded-full bg-muted overflow-hidden">
-            {other.user.avatarUrl ? (
+          <div className="h-10 w-10 rounded-xl overflow-hidden bg-accent-muted">
+            {peerImage ? (
               <Image
-                src={other.user.avatarUrl}
-                alt={other.user.name}
-                width={36}
-                height={36}
-                className="object-cover w-full h-full"
+                src={peerImage}
+                alt={peerName}
+                width={40}
+                height={40}
+                className="h-full w-full object-cover"
               />
             ) : (
-              <div className="h-full w-full flex items-center justify-center text-sm font-semibold text-muted-foreground uppercase">
-                {other.user.name.charAt(0)}
+              <div className="h-full w-full flex items-center justify-center text-sm font-semibold text-accent">
+                {getInitials(peerName)}
               </div>
             )}
           </div>
           <OnlineBadge
             userId={other.user.id}
-            className="absolute bottom-0 right-0"
+            className="absolute -bottom-0.5 -right-0.5 border-2 border-white"
           />
         </div>
+
+        {/* Name + online status */}
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold truncate">{other.user.name}</p>
-          {conv.listing && (
-            <p className="text-xs text-muted-foreground truncate">
-              About: {conv.listing.title}
-              {conv.listing.status !== "ACTIVE" && (
-                <span className="ml-1 text-destructive">
-                  ({conv.listing.status.toLowerCase()})
-                </span>
-              )}
-            </p>
-          )}
+          <p className="text-sm font-semibold text-foreground truncate">{peerName}</p>
+          <OnlineStatusText userId={other.user.id} />
         </div>
+
+        {/* "Re:" item chip — listings only, so the user knows which item is being discussed */}
+        {itemChip && (
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface border border-border shrink-0">
+            {itemChip.image && (
+              <div className="w-8 h-8 rounded-full overflow-hidden shrink-0">
+                <Image
+                  src={itemChip.image}
+                  alt={itemChip.label}
+                  width={32}
+                  height={32}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            )}
+            <div className="min-w-0">
+              <p className="text-[10px] text-muted-foreground">Re:</p>
+              <p className="text-xs font-semibold text-foreground truncate max-w-32">
+                {itemChip.label}
+                {itemChip.status && (
+                  <span className="ml-1 font-normal text-destructive">({itemChip.status})</span>
+                )}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* View Store / View Listing link — desktop only */}
+        {viewLink && (
+          <Link
+            href={viewLink.href}
+            className="hidden sm:block text-xs font-semibold text-accent hover:underline shrink-0"
+          >
+            {viewLink.action}
+          </Link>
+        )}
       </div>
 
-      {/* Thread */}
-      <ChatThread conversationId={id} currentUserId={session.user.id} />
-    </div>
+      {/* Thread body */}
+      <ChatThread
+        conversationId={id}
+        currentUserId={session.user.id}
+        otherName={peerName}
+      />
+    </>
   );
 }
