@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
-import { cn, formatTimeAgo } from "@/lib/utils";
+import { cn, formatTimeAgo, getInitials } from "@/lib/utils";
 import { hideConversation } from "@/actions/conversation-actions";
 import { OnlineBadge } from "./online-badge";
 import {
@@ -27,8 +27,7 @@ interface ConversationItemProps {
 }
 
 export function ConversationItem({ conversation, isActive }: ConversationItemProps) {
-  const { otherParticipant, lastMessage, lastMessageAt, unreadCount, listingTitle } =
-    conversation;
+  const { otherParticipant, lastMessage, lastMessageAt, unreadCount } = conversation;
   const hasUnread = unreadCount > 0;
 
   const router = useRouter();
@@ -51,92 +50,87 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
   }
 
   return (
-    <div
-      className={cn(
-        "relative flex items-stretch transition-colors hover:bg-accent",
-        isActive && "bg-accent"
-      )}
-    >
-      <Link
-        href={`/chat/${conversation.id}`}
-        className="flex flex-1 min-w-0 items-center gap-3 px-4 py-3"
+    <>
+      <div
+        className={cn(
+          "relative group flex items-start gap-3 px-4 py-4 hover:bg-surface transition-colors border-b border-border/50",
+          isActive && "bg-accent-muted border-l-2 border-l-accent"
+        )}
       >
-        <div className="relative shrink-0">
-          <div className="h-11 w-11 rounded-full bg-muted overflow-hidden">
-            {otherParticipant.avatarUrl ? (
-              <Image
-                src={otherParticipant.avatarUrl}
-                alt={otherParticipant.name}
-                width={44}
-                height={44}
-                className="object-cover w-full h-full"
-              />
-            ) : (
-              <div className="h-full w-full flex items-center justify-center text-sm font-semibold text-muted-foreground uppercase">
-                {otherParticipant.name.charAt(0)}
-              </div>
-            )}
+        <Link href={`/chat/${conversation.id}`} className="flex items-start gap-3 flex-1 min-w-0">
+          {/* Avatar — rounded square with online dot */}
+          <div className="relative shrink-0">
+            <div className="w-11 h-11 rounded-xl overflow-hidden bg-accent-muted">
+              {otherParticipant.avatarUrl ? (
+                <Image
+                  src={otherParticipant.avatarUrl}
+                  alt={otherParticipant.name}
+                  width={44}
+                  height={44}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="h-full w-full flex items-center justify-center text-sm font-semibold text-accent">
+                  {getInitials(otherParticipant.name)}
+                </div>
+              )}
+            </div>
+            <OnlineBadge
+              userId={otherParticipant.userId}
+              className="absolute -bottom-0.5 -right-0.5 border-2 border-white"
+            />
           </div>
-          <OnlineBadge
-            userId={otherParticipant.userId}
-            className="absolute bottom-0 right-0"
-          />
-        </div>
 
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2">
-            <span
-              className={cn(
-                "text-sm truncate",
-                hasUnread ? "font-semibold" : "font-medium"
-              )}
-            >
-              {otherParticipant.name}
-            </span>
-            {lastMessageAt && (
-              <span className="text-[10px] text-muted-foreground shrink-0">
-                {formatTimeAgo(lastMessageAt)}
+          {/* Text content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-1 mb-0.5">
+              <span className="text-sm font-semibold text-foreground truncate">
+                {otherParticipant.name}
               </span>
-            )}
-          </div>
-          {listingTitle && (
-            <p className="text-[11px] text-muted-foreground/80 truncate">{listingTitle}</p>
-          )}
-          <div className="flex items-center gap-2 mt-0.5">
-            <p
-              className={cn(
-                "text-xs truncate flex-1",
-                hasUnread ? "text-foreground font-medium" : "text-muted-foreground"
+              {lastMessageAt && (
+                <span className="text-[10px] text-muted-foreground shrink-0">
+                  {formatTimeAgo(lastMessageAt)}
+                </span>
               )}
-            >
+            </div>
+            <p className={cn("text-xs truncate mb-1", hasUnread ? "text-foreground" : "text-muted-foreground")}>
               {lastMessage ?? "Start chatting"}
             </p>
-            {hasUnread && (
-              <span className="shrink-0 min-w-[18px] h-[18px] px-1 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center font-semibold">
-                {unreadCount > 99 ? "99+" : unreadCount}
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium bg-blue-100 text-blue-700">
+                👤 Seller
               </span>
-            )}
+              {hasUnread && (
+                <span className="w-4 h-4 rounded-full bg-accent text-white text-[9px] font-bold flex items-center justify-center">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
-      </Link>
+        </Link>
 
-      <button
-        type="button"
-        onClick={() => setConfirmOpen(true)}
-        disabled={isDeleting}
-        aria-label="Delete conversation"
-        className="shrink-0 flex items-center px-3 text-muted-foreground/50 transition-colors hover:text-destructive disabled:opacity-50"
-      >
-        <Trash2 className="h-4 w-4" />
-      </button>
+        {/* Delete — appears on hover */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setConfirmOpen(true);
+          }}
+          disabled={isDeleting}
+          aria-label="Delete conversation"
+          className="opacity-0 group-hover:opacity-100 shrink-0 self-center text-muted-foreground/40 hover:text-destructive transition-all disabled:opacity-50"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      </div>
 
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
             <DialogTitle>Delete conversation?</DialogTitle>
             <DialogDescription>
-              This is removed from your chat list only. The other person keeps
-              their copy, and it comes back if they message you again.
+              This is removed from your chat list only. The other person keeps their copy, and it
+              comes back if they message you again.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -149,6 +143,6 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }

@@ -65,7 +65,7 @@ export function MessageList({ conversationId, currentUserId }: MessageListProps)
   const allMessages = [...(data?.pages.flatMap((p) => p.items) ?? [])].reverse();
 
   return (
-    <div className="flex-1 overflow-y-auto flex flex-col gap-1.5 px-4 py-3 min-h-0">
+    <div className="flex-1 overflow-y-auto flex flex-col gap-4 p-5 min-h-0">
       {hasNextPage && (
         <div className="flex justify-center pb-2">
           <Button

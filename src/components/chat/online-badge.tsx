@@ -3,12 +3,12 @@
 import { cn } from "@/lib/utils";
 import { useSocketStore } from "@/stores/socket-store";
 
-interface OnlineBadgeProps {
+interface OnlineProps {
   userId: string;
   className?: string;
 }
 
-export function OnlineBadge({ userId, className }: OnlineBadgeProps) {
+export function OnlineBadge({ userId, className }: OnlineProps) {
   const isOnline = useSocketStore((s) => s.onlineUsers.has(userId));
   return (
     <span
@@ -18,5 +18,20 @@ export function OnlineBadge({ userId, className }: OnlineBadgeProps) {
         className
       )}
     />
+  );
+}
+
+export function OnlineStatusText({ userId, className }: OnlineProps) {
+  const isOnline = useSocketStore((s) => s.onlineUsers.has(userId));
+  return (
+    <span
+      className={cn(
+        "text-xs font-medium",
+        isOnline ? "text-green-500" : "text-muted-foreground",
+        className
+      )}
+    >
+      {isOnline ? "Online" : "Offline"}
+    </span>
   );
 }

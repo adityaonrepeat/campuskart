@@ -1,21 +1,18 @@
 "use client";
 
-import { useState, useRef, type KeyboardEvent, type ChangeEvent } from "react";
-import { Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { useState, type KeyboardEvent, type ChangeEvent } from "react";
 import { cn } from "@/lib/utils";
 
 interface ChatInputProps {
   onSend: (content: string) => Promise<boolean>;
   onTyping: () => void;
   disabled?: boolean;
+  placeholder?: string;
 }
 
-export function ChatInput({ onSend, onTyping, disabled }: ChatInputProps) {
+export function ChatInput({ onSend, onTyping, disabled, placeholder = "Type a message..." }: ChatInputProps) {
   const [value, setValue] = useState("");
   const [sending, setSending] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   async function handleSend() {
     const content = value.trim();
@@ -26,45 +23,46 @@ export function ChatInput({ onSend, onTyping, disabled }: ChatInputProps) {
     const ok = await onSend(content);
     setSending(false);
     if (!ok) setValue(prev);
-    textareaRef.current?.focus();
   }
 
-  function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === "Enter" && !e.shiftKey) {
+  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
       e.preventDefault();
       handleSend();
     }
   }
 
-  function handleChange(e: ChangeEvent<HTMLTextAreaElement>) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
     onTyping();
   }
 
   return (
-    <div className="flex items-end gap-2 border-t bg-background px-3 py-2.5 shrink-0">
-      <Textarea
-        ref={textareaRef}
+    <div className="flex gap-2 items-end p-4 border-t border-border shrink-0">
+      <input
+        type="text"
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        placeholder="Type a message…"
-        rows={1}
-        className={cn(
-          "flex-1 min-h-[38px] max-h-28 resize-none overflow-y-auto",
-          "rounded-xl border-0 bg-muted px-3 py-2 text-sm shadow-none",
-          "focus-visible:ring-0 focus-visible:ring-offset-0"
-        )}
+        placeholder={placeholder}
         disabled={disabled || sending}
+        className={cn(
+          "flex-1 px-4 py-3 rounded-xl text-sm",
+          "bg-surface border border-border",
+          "focus:outline-none focus:ring-2 focus:ring-accent/30",
+          "disabled:opacity-50"
+        )}
       />
-      <Button
-        size="icon"
+      <button
         onClick={handleSend}
         disabled={!value.trim() || sending || disabled}
-        className="shrink-0 rounded-full"
+        className="w-11 h-11 rounded-xl bg-accent text-white flex items-center justify-center disabled:opacity-50 hover:bg-accent/90 transition-colors shrink-0"
       >
-        <Send className="h-4 w-4" />
-      </Button>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <line x1="22" y1="2" x2="11" y2="13" />
+          <polygon points="22 2 15 22 11 13 2 9 22 2" />
+        </svg>
+      </button>
     </div>
   );
 }
