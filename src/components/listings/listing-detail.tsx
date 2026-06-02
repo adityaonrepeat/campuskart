@@ -241,7 +241,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                   <span className="text-muted text-xs">·</span>
                   <span className="verified-badge">
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5" /></svg>
-                    {listing.seller.college.name}
+                    {listing.seller.college?.name ?? ""}
                   </span>
                 </div>
                 <h1 className="font-display text-2xl sm:text-3xl font-semibold text-primary leading-snug">
@@ -341,7 +341,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                         {[
                           { label: "Condition", value: conditionLabel },
                           { label: "Category", value: categoryLabel },
-                          { label: "College", value: listing.seller.college.name },
+                          { label: "College", value: listing.seller.college?.name ?? "" },
                           { label: "Pickup", value: "On Campus" },
                         ].map((row) => (
                           <div key={row.label} className="bg-surface rounded-xl p-3">
@@ -387,7 +387,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                           { label: "MEMBER SINCE", value: "Sep 2023" },
                           { label: "TOTAL SALES", value: "14 items" },
                           { label: "RESPONSE TIME", value: "Usually within 1 hour" },
-                          { label: "COLLEGE", value: listing.seller.college.name },
+                          { label: "COLLEGE", value: listing.seller.college?.name ?? "" },
                         ].map((row) => (
                           <div key={row.label} className="bg-surface rounded-xl p-3">
                             <p className="text-[10px] text-muted uppercase tracking-wider mb-1">{row.label}</p>
@@ -456,7 +456,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-sm text-foreground">{listing.seller.name}</p>
-                <p className="text-[11px] text-muted">{listing.seller.college.name}</p>
+                <p className="text-[11px] text-muted">{listing.seller.college?.name ?? ""}</p>
               </div>
               <button
                 type="button"
