@@ -12,14 +12,15 @@ export default async function AppLayout({
 }) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
+  if (!session.user.collegeId) redirect("/complete-profile");
 
   const role = (session.user.role ?? "USER") as Role;
   const showAdmin = role === "MODERATOR" || role === "ADMIN";
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen app-main-pb">
       <SocketInitializer />
-      <main className="max-w-3xl mx-auto px-4">{children}</main>
+      <main>{children}</main>
       <BottomNav showAdmin={showAdmin} />
     </div>
   );
