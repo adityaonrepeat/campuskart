@@ -43,6 +43,10 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--ck-accent);
   --color-muted-foreground: var(--muted-foreground);
+  /* NOTE: intentionally aliased to --muted-foreground (#6B7280), NOT --muted.
+     Much of the app (ListingsGrid/ListingCard/listing-detail/AuthPanel) uses the
+     bare `text-muted` utility for gray body text and depends on this value.
+     Avatars/placeholders use `bg-accent-muted`, so they don't rely on this. */
   --color-muted: var(--muted-foreground);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
@@ -444,6 +448,41 @@
   }
 }
 
+/* ─── Chat layout (Tailwind v4 base-after-variant fix) ─────────── */
+.chat-sidebar {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 100%;
+  border-right: 1px solid var(--border);
+}
+.chat-sidebar.thread-open {
+  display: none;
+}
+@media (min-width: 640px) {
+  .chat-sidebar {
+    width: 320px;
+  }
+  .chat-sidebar.thread-open {
+    display: flex;
+  }
+}
+
+.chat-content {
+  display: none;
+  flex: 1 1 0%;
+  flex-direction: column;
+  min-width: 0;
+}
+.chat-content.thread-open {
+  display: flex;
+}
+@media (min-width: 640px) {
+  .chat-content {
+    display: flex;
+  }
+}
+
 /* ─── Checkbox / range ───────────────────────────────────────────── */
 .checkbox-custom {
   width: 18px;
@@ -574,6 +613,19 @@ input[type="range"] { accent-color: var(--ck-accent); }
   border-color: #4F46E5;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
+/* ─── Auth left panel — visible on lg+ (Tailwind v4 hidden lg:flex workaround) ── */
+.auth-left-panel {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .auth-left-panel {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+}
+
 /* ─── Bottom nav — hidden on desktop (Tailwind v4 lg:hidden workaround) ── */
 .bottom-nav-wrap {
   display: flex;
