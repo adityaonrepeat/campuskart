@@ -40,7 +40,11 @@ export function MarkSoldButton({ listingId, title }: MarkSoldButtonProps) {
 
   return (
     <>
-      <Button size="sm" onClick={() => setOpen(true)}>
+      <Button
+        size="sm"
+        onClick={() => setOpen(true)}
+        className="bg-emerald-600 hover:bg-emerald-700 text-white border-0 shadow-sm"
+      >
         Mark as Sold
       </Button>
 
