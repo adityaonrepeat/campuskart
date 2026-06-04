@@ -10,8 +10,8 @@ const LISTINGS = [
   category: 'Textbooks',
   image: "/featured-1.png",
   alt: 'Organic chemistry textbook open on clean white desk, well-lit study space',
-  currentBid: 22,
-  minBid: 15,
+  currentBid: 450,
+  minBid: 300,
   seller: 'Priya M.',
   sellerAvatar: "/featured-1.png",
   rating: 4.8,
@@ -19,7 +19,7 @@ const LISTINGS = [
   timeLeft: '2h 14m',
   bids: 5,
   condition: 'Good',
-  college: 'UMich'
+  college: 'IIT Bombay'
 },
 {
   id: 2,
@@ -27,8 +27,8 @@ const LISTINGS = [
   category: 'Sports & Fitness',
   image: "https://images.unsplash.com/photo-1733141731756-2d817614a15f",
   alt: 'Badminton racket on gym floor with shuttlecock, bright indoor lighting',
-  currentBid: 28,
-  minBid: 20,
+  currentBid: 650,
+  minBid: 400,
   seller: 'Marcus T.',
   sellerAvatar: "https://images.unsplash.com/photo-1733141731756-2d817614a15f",
   rating: 4.6,
@@ -36,7 +36,7 @@ const LISTINGS = [
   timeLeft: '5h 32m',
   bids: 3,
   condition: 'Like New',
-  college: 'UCLA'
+  college: 'BITS Pilani'
 },
 {
   id: 3,
@@ -44,8 +44,8 @@ const LISTINGS = [
   category: 'Electronics',
   image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0",
   alt: 'MacBook charger cable on clean white surface, minimal tech product photo',
-  currentBid: 18,
-  minBid: 12,
+  currentBid: 1200,
+  minBid: 900,
   seller: 'Jordan K.',
   sellerAvatar: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0",
   rating: 5.0,
@@ -53,7 +53,7 @@ const LISTINGS = [
   timeLeft: '1h 08m',
   bids: 9,
   condition: 'Like New',
-  college: 'NYU'
+  college: 'IIT Delhi'
 },
 {
   id: 4,
@@ -61,8 +61,8 @@ const LISTINGS = [
   category: 'Sports & Fitness',
   image: "/featured-2.png",
   alt: 'Purple yoga mat rolled out on light wood floor, bright airy studio space',
-  currentBid: 14,
-  minBid: 10,
+  currentBid: 350,
+  minBid: 250,
   seller: 'Aisha N.',
   sellerAvatar: "/featured-2.png",
   rating: 4.9,
@@ -70,7 +70,7 @@ const LISTINGS = [
   timeLeft: '12h 00m',
   bids: 2,
   condition: 'Good',
-  college: 'BU'
+  college: 'VIT Vellore'
 }];
 
 
@@ -175,8 +175,8 @@ export default function FeaturedListings() {
                 <div className="flex items-end justify-between mb-3">
                   <div>
                     <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Current Bid</p>
-                    <p className="text-xl font-display font-semibold text-accent">${item.currentBid}</p>
-                    <p className="text-[10px] text-muted">Min: ${item.minBid} · {item.bids} bids</p>
+                    <p className="text-xl font-display font-semibold text-accent">₹{item.currentBid.toLocaleString('en-IN')}</p>
+                    <p className="text-[10px] text-muted">Min: ₹{item.minBid.toLocaleString('en-IN')} · {item.bids} bids</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Ends In</p>

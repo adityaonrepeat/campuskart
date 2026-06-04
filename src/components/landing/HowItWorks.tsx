@@ -138,7 +138,7 @@ export default function HowItWorks() {
         {/* Bottom CTA */}
         <div className="mt-12 flex justify-center aos-elem delay-500">
           <Link
-            href="/sign-up-login"
+            href="/signup"
             className="inline-flex items-center gap-2 text-accent text-sm font-semibold hover:gap-3 transition-all duration-300"
           >
             Start selling today — it&apos;s free

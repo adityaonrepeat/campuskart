@@ -5,22 +5,22 @@ import AppImage from '@/components/ui/AppImage';
 
 const COLLEGES = [
 'Select your college...',
-'University of Michigan',
-'UCLA',
-'NYU',
-'Boston University',
-'University of Texas',
-'Georgia Tech',
-'Ohio State University',
-'University of Washington'];
+'IIT Bombay',
+'IIT Delhi',
+'IIT Madras',
+'BITS Pilani',
+'NIT Trichy',
+'VIT Vellore',
+'Anna University',
+'Delhi Technological University'];
 
 
 const LIVE_BIDS = [
-{ item: 'Calculus Textbook', bid: '$18', college: 'UMich' },
-{ item: 'Badminton Racket', bid: '$24', college: 'UCLA' },
-{ item: 'MacBook Charger', bid: '$15', college: 'NYU' },
-{ item: 'Yoga Mat', bid: '$12', college: 'BU' },
-{ item: 'Mini Fridge', bid: '$55', college: 'GT' }];
+{ item: 'Calculus Textbook', bid: '₹450', college: 'IIT Bombay' },
+{ item: 'Badminton Racket', bid: '₹650', college: 'BITS Pilani' },
+{ item: 'MacBook Charger', bid: '₹1,200', college: 'IIT Delhi' },
+{ item: 'Yoga Mat', bid: '₹350', college: 'VIT Vellore' },
+{ item: 'Mini Fridge', bid: '₹3,500', college: 'NIT Trichy' }];
 
 
 export default function HeroSection() {
@@ -133,7 +133,7 @@ export default function HeroSection() {
           {/* Secondary CTA */}
           <div className="flex items-center gap-6">
             <Link
-              href="/sign-up-login"
+              href="/signup"
               className="text-white/80 text-sm font-medium hover:text-white transition-colors flex items-center gap-2 group">
               
               <span className="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white/10 transition-colors">

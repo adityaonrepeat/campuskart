@@ -112,7 +112,7 @@ export default function TrustSection() {
 
             <div className="mt-10 aos-elem delay-500">
               <Link
-                href="/sign-up-login"
+                href="/signup"
                 className="inline-flex items-center gap-2 bg-primary text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors duration-200 shadow-card"
               >
                 Verify your student status

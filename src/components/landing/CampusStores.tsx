@@ -12,7 +12,7 @@ const STORES = [
   alt: 'Warm cozy campus café with coffee cups, wooden furniture, bright natural light streaming in',
   rating: 4.7,
   reviews: 84,
-  college: 'UMich',
+  college: 'IIT Bombay',
   items: 24,
   featured: ['Cold Brew', 'Matcha Latte', 'Avocado Toast'],
   badge: 'Popular',
@@ -26,7 +26,7 @@ const STORES = [
   alt: 'Colorful healthy grain bowls with fresh vegetables on clean white table, bright studio lighting',
   rating: 4.9,
   reviews: 112,
-  college: 'UCLA',
+  college: 'BITS Pilani',
   items: 18,
   featured: ['Grain Bowl', 'Protein Wrap', 'Smoothie'],
   badge: 'Top Rated',
@@ -40,7 +40,7 @@ const STORES = [
   alt: 'Neatly arranged stationery, notebooks, pens on bright desk, clean minimal product display',
   rating: 4.5,
   reviews: 47,
-  college: 'NYU',
+  college: 'IIT Delhi',
   items: 63,
   featured: ['Notebooks', 'Highlighters', 'USB Hubs'],
   badge: 'New',
@@ -155,7 +155,7 @@ export default function CampusStores() {
             </p>
           </div>
           <Link
-            href="/sign-up-login"
+            href="/signup"
             className="flex-shrink-0 bg-white text-primary text-sm font-semibold px-7 py-3.5 rounded-xl hover:bg-surface transition-colors duration-200 shadow-card whitespace-nowrap">
             
             Register Your Store
