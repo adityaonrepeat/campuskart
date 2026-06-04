@@ -30,7 +30,10 @@ const registerSchema = z
       .min(3, "Username must be at least 3 characters")
       .max(30, "Username must be at most 30 characters")
       .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers, and underscores"),
-    email: z.string().email("Invalid email address"),
+    email: z
+      .string()
+      .email("Invalid email address")
+      .refine((e) => e.toLowerCase().endsWith("@gmail.com"), "Only Gmail addresses are allowed"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
     collegeId: z.string().min(1, "Please select your college"),
@@ -146,7 +149,7 @@ export function RegisterForm() {
           <label className="block text-xs font-semibold text-[#111111] mb-1.5">Email Address</label>
           <input
             type="email"
-            placeholder="you@college.edu"
+            placeholder="you@gmail.com"
             autoComplete="email"
             className="input-field"
             {...register("email")}

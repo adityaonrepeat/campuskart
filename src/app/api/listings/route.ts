@@ -86,8 +86,10 @@ export async function GET(request: NextRequest) {
         : {};
 
   // storeId present → fetch that store's listings; absent → main feed (no store listings)
+  // collegeId is always enforced regardless of storeId to prevent cross-college data access
   const where: Prisma.ListingWhereInput = {
-    ...(storeId ? { storeId } : { collegeId: session.user.collegeId, storeId: null }),
+    collegeId: session.user.collegeId,
+    ...(storeId ? { storeId } : { storeId: null }),
     status: "ACTIVE",
     ...listingTypeFilter,
     ...(category && VALID_CATEGORIES.has(category)

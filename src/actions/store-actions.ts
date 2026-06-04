@@ -128,9 +128,10 @@ export async function submitStoreReview(
 
   const store = await db.store.findUnique({
     where: { id: storeId },
-    select: { ownerId: true, status: true },
+    select: { ownerId: true, status: true, collegeId: true },
   });
   if (!store) return { success: false, error: "Store not found" };
+  if (store.collegeId !== user.collegeId) return { success: false, error: "Forbidden" };
   if (store.status !== "ACTIVE") {
     return { success: false, error: "This store is not available.", code: "STORE_NOT_ACTIVE" };
   }

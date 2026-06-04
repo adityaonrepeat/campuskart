@@ -92,10 +92,13 @@ export function registerSocketHandlers(io: AppServer, socket: AppSocket): void {
     async (payload: SendMessagePayload, callback) => {
       const { conversationId, content } = payload;
 
-      // Trim and reject empty messages
       const trimmed = content.trim();
       if (!trimmed) {
         callback({ success: false, error: "Message cannot be empty" });
+        return;
+      }
+      if (trimmed.length > 2000) {
+        callback({ success: false, error: "Message too long" });
         return;
       }
 

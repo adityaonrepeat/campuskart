@@ -5,6 +5,23 @@ import { db } from "@/lib/db";
 
 export const auth = betterAuth({
   database: prismaAdapter(db, { provider: "postgresql" }),
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          if (!user.email.toLowerCase().endsWith("@gmail.com")) {
+            throw new Error("Only Gmail addresses are allowed");
+          }
+          const college = await db.college.findUnique({
+            where: { id: (user as { collegeId?: string }).collegeId ?? "" },
+            select: { id: true },
+          });
+          if (!college) throw new Error("Invalid college");
+          return { data: user };
+        },
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 8,
