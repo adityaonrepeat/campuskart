@@ -52,8 +52,16 @@ docs/
 
 # Testing / e2e
 playwright.config.ts
+playwright-report/
+blob-report/
+playwright/.cache/
 test-results/
 tests/
+*.auth.json
+
+# Dev scripts & screenshots (not deployable)
+/scripts/
+/public/screenshot-*.png
 
 # UI inspiration (not deployable source)
 rocket-ui/
