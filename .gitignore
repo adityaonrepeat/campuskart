@@ -66,6 +66,12 @@ tests/
 # UI inspiration (not deployable source)
 rocket-ui/
 
+# Marketing / showcase assets (not deployable)
+showcase/
+
+# One-off admin scripts (keep local, don't publish)
+prisma/make-admin.ts
+
 # Socket server — nested deps and secrets
 socket-server/node_modules/
 socket-server/.env

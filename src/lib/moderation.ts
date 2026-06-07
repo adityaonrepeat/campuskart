@@ -5,10 +5,12 @@
 const SIGHTENGINE_ENDPOINT = "https://api.sightengine.com/1.0/check.json";
 
 // Comma-separated model list. Overridable via env for tuning without code changes.
-const MODELS = process.env.SIGHTENGINE_MODELS ?? "nudity-2.1,gore-2.0,offensive";
+// `violence` catches fighting/blood scenes that gore-2.0 misses (e.g. combat sports).
+const MODELS = process.env.SIGHTENGINE_MODELS ?? "nudity-2.1,gore-2.0,violence,offensive";
 
 // Confidence threshold (0–1) above which a category flags the image as unsafe.
-const THRESHOLD = Number(process.env.SIGHTENGINE_THRESHOLD ?? 0.5);
+// 0.2 is strict — catches borderline content like sports blood, suggestive images, etc.
+const THRESHOLD = Number(process.env.SIGHTENGINE_THRESHOLD ?? 0.2);
 
 interface SightengineResponse {
   status: "success" | "failure";
@@ -23,6 +25,7 @@ interface SightengineResponse {
     none?: number;
   };
   gore?: { prob?: number };
+  violence?: { prob?: number };
   offensive?: { prob?: number };
 }
 
@@ -40,6 +43,7 @@ function isResponseSafe(data: SightengineResponse): boolean {
     if (explicit >= THRESHOLD) return false;
   }
   if ((data.gore?.prob ?? 0) >= THRESHOLD) return false;
+  if ((data.violence?.prob ?? 0) >= THRESHOLD) return false;
   if ((data.offensive?.prob ?? 0) >= THRESHOLD) return false;
   return true;
 }

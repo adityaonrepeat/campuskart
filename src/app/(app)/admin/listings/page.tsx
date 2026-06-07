@@ -145,7 +145,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps) {
                 </div>
 
                 <div className="shrink-0">
-                  <RemoveListingButton listingId={listing.id} title={listing.title} />
+                  <RemoveListingButton listingId={listing.id} title={listing.title} isAdmin={role === "ADMIN"} />
                 </div>
               </div>
             );

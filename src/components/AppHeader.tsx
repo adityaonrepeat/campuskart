@@ -16,9 +16,10 @@ const NAV_LINKS = [
 interface AppHeaderProps {
   user: { name: string; avatarUrl?: string | null };
   forceScrolled?: boolean;
+  showAdmin?: boolean;
 }
 
-export default function AppHeader({ user, forceScrolled = true }: AppHeaderProps) {
+export default function AppHeader({ user, forceScrolled = true, showAdmin = false }: AppHeaderProps) {
   const [scrolled, setScrolled] = useState(forceScrolled);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
@@ -85,6 +86,18 @@ export default function AppHeader({ user, forceScrolled = true }: AppHeaderProps
                 {link.label}
               </Link>
             ))}
+            {showAdmin && (
+              <Link
+                href="/admin"
+                className={`text-sm font-medium underline-link transition-colors duration-200 ${
+                  pathname.startsWith('/admin')
+                    ? scrolled ? 'text-[#4F46E5]' : 'text-white font-semibold'
+                    : scrolled ? 'text-[#6B7280] hover:text-[#111111]' : 'text-white/80 hover:text-white'
+                }`}
+              >
+                Admin
+              </Link>
+            )}
           </nav>
 
           {/* Desktop CTAs */}

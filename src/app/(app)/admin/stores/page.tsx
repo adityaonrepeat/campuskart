@@ -1,12 +1,15 @@
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-import { CheckCircle, Trash2, Clock } from "lucide-react";
+import { CheckCircle, Trash2, Clock, ExternalLink } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { verifyStore, removeStore } from "@/actions/admin-actions";
+import { StoreAdminFilters } from "@/components/admin/store-admin-filters";
 import { STORE_CATEGORY_LABELS } from "@/types/store";
-import type { Role } from "@prisma/client";
+import { StoreStatus } from "@prisma/client";
+import type { Prisma, Role } from "@prisma/client";
 
 export const metadata = { title: "Store verification — Admin" };
 
@@ -48,38 +51,77 @@ function RemoveButton({ storeId, label }: { storeId: string; label: string }) {
   );
 }
 
-export default async function AdminStoresPage() {
+interface PageProps {
+  searchParams: Promise<{ search?: string; college?: string; status?: string }>;
+}
+
+const VALID_STATUSES = new Set<string>(Object.values(StoreStatus));
+
+export default async function AdminStoresPage({ searchParams }: PageProps) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
 
   const role = (session.user.role ?? "USER") as Role;
   if (role !== "MODERATOR" && role !== "ADMIN") redirect("/listings");
 
-  const stores = await db.store.findMany({
-    where: role === "MODERATOR" ? { collegeId: session.user.collegeId } : {},
-    orderBy: { createdAt: "asc" },
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      category: true,
-      images: true,
-      status: true,
-      isVerified: true,
-      createdAt: true,
-      owner: { select: { name: true, email: true } },
-    },
-  });
+  const { search, college, status } = await searchParams;
+  const collegeFilter = role === "ADMIN" ? (college || undefined) : session.user.collegeId;
+  const statusFilter =
+    status && VALID_STATUSES.has(status) ? (status as StoreStatus) : undefined;
+
+  const where: Prisma.StoreWhereInput = {
+    ...(collegeFilter ? { collegeId: collegeFilter } : {}),
+    ...(search ? { name: { contains: search, mode: "insensitive" as const } } : {}),
+    ...(statusFilter ? { status: statusFilter } : {}),
+  };
+
+  const [stores, colleges] = await Promise.all([
+    db.store.findMany({
+      where,
+      orderBy: { createdAt: "asc" },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        category: true,
+        images: true,
+        status: true,
+        isVerified: true,
+        createdAt: true,
+        owner: { select: { name: true, email: true } },
+      },
+    }),
+    role === "ADMIN"
+      ? db.college.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } })
+      : Promise.resolve([] as { id: string; name: string }[]),
+  ]);
 
   const pending = stores.filter((s) => s.status === "PENDING");
   const active = stores.filter((s) => s.status === "ACTIVE");
   const archived = stores.filter((s) => s.status === "ARCHIVED");
 
+  const showPending = !statusFilter || statusFilter === "PENDING";
+  const showActive = !statusFilter || statusFilter === "ACTIVE";
+  const showArchived = role === "ADMIN" && (!statusFilter || statusFilter === "ARCHIVED");
+
   return (
-    <div className="py-6 space-y-8">
-      <h1 className="text-xl font-bold">Store verification</h1>
+    <div className="py-6 space-y-6">
+      <div className="space-y-3">
+        <h1 className="text-xl font-bold">Store verification</h1>
+        <StoreAdminFilters
+          isAdmin={role === "ADMIN"}
+          colleges={colleges}
+          defaultValues={{ search, college, status: statusFilter }}
+        />
+        {(search || college || statusFilter) && (
+          <p className="text-sm text-muted-foreground">
+            {stores.length} store{stores.length !== 1 ? "s" : ""} found
+          </p>
+        )}
+      </div>
 
       {/* Pending */}
+      {showPending && (
       <section className="space-y-3">
         <div className="flex items-center gap-2">
           <Clock className="h-4 w-4 text-amber-600" />
@@ -104,8 +146,10 @@ export default async function AdminStoresPage() {
           </div>
         )}
       </section>
+      )}
 
       {/* Active */}
+      {showActive && (
       <section className="space-y-3">
         <h2 className="font-semibold">Active ({active.length})</h2>
         {active.length === 0 ? (
@@ -124,9 +168,10 @@ export default async function AdminStoresPage() {
           </div>
         )}
       </section>
+      )}
 
       {/* Archived — only admins see this (can permanently delete) */}
-      {role === "ADMIN" && archived.length > 0 && (
+      {showArchived && archived.length > 0 && (
         <section className="space-y-3">
           <h2 className="font-semibold text-muted-foreground">Archived ({archived.length})</h2>
           <div className="space-y-3">
@@ -165,31 +210,62 @@ function StoreRow({ store, actions }: StoreRowProps) {
   const categoryLabel =
     STORE_CATEGORY_LABELS[store.category as keyof typeof STORE_CATEGORY_LABELS] ?? store.category;
 
+  const storeHref = `/stores/${store.id}`;
+
   return (
-    <div className="flex items-start gap-3 rounded-xl border p-4">
-      <div className="relative h-16 w-16 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
-        {store.images[0] ? (
-          <Image src={store.images[0]} alt={store.name} fill className="object-cover" sizes="64px" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-2xl">🏪</div>
-        )}
-      </div>
+    <div className="rounded-xl border p-4">
+      <div className="flex items-start gap-3">
+        <Link
+          href={storeHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative h-16 w-16 shrink-0 rounded-lg overflow-hidden bg-muted block"
+        >
+          {store.images[0] ? (
+            <Image src={store.images[0]} alt={store.name} fill className="object-cover" sizes="64px" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-2xl">🏪</div>
+          )}
+        </Link>
 
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <p className="font-semibold text-sm">{store.name}</p>
-          <span className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-            {categoryLabel}
-          </span>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Link
+              href={storeHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-sm hover:text-primary hover:underline inline-flex items-center gap-1"
+            >
+              {store.name}
+              <ExternalLink className="h-3 w-3 text-muted-foreground" />
+            </Link>
+            <span className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+              {categoryLabel}
+            </span>
+            <span className="text-[10px] text-muted-foreground">
+              {store.images.length} photo{store.images.length !== 1 ? "s" : ""}
+            </span>
+          </div>
+          <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{store.description}</p>
+          <p className="text-xs text-muted-foreground mt-1">
+            By {store.owner.name} · {store.owner.email} ·{" "}
+            {new Date(store.createdAt).toLocaleDateString("en-IN")}
+          </p>
         </div>
-        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{store.description}</p>
-        <p className="text-xs text-muted-foreground mt-1">
-          By {store.owner.name} · {store.owner.email} ·{" "}
-          {new Date(store.createdAt).toLocaleDateString("en-IN")}
-        </p>
       </div>
 
-      <div className="flex flex-col gap-2 flex-shrink-0">{actions}</div>
+      <div className="flex flex-wrap gap-2 justify-end mt-3">
+        <Link
+          href={storeHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-muted/70 text-foreground text-xs font-semibold rounded-lg transition-colors"
+        >
+          <ExternalLink className="h-3.5 w-3.5" />
+          Review
+        </Link>
+        {actions}
+      </div>
     </div>
   );
 }

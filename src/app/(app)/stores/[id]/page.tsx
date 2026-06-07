@@ -2,15 +2,43 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { headers } from "next/headers";
-import { CheckCircle2 } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  MapPin,
+  Phone,
+  MessageCircle,
+  Pencil,
+  Navigation,
+} from "lucide-react";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { StoreTabs } from "@/components/stores/store-tabs";
+import { StoreGallery } from "@/components/stores/store-gallery";
 import { STORE_CATEGORY_LABELS } from "@/types/store";
 import type { Role } from "@prisma/client";
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+function Stars({ value, size = 14 }: { value: number; size?: number }) {
+  return (
+    <span className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <svg
+          key={s}
+          width={size}
+          height={size}
+          viewBox="0 0 24 24"
+          fill={s <= Math.round(value) ? "#F59E0B" : "#D1D5DB"}
+          stroke="none"
+        >
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+      ))}
+    </span>
+  );
 }
 
 export default async function StoreDetailPage({ params }: PageProps) {
@@ -26,6 +54,8 @@ export default async function StoreDetailPage({ params }: PageProps) {
       description: true,
       category: true,
       images: true,
+      menuImages: true,
+      tags: true,
       phone: true,
       whatsapp: true,
       location: true,
@@ -66,10 +96,11 @@ export default async function StoreDetailPage({ params }: PageProps) {
   const canReview = !isOwner && store.status === "ACTIVE";
   const categoryLabel = STORE_CATEGORY_LABELS[store.category] ?? store.category;
   const isActive = store.status === "ACTIVE";
+  const reviewCount = store.reviews.length;
 
   const avg =
-    store.reviews.length > 0
-      ? store.reviews.reduce((sum, r) => sum + r.rating, 0) / store.reviews.length
+    reviewCount > 0
+      ? store.reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount
       : 0;
 
   const existingConversation = await db.conversation.findFirst({
@@ -83,11 +114,18 @@ export default async function StoreDetailPage({ params }: PageProps) {
     ? `/chat/${existingConversation.id}`
     : `/chat?storeId=${store.id}`;
 
-  // Strip userId from reviews before passing to client component
   const reviewsForClient = store.reviews.map(({ userId: _uid, ...r }) => r);
 
+  const showChat = !isOwner && isActive;
+  const hasContact = Boolean(
+    store.hours || store.location || store.mapUrl || store.phone || store.whatsapp
+  );
+  const whatsappHref = store.whatsapp
+    ? `https://wa.me/${store.whatsapp.replace(/\D/g, "")}`
+    : null;
+
   return (
-    <div>
+    <div className="bg-surface min-h-screen pb-10">
       {/* Status banner (owner/mod only) */}
       {store.status !== "ACTIVE" && (
         <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 text-sm text-amber-800 text-center">
@@ -97,8 +135,8 @@ export default async function StoreDetailPage({ params }: PageProps) {
         </div>
       )}
 
-      {/* Cover image */}
-      <div className="relative h-52 sm:h-64 overflow-hidden">
+      {/* Hero */}
+      <div className="relative h-52 sm:h-72 overflow-hidden">
         {store.images[0] ? (
           <Image
             src={store.images[0]}
@@ -113,161 +151,99 @@ export default async function StoreDetailPage({ params }: PageProps) {
             <span className="text-8xl opacity-30">🏪</span>
           </div>
         )}
-        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/25 to-transparent" />
 
-        {/* Overlay content */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-          <div className="max-w-7xl mx-auto flex items-end justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2 mb-1 flex-wrap">
-                <span
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                    isActive ? "bg-green-500 text-white" : "bg-gray-500 text-white"
-                  }`}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-white" />
-                  {isActive ? "OPEN" : "CLOSED"}
-                </span>
-                {store.isVerified && (
-                  <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-500 text-white text-[10px] font-bold">
-                    <CheckCircle2 className="h-3 w-3" />
-                    VERIFIED
-                  </span>
-                )}
-                {store.hours && (
-                  <span className="text-white/70 text-xs">{store.hours}</span>
-                )}
-              </div>
-              <h1 className="font-display text-2xl sm:text-3xl font-semibold text-white">
-                {store.name}
-              </h1>
-              <p className="text-white/70 text-sm mt-0.5">{categoryLabel}</p>
-            </div>
-
-            {/* Edit button (owner, desktop) */}
-            {isOwner && (
-              <Link
-                href={`/stores/${store.id}/edit`}
-                className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white text-sm font-semibold hover:bg-white/30 transition-colors shrink-0"
+        <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
+          <div className="max-w-5xl mx-auto">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
+              <span
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                  isActive ? "bg-green-500 text-white" : "bg-gray-500 text-white"
+                }`}
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                  <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                </svg>
-                Edit store
-              </Link>
-            )}
+                <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                {isActive ? "OPEN" : "CLOSED"}
+              </span>
+              {store.isVerified && (
+                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-500 text-white text-[10px] font-bold">
+                  <CheckCircle2 className="h-3 w-3" />
+                  VERIFIED
+                </span>
+              )}
+            </div>
+            <h1 className="font-display text-2xl sm:text-4xl font-semibold text-white leading-tight">
+              {store.name}
+            </h1>
+            <div className="flex items-center gap-2.5 mt-1.5 text-white/85 text-sm flex-wrap">
+              <span>{categoryLabel}</span>
+              <span className="w-1 h-1 rounded-full bg-white/40" />
+              <span className="flex items-center gap-1.5">
+                <Stars value={avg} size={14} />
+                {avg > 0 && <span className="font-semibold text-white">{avg.toFixed(1)}</span>}
+                <span className="text-white/70">
+                  ({reviewCount} {reviewCount === 1 ? "review" : "reviews"})
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-            {/* Chat button (desktop, non-owner) */}
-            {!isOwner && isActive && (
+      {/* Action bar */}
+      <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-border">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-x-5 gap-y-1 flex-wrap text-xs sm:text-sm text-muted-foreground min-w-0">
+            {store.location && (
+              <span className="flex items-center gap-1.5 min-w-0">
+                <MapPin className="h-4 w-4 shrink-0" />
+                <span className="truncate">{store.location}</span>
+              </span>
+            )}
+            {store.hours && (
+              <span className="flex items-center gap-1.5">
+                <Clock className="h-4 w-4 shrink-0" />
+                {store.hours}
+              </span>
+            )}
+          </div>
+
+          {isOwner ? (
+            <Link
+              href={`/stores/${store.id}/edit`}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-border text-sm font-semibold text-foreground hover:bg-surface transition-colors shrink-0"
+            >
+              <Pencil className="h-4 w-4" />
+              <span className="hidden sm:inline">Edit store</span>
+              <span className="sm:hidden">Edit</span>
+            </Link>
+          ) : (
+            isActive && (
               <Link
                 href={chatHref}
-                className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white text-sm font-semibold hover:bg-white/30 transition-colors shrink-0"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent/90 transition-colors shadow-accent-md shrink-0"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-                </svg>
-                Chat with store
+                <MessageCircle className="h-4 w-4" />
+                <span className="hidden sm:inline">Chat with store</span>
+                <span className="sm:hidden">Chat</span>
               </Link>
-            )}
-          </div>
+            )
+          )}
         </div>
       </div>
 
-      {/* Store info bar */}
-      <div className="bg-white border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-            {/* Rating */}
-            <div className="flex items-center gap-1.5">
-              <span className="flex items-center gap-0.5">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <svg
-                    key={s}
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill={s <= Math.round(avg) ? "#F59E0B" : "#D1D5DB"}
-                    stroke="none"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                  </svg>
-                ))}
-              </span>
-              {avg > 0 && (
-                <span className="text-sm font-semibold text-foreground">{avg.toFixed(1)}</span>
-              )}
-              <span className="text-xs text-muted-foreground">
-                ({store.reviews.length} {store.reviews.length === 1 ? "review" : "reviews"})
-              </span>
-            </div>
-
-            {/* Location */}
-            {store.location && (
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
-                </svg>
-                {store.location}
-              </div>
-            )}
-
-            {/* Hours */}
-            {store.hours && (
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-                </svg>
-                {store.hours}
-              </div>
-            )}
-
-            {/* Mobile: edit / chat */}
-            <div className="flex gap-2 ml-auto">
-              {isOwner && (
-                <Link
-                  href={`/stores/${store.id}/edit`}
-                  className="sm:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-semibold text-foreground"
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                  </svg>
-                  Edit
-                </Link>
-              )}
-              {!isOwner && isActive && (
-                <Link
-                  href={chatHref}
-                  className="sm:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent text-white text-xs font-semibold"
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-                  </svg>
-                  Chat
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main content + sidebar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Tabs */}
-          <div className="flex-1 min-w-0">
+      {/* Body */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+        <div className="grid lg:grid-cols-[1fr_320px] gap-6 items-start">
+          {/* Main */}
+          <div className="min-w-0 space-y-6">
+            <StoreGallery
+              storefront={store.images}
+              menu={store.menuImages}
+              storeName={store.name}
+            />
             <StoreTabs
               storeId={store.id}
               reviews={reviewsForClient}
-              info={{
-                description: store.description,
-                hours: store.hours,
-                phone: store.phone,
-                whatsapp: store.whatsapp,
-                location: store.location,
-                mapUrl: store.mapUrl,
-              }}
               isOwner={isOwner}
               canReview={canReview}
               existingRating={myReview?.rating}
@@ -275,112 +251,139 @@ export default async function StoreDetailPage({ params }: PageProps) {
           </div>
 
           {/* Sidebar */}
-          <div className="lg:w-72 shrink-0">
-            <div className="bg-white rounded-2xl border border-border p-5 sticky top-20 space-y-4">
-              {/* Owner info */}
-              <div>
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                  Sold by
-                </p>
-                <div className="flex items-center gap-3">
-                  {store.owner.avatarUrl ? (
-                    <Image
-                      src={store.owner.avatarUrl}
-                      alt={store.owner.name}
-                      width={40}
-                      height={40}
-                      className="rounded-xl object-cover"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 rounded-xl bg-accent-muted flex items-center justify-center text-sm font-semibold text-accent">
-                      {store.owner.name[0]}
-                    </div>
-                  )}
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">{store.owner.name}</p>
-                    {store.owner.username && (
-                      <Link
-                        href={`/profile/${store.owner.username}`}
-                        className="text-xs text-accent hover:underline"
-                      >
-                        @{store.owner.username}
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Chat CTA */}
-              {!isOwner && isActive && (
-                <Link
-                  href={chatHref}
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent/90 transition-colors shadow-accent-md"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-                  </svg>
-                  Chat with store
-                </Link>
-              )}
-
-              {/* Quick info */}
-              {(store.hours || store.location) && (
-                <div className="space-y-2 pt-2 border-t border-border">
-                  {store.hours && (
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-                      </svg>
-                      {store.hours}
-                    </div>
-                  )}
-                  {store.location && (
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
-                      </svg>
-                      {store.location}
-                    </div>
-                  )}
-                  {store.mapUrl && (
-                    <a
-                      href={store.mapUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-xs text-accent hover:underline"
+          <aside className="space-y-4 lg:sticky lg:top-20">
+            {/* About */}
+            <div className="bg-white rounded-2xl border border-border p-5">
+              <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                About
+              </h2>
+              <p className="text-sm text-foreground leading-relaxed whitespace-pre-line">
+                {store.description}
+              </p>
+              {store.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {store.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-xs font-medium bg-surface border border-border rounded-full px-2.5 py-1 text-muted-foreground"
                     >
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polygon points="3 11 22 2 13 21 11 13 3 11" />
-                      </svg>
-                      Get directions
-                    </a>
-                  )}
-                </div>
-              )}
-
-              {/* Image thumbnails */}
-              {store.images.length > 1 && (
-                <div className="pt-2 border-t border-border">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                    Photos
-                  </p>
-                  <div className="flex gap-2 flex-wrap">
-                    {store.images.slice(0, 4).map((img, i) => (
-                      <div key={i} className="relative w-14 h-14 rounded-xl overflow-hidden border border-border">
-                        <Image src={img} alt={`${store.name} photo ${i + 1}`} fill className="object-cover" sizes="56px" />
-                      </div>
-                    ))}
-                    {store.images.length > 4 && (
-                      <div className="w-14 h-14 rounded-xl bg-surface border border-border flex items-center justify-center text-xs font-semibold text-muted-foreground">
-                        +{store.images.length - 4}
-                      </div>
-                    )}
-                  </div>
+                      {tag}
+                    </span>
+                  ))}
                 </div>
               )}
             </div>
-          </div>
+
+            {/* Contact & hours */}
+            {hasContact && (
+              <div className="bg-white rounded-2xl border border-border p-5 space-y-3">
+                <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  Contact & hours
+                </h2>
+                {store.hours && (
+                  <Row icon={<Clock className="h-4 w-4" />} label="Hours" value={store.hours} />
+                )}
+                {store.location && (
+                  <Row icon={<MapPin className="h-4 w-4" />} label="Location" value={store.location} />
+                )}
+                {store.phone && (
+                  <a href={`tel:${store.phone}`} className="block">
+                    <Row icon={<Phone className="h-4 w-4" />} label="Phone" value={store.phone} link />
+                  </a>
+                )}
+                {whatsappHref && (
+                  <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="block">
+                    <Row
+                      icon={<MessageCircle className="h-4 w-4" />}
+                      label="WhatsApp"
+                      value={store.whatsapp!}
+                      link
+                    />
+                  </a>
+                )}
+                {store.mapUrl && (
+                  <a href={store.mapUrl} target="_blank" rel="noopener noreferrer" className="block">
+                    <Row
+                      icon={<Navigation className="h-4 w-4" />}
+                      label="Directions"
+                      value="Open in Maps"
+                      link
+                    />
+                  </a>
+                )}
+              </div>
+            )}
+
+            {/* Run by */}
+            <div className="bg-white rounded-2xl border border-border p-5">
+              <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                Run by
+              </h2>
+              <div className="flex items-center gap-3">
+                {store.owner.avatarUrl ? (
+                  <Image
+                    src={store.owner.avatarUrl}
+                    alt={store.owner.name}
+                    width={40}
+                    height={40}
+                    className="rounded-xl object-cover"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-xl bg-accent-muted flex items-center justify-center text-sm font-semibold text-accent">
+                    {store.owner.name[0]}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-foreground truncate">{store.owner.name}</p>
+                  {store.owner.username && (
+                    <Link
+                      href={`/profile/${store.owner.username}`}
+                      className="text-xs text-accent hover:underline"
+                    >
+                      @{store.owner.username}
+                    </Link>
+                  )}
+                </div>
+              </div>
+
+              {showChat && (
+                <Link
+                  href={chatHref}
+                  className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent/90 transition-colors shadow-accent-md"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  Chat with store
+                </Link>
+              )}
+            </div>
+          </aside>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function Row({
+  icon,
+  label,
+  value,
+  link = false,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  link?: boolean;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <span className={`mt-0.5 shrink-0 ${link ? "text-accent" : "text-muted-foreground"}`}>
+        {icon}
+      </span>
+      <div className="min-w-0">
+        <p className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wide">
+          {label}
+        </p>
+        <p className={`text-sm font-medium ${link ? "text-accent" : "text-foreground"}`}>{value}</p>
       </div>
     </div>
   );

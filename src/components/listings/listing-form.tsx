@@ -33,6 +33,11 @@ const CONDITIONS = [
   { value: "POOR", label: "Poor" },
 ] as const;
 
+const LISTING_TYPES = [
+  { value: "FIXED_PRICE", label: "Fixed Price" },
+  { value: "NEGOTIABLE", label: "Negotiable" },
+] as const;
+
 interface ListingFormProps {
   listing?: ListingDetail;
 }
@@ -58,12 +63,14 @@ export function ListingForm({ listing }: ListingFormProps) {
           price: listing.price,
           category: listing.category,
           condition: listing.condition,
+          listingType: listing.listingType,
           images: listing.images,
           imageKeys: [],
         }
       : {
           images: [],
           imageKeys: [],
+          listingType: "FIXED_PRICE" as const,
         },
   });
 
@@ -124,6 +131,31 @@ export function ListingForm({ listing }: ListingFormProps) {
         />
         {errors.price && (
           <p className="text-sm text-destructive">{errors.price.message}</p>
+        )}
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="listingType">Listing Type</Label>
+        <Controller
+          name="listingType"
+          control={control}
+          render={({ field }) => (
+            <select
+              id="listingType"
+              value={field.value ?? "FIXED_PRICE"}
+              onChange={field.onChange}
+              className="flex h-8 w-full rounded-lg border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {LISTING_TYPES.map((t) => (
+                <option key={t.value} value={t.value}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+          )}
+        />
+        {errors.listingType && (
+          <p className="text-sm text-destructive">{errors.listingType.message}</p>
         )}
       </div>
 

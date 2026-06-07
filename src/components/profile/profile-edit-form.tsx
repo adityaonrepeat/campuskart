@@ -70,7 +70,7 @@ export function ProfileEditForm({ initialValues }: ProfileEditFormProps) {
       <div className="space-y-1.5">
         <Label htmlFor="username">Username</Label>
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">@</span>
+          <span className="absolute left-3 top-[18%] -translate-y-1/2 text-muted-foreground text-sm">@</span>
           <Input
             id="username"
             placeholder="username"

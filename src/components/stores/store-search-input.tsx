@@ -22,7 +22,7 @@ export function StoreSearchInput({ defaultValue }: { defaultValue?: string }) {
   return (
     <div className="relative flex-1 min-w-0">
       <svg
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+        className="absolute left-3 top-[29%] -translate-y-1/2 text-muted-foreground pointer-events-none"
         width="16"
         height="16"
         viewBox="0 0 24 24"

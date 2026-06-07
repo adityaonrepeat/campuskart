@@ -13,19 +13,9 @@ interface Review {
   user: { id: string; name: string; avatarUrl: string | null };
 }
 
-interface StoreInfo {
-  description: string;
-  hours: string | null;
-  phone: string | null;
-  whatsapp: string | null;
-  location: string | null;
-  mapUrl: string | null;
-}
-
 interface StoreTabsProps {
   storeId: string;
   reviews: Review[];
-  info: StoreInfo;
   isOwner: boolean;
   canReview: boolean;
   existingRating?: number;
@@ -50,48 +40,17 @@ function StarRating({ rating, size = 12 }: { rating: number; size?: number }) {
   );
 }
 
-const INFO_ICONS = {
-  hours: (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-    </svg>
-  ),
-  location: (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
-    </svg>
-  ),
-  phone: (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 .18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
-    </svg>
-  ),
-  map: (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <polygon points="3 11 22 2 13 21 11 13 3 11" />
-    </svg>
-  ),
-};
-
-export function StoreTabs({
-  storeId,
-  reviews,
-  info,
-  isOwner,
-  canReview,
-  existingRating,
-}: StoreTabsProps) {
-  const [activeTab, setActiveTab] = useState<"listings" | "reviews" | "info">("listings");
+export function StoreTabs({ storeId, reviews, isOwner, canReview, existingRating }: StoreTabsProps) {
+  const [activeTab, setActiveTab] = useState<"listings" | "reviews">("listings");
 
   const avg =
     reviews.length > 0
       ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
       : 0;
 
-  const tabs: { key: "listings" | "reviews" | "info"; label: string }[] = [
+  const tabs: { key: "listings" | "reviews"; label: string }[] = [
     { key: "listings", label: "Listings" },
     { key: "reviews", label: `Reviews (${reviews.length})` },
-    { key: "info", label: "Info" },
   ];
 
   return (
@@ -113,12 +72,8 @@ export function StoreTabs({
         ))}
       </div>
 
-      {/* LISTINGS TAB */}
-      {activeTab === "listings" && (
-        <ListingGrid filters={{ storeId }} />
-      )}
+      {activeTab === "listings" && <ListingGrid filters={{ storeId }} />}
 
-      {/* REVIEWS TAB */}
       {activeTab === "reviews" && (
         <div className="space-y-5">
           {/* Rating summary */}
@@ -215,79 +170,6 @@ export function StoreTabs({
               <StoreReviewForm storeId={storeId} existingRating={existingRating} />
             </div>
           )}
-        </div>
-      )}
-
-      {/* INFO TAB */}
-      {activeTab === "info" && (
-        <div className="bg-white rounded-2xl border border-border p-6 space-y-5">
-          <div>
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-              About
-            </h3>
-            <p className="text-sm text-foreground leading-relaxed">{info.description}</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {info.hours && (
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-surface">
-                <span className="text-accent mt-0.5">{INFO_ICONS.hours}</span>
-                <div>
-                  <p className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wide">Hours</p>
-                  <p className="text-sm text-foreground font-medium">{info.hours}</p>
-                </div>
-              </div>
-            )}
-            {info.location && (
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-surface">
-                <span className="text-accent mt-0.5">{INFO_ICONS.location}</span>
-                <div>
-                  <p className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wide">Location</p>
-                  <p className="text-sm text-foreground font-medium">{info.location}</p>
-                </div>
-              </div>
-            )}
-            {info.phone && (
-              <a
-                href={`tel:${info.phone}`}
-                className="flex items-start gap-3 p-3 rounded-xl bg-surface hover:bg-surface-2 transition-colors"
-              >
-                <span className="text-accent mt-0.5">{INFO_ICONS.phone}</span>
-                <div>
-                  <p className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wide">Phone</p>
-                  <p className="text-sm text-accent font-medium">{info.phone}</p>
-                </div>
-              </a>
-            )}
-            {info.whatsapp && (
-              <a
-                href={`https://wa.me/${info.whatsapp.replace(/\D/g, "")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-3 p-3 rounded-xl bg-surface hover:bg-surface-2 transition-colors"
-              >
-                <span className="text-accent mt-0.5">{INFO_ICONS.phone}</span>
-                <div>
-                  <p className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wide">WhatsApp</p>
-                  <p className="text-sm text-accent font-medium">{info.whatsapp}</p>
-                </div>
-              </a>
-            )}
-            {info.mapUrl && (
-              <a
-                href={info.mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-3 p-3 rounded-xl bg-surface hover:bg-surface-2 transition-colors"
-              >
-                <span className="text-accent mt-0.5">{INFO_ICONS.map}</span>
-                <div>
-                  <p className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wide">Directions</p>
-                  <p className="text-sm text-accent font-medium">Open in Maps</p>
-                </div>
-              </a>
-            )}
-          </div>
         </div>
       )}
     </div>

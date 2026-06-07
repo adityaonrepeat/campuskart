@@ -9,11 +9,12 @@ export function AdminNav({ isAdmin }: { isAdmin: boolean }) {
 
   const tabs = [
     { label: "Listings", href: "/admin/listings" },
+    { label: "Stores", href: "/admin/stores" },
     ...(isAdmin ? [{ label: "Mod Log", href: "/admin/mod-log" }] : []),
   ];
 
   return (
-    <div className="flex gap-1 border-b">
+    <div className="flex gap-1 border-b overflow-x-auto">
       {tabs.map((tab) => (
         <Link
           key={tab.href}

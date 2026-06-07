@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { StoreGrid } from "@/components/stores/store-grid";
 import { StoreSearchInput } from "@/components/stores/store-search-input";
+import AppHeader from "@/components/AppHeader";
 
 const FOOD_TAGS = [
   { label: "All", value: "" },
@@ -31,34 +32,10 @@ export default async function StoresPage({ searchParams }: PageProps) {
 
   return (
     <div>
-      {/* Hero banner */}
-      <div className="bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-accent blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-accent-light blur-3xl" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
-          <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 text-accent-light text-xs font-semibold tracking-widest uppercase mb-3">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-              Campus Stores
-            </span>
-            <h1 className="font-display text-3xl sm:text-4xl font-semibold text-white mb-3 leading-tight">
-              Order from stores<br />
-              <span className="text-accent-light italic">on your campus</span>
-            </h1>
-            <p className="text-white/60 text-sm leading-relaxed">
-              Browse restaurants, cafes, and campus shops. Chat with sellers, place orders, and get it delivered to your dorm.
-            </p>
-          </div>
-        </div>
-      </div>
+      <AppHeader user={{ name: session?.user.name ?? "User", avatarUrl: session?.user.avatarUrl }} forceScrolled showAdmin={session?.user.role === "MODERATOR" || session?.user.role === "ADMIN"} />
 
       {/* Search + filters bar */}
-      <div className="bg-white border-b border-border sticky top-0 z-30">
+      <div className="bg-white border-b border-border sticky top-16 z-30 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex flex-row gap-2 items-center">
             <StoreSearchInput defaultValue={search} />

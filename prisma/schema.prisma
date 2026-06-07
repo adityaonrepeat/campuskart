@@ -253,7 +253,8 @@ model Store {
   phone        String?
   whatsapp     String?
   category     StoreCategory
-  images       String[]
+  images       String[]      // storefront photos (first is cover)
+  menuImages   String[]      // menu / product photos
   location     String?       // campus location text (e.g. "Block C, Ground Floor")
   mapUrl       String?       // Google Maps share URL added by owner
   hours        String?       // free-text hours (e.g. "Mon–Fri 9 am–7 pm")

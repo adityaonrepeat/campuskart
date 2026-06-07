@@ -147,16 +147,22 @@ export function StoreForm({ store }: StoreFormProps) {
           tags: store.tags,
           images: store.images,
           imageKeys: [],
+          menuImages: store.menuImages,
+          menuImageKeys: [],
         }
       : {
           tags: [],
           images: [],
           imageKeys: [],
+          menuImages: [],
+          menuImageKeys: [],
         },
   });
 
   const images = watch("images") ?? [];
   const imageKeys = watch("imageKeys") ?? [];
+  const menuImages = watch("menuImages") ?? [];
+  const menuImageKeys = watch("menuImageKeys") ?? [];
   const tags = watch("tags") ?? [];
 
   function toggleTag(tag: string) {
@@ -368,9 +374,13 @@ export function StoreForm({ store }: StoreFormProps) {
         </div>
       </section>
 
-      {/* ── Photos ── */}
+      {/* ── Storefront photos ── */}
       <section className="space-y-4">
-        <SectionHeader icon="image" title="Photos" sub="Show your store, menu, or products (max 10)" />
+        <SectionHeader
+          icon="image"
+          title="Storefront photos"
+          sub="Your shop, counter or stall — the first photo becomes the cover (max 10)"
+        />
         <ImageUploader
           value={images.map((url, i) => ({ url, key: imageKeys[i] ?? url }))}
           onChange={(imgs) => {
@@ -381,6 +391,25 @@ export function StoreForm({ store }: StoreFormProps) {
           maxFiles={10}
         />
         {errors.images && <p className="text-xs text-destructive">{errors.images.message}</p>}
+      </section>
+
+      {/* ── Menu / product photos ── */}
+      <section className="space-y-4">
+        <SectionHeader
+          icon="menu"
+          title="Menu / product photos"
+          sub="Your menu card or photos of what you sell — shown in a separate section (max 10)"
+        />
+        <ImageUploader
+          value={menuImages.map((url, i) => ({ url, key: menuImageKeys[i] ?? url }))}
+          onChange={(imgs) => {
+            setValue("menuImages", imgs.map((i) => i.url), { shouldValidate: true });
+            setValue("menuImageKeys", imgs.map((i) => i.key));
+          }}
+          disabled={isSubmitting}
+          maxFiles={10}
+        />
+        {errors.menuImages && <p className="text-xs text-destructive">{errors.menuImages.message}</p>}
       </section>
 
       {/* ── Default quick replies notice ── */}
@@ -412,7 +441,7 @@ export function StoreForm({ store }: StoreFormProps) {
 
 // ── Shared section header ──────────────────────────────────────────────────────
 
-type IconName = "store" | "tag" | "clock" | "phone" | "image";
+type IconName = "store" | "tag" | "clock" | "phone" | "image" | "menu";
 
 const ICONS: Record<IconName, React.ReactElement> = {
   store: (
@@ -440,6 +469,11 @@ const ICONS: Record<IconName, React.ReactElement> = {
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366F1" strokeWidth="2">
       <rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" />
       <polyline points="21 15 16 10 5 21" />
+    </svg>
+  ),
+  menu: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366F1" strokeWidth="2">
+      <path d="M3 3h18v4H3zM3 11h18M3 16h18M3 21h18" />
     </svg>
   ),
 };

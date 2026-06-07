@@ -17,9 +17,10 @@ import { moderateListing } from "@/actions/admin-actions";
 interface RemoveListingButtonProps {
   listingId: string;
   title: string;
+  isAdmin?: boolean;
 }
 
-export function RemoveListingButton({ listingId, title }: RemoveListingButtonProps) {
+export function RemoveListingButton({ listingId, title, isAdmin = false }: RemoveListingButtonProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -50,7 +51,9 @@ export function RemoveListingButton({ listingId, title }: RemoveListingButtonPro
           <DialogHeader>
             <DialogTitle>Remove listing?</DialogTitle>
             <DialogDescription>
-              &ldquo;{title}&rdquo; will be archived and hidden from all users.
+              {isAdmin
+                ? `"${title}" will be permanently deleted and cannot be recovered.`
+                : `"${title}" will be archived and hidden from all users.`}
             </DialogDescription>
           </DialogHeader>
           <textarea

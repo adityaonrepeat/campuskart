@@ -38,12 +38,9 @@ export async function moderateListing(
     return { success: false, error: "Forbidden" };
   }
 
-  await db.$transaction([
-    db.listing.update({
-      where: { id: listingId },
-      data: { status: "ARCHIVED" },
-    }),
-    db.moderationLog.create({
+  if (user.role === "ADMIN") {
+    // Log first (no FK on listingId), then hard delete
+    await db.moderationLog.create({
       data: {
         moderatorId: user.id,
         listingId,
@@ -52,8 +49,26 @@ export async function moderateListing(
         collegeId: listing.collegeId,
         reason: reason?.trim() || null,
       },
-    }),
-  ]);
+    });
+    await db.listing.delete({ where: { id: listingId } });
+  } else {
+    await db.$transaction([
+      db.listing.update({
+        where: { id: listingId },
+        data: { status: "ARCHIVED" },
+      }),
+      db.moderationLog.create({
+        data: {
+          moderatorId: user.id,
+          listingId,
+          listingTitle: listing.title,
+          sellerName: listing.seller.name,
+          collegeId: listing.collegeId,
+          reason: reason?.trim() || null,
+        },
+      }),
+    ]);
+  }
 
   revalidatePath("/admin/listings");
   revalidatePath("/listings");

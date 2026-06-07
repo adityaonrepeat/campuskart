@@ -60,6 +60,7 @@ export async function createStore(
       quickReplies: DEFAULT_QUICK_REPLIES,
       tags: data.tags,
       images: data.images,
+      menuImages: data.menuImages,
       ownerId: user.id,
       collegeId: user.collegeId,
     },
@@ -78,7 +79,7 @@ export async function updateStore(
 
   const existing = await db.store.findUnique({
     where: { id: storeId },
-    select: { ownerId: true, images: true },
+    select: { ownerId: true, images: true, menuImages: true },
   });
   if (!existing) return { success: false, error: "Store not found" };
   if (existing.ownerId !== user.id) return { success: false, error: "Forbidden" };
@@ -103,11 +104,18 @@ export async function updateStore(
       ...(data.hours !== undefined && { hours: data.hours }),
       ...(data.tags !== undefined && { tags: data.tags }),
       ...(data.images !== undefined && { images: data.images }),
+      ...(data.menuImages !== undefined && { menuImages: data.menuImages }),
     },
   });
 
-  if (data.images && data.images.length > 0 && existing.images.length > 0) {
-    const removedUrls = existing.images.filter((u) => !data.images!.includes(u));
+  const removedUrls: string[] = [];
+  if (data.images !== undefined) {
+    removedUrls.push(...existing.images.filter((u) => !data.images!.includes(u)));
+  }
+  if (data.menuImages !== undefined) {
+    removedUrls.push(...existing.menuImages.filter((u) => !data.menuImages!.includes(u)));
+  }
+  if (removedUrls.length > 0) {
     const oldKeys = removedUrls
       .map((url) => url.split("/").pop())
       .filter((k): k is string => Boolean(k));
