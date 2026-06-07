@@ -9,13 +9,13 @@ function getIp(request: NextRequest): string {
   );
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/api/auth/sign-in/") || pathname.startsWith("/api/auth/sign-up/")) {
     const ip = getIp(request);
     const limiter =
-      pathname === "/api/auth/sign-up" ? signUpRatelimit : signInRatelimit;
+      pathname.startsWith("/api/auth/sign-up") ? signUpRatelimit : signInRatelimit;
 
     const { success, limit, remaining, reset } = await limiter.limit(ip);
 
@@ -53,6 +53,7 @@ export const config = {
     "/api/auth/sign-in/:path*",
     "/api/auth/sign-up/:path*",
     "/listings/:path*",
+    "/stores/:path*",
     "/chat/:path*",
     "/orders/:path*",
     "/profile/:path*",
