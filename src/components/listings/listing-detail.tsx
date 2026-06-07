@@ -187,9 +187,9 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                   </div>
                 )}
 
-                {listing.listingType === "BIDDING" && !isSold && (
+                {listing.listingType === "NEGOTIABLE" && !isSold && (
                   <span className="absolute top-4 left-4 tag-pill bg-amber-100 text-amber-700 text-xs">
-                    Open to offers
+                    Negotiable
                   </span>
                 )}
 
@@ -264,7 +264,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                       ₹{listing.price.toLocaleString("en-IN")}
                     </p>
                     <p className="text-sm font-medium text-muted mt-1">
-                      {listing.listingType === "BIDDING" ? "Open to offers" : "Fixed price"}
+                      {listing.listingType === "NEGOTIABLE" ? "Negotiable" : "Fixed price"}
                     </p>
                   </div>
                   <div className="text-right">

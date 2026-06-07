@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
 
   const listingTypeFilter: Prisma.ListingWhereInput =
     tab === "bidding"
-      ? { listingType: "BIDDING" }
+      ? { listingType: "NEGOTIABLE" }
       : tab === "buynow"
         ? { listingType: "FIXED_PRICE" }
         : {};

@@ -23,7 +23,7 @@ export const createListingSchema = z.object({
     "OTHER",
   ]),
   condition: z.enum(["NEW", "LIKE_NEW", "GOOD", "FAIR", "POOR"]),
-  listingType: z.enum(["FIXED_PRICE", "BIDDING"]),
+  listingType: z.enum(["FIXED_PRICE", "NEGOTIABLE"]),
   images: z
     .array(z.string().url("Invalid image URL"))
     .min(1, "At least one image is required")

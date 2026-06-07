@@ -70,7 +70,7 @@ export default function ListingCard({ listing }: { listing: ListingCardType }) {
         <span className={`absolute top-3 left-3 tag-pill text-[10px] ${conditionColor(listing.condition)}`}>
           {CONDITION_LABEL[listing.condition] ?? listing.condition}
         </span>
-        {listing.listingType === "BIDDING" && !isDimmed && (
+        {listing.listingType === "NEGOTIABLE" && !isDimmed && (
           <span className="absolute top-3 right-3 tag-pill bg-accent text-white text-[10px]">
             Negotiable
           </span>
@@ -120,7 +120,7 @@ export default function ListingCard({ listing }: { listing: ListingCardType }) {
           <div className="text-right">
             <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Type</p>
             <p className="text-sm font-semibold text-foreground">
-              {listing.listingType === "BIDDING" ? "Negotiable" : "Fixed Price"}
+              {listing.listingType === "NEGOTIABLE" ? "Negotiable" : "Fixed Price"}
             </p>
           </div>
         </div>
