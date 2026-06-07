@@ -11,7 +11,9 @@ export default defineConfig({
     seed: "npx tsx prisma/seed.ts",
   },
   datasource: {
-    url: process.env["DATABASE_URL"] ?? "",
-    directUrl: process.env["DIRECT_URL"],
+    // Prisma 7: the CLI (migrate / db push / studio) uses this single `url`.
+    // Prefer the direct (unpooled) Neon URL here; the app runtime connects via the
+    // pooled DATABASE_URL in src/lib/db.ts. `directUrl` is no longer a valid key.
+    url: process.env["DIRECT_URL"] || process.env["DATABASE_URL"] || "",
   },
 });

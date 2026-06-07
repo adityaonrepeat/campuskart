@@ -136,7 +136,7 @@ enum ListingStatus {
 
 enum ListingType {
   FIXED_PRICE
-  BIDDING
+  NEGOTIABLE
 }
 
 model Listing {

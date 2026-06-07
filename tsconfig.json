@@ -30,5 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "socket-server", "rocket-ui"]
+  "exclude": ["node_modules", "socket-server", "rocket-ui", "tests"]
 }
