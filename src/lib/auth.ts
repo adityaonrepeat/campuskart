@@ -12,14 +12,41 @@ export const auth = betterAuth({
           if (!user.email.toLowerCase().endsWith("@gmail.com")) {
             throw new Error("Only Gmail addresses are allowed");
           }
+
+          const typed = user as { collegeId?: string; username?: string };
+
+          // OAuth signups have no username — generate one from name/email
+          if (!typed.username) {
+            const base = (user.name ?? user.email.split("@")[0])
+              .toLowerCase()
+              .replace(/[^a-z0-9]/g, "")
+              .slice(0, 20) || "user";
+            const suffix = Math.floor(Math.random() * 9000 + 1000);
+            const generated = `${base}${suffix}`;
+            // check uniqueness; retry once if collision
+            const exists = await db.user.findUnique({ where: { username: generated }, select: { id: true } });
+            typed.username = exists
+              ? `${base}${Math.floor(Math.random() * 90000 + 10000)}`
+              : generated;
+          }
+
+          // OAuth signups have no collegeId yet — /complete-profile collects it after
+          if (!typed.collegeId) return { data: user };
           const college = await db.college.findUnique({
-            where: { id: (user as { collegeId?: string }).collegeId ?? "" },
+            where: { id: typed.collegeId },
             select: { id: true },
           });
           if (!college) throw new Error("Invalid college");
           return { data: user };
         },
       },
+    },
+  },
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google"],
+      requireLocalEmailVerified: false,
     },
   },
   emailAndPassword: {

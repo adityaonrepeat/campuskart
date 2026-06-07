@@ -58,7 +58,7 @@ export function RegisterForm() {
 
   async function handleGoogleSignIn() {
     setIsPending(true);
-    const result = await signIn.social({ provider: "google", callbackURL: "/listings" });
+    const result = await signIn.social({ provider: "google", callbackURL: "/complete-profile" });
     if (result?.error) {
       toast.error(result.error.message ?? "Google sign-in failed. Please try again.");
       setIsPending(false);
