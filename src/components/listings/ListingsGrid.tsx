@@ -163,7 +163,7 @@ export default function ListingsGrid({ filters }: ListingsGridProps) {
         {/* List an Item */}
         <Link
           href="/listings/new"
-          className="btn-shimmer w-full h-11 flex items-center justify-center gap-2 text-white font-semibold rounded-xl text-sm"
+          className="bg-accent w-full h-11 flex items-center justify-center gap-2 text-white font-semibold rounded-xl text-sm hover:bg-accent/90 transition-colors duration-200"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
             <path d="M12 5v14M5 12h14" />

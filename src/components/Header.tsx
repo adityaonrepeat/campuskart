@@ -43,7 +43,7 @@ export default function Header({ forceScrolled = false }: { forceScrolled?: bool
           <Link href="/" className="flex items-center gap-2.5 group">
             <AppLogo size={36} />
             <span
-              className={`font-display text-xl font-semibold tracking-tight transition-colors duration-300 ${
+              className={`font-serif text-xl font-semibold tracking-tight transition-colors duration-300 ${
                 scrolled ? 'text-primary' : 'text-white'
               }`}
             >
@@ -118,7 +118,7 @@ export default function Header({ forceScrolled = false }: { forceScrolled?: bool
         <div className="header-mobile-panel fixed top-0 left-0 right-0 z-50 bg-white pt-20 pb-8 px-6 shadow-xl mobile-menu-open">
           <div className="flex items-center gap-2.5 mb-8">
             <AppLogo size={32} />
-            <span className="font-display text-lg font-semibold text-primary">CampusKart</span>
+            <span className="font-serif text-lg font-semibold text-primary">CampusKart</span>
           </div>
           <nav className="flex flex-col gap-1 mb-8">
             {navLinks.map((link) => (

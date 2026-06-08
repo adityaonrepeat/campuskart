@@ -178,7 +178,7 @@ export function FilterSidebar({ onClose }: FilterSidebarProps) {
 
       <button
         onClick={applyFilters}
-        className="w-full btn-shimmer text-white font-semibold py-3 rounded-xl text-sm"
+        className="w-full bg-accent text-white font-semibold py-3 rounded-xl text-sm hover:bg-accent/90 transition-colors duration-200"
       >
         Apply Filters
       </button>

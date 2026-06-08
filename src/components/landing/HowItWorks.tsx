@@ -101,7 +101,7 @@ export default function HowItWorks() {
           {STEPS?.map((step, i) => (
             <div
               key={step?.number}
-              className={`aos-elem delay-${(i + 1) * 100} group relative p-7 rounded-2xl border border-border bg-surface hover:border-accent/30 hover:shadow-card-hover transition-all duration-400`}
+              className={`aos-elem delay-${(i + 1) * 100} group relative p-7 rounded-2xl border border-border bg-surface hover:border-accent/30 hover:shadow-card-hover transition-all duration-400 flex flex-col`}
             >
               {/* Number */}
               <span className="absolute top-5 right-6 text-[40px] font-display font-semibold text-border leading-none select-none">
@@ -118,7 +118,7 @@ export default function HowItWorks() {
               <p className="text-muted text-sm leading-relaxed mb-4">{step?.description}</p>
 
               {/* Detail pill */}
-              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-accent">
+              <span className="mt-auto inline-flex items-center gap-1.5 text-xs font-medium text-accent">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                 {step?.detail}
               </span>
