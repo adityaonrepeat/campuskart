@@ -4,81 +4,81 @@ import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 
 const LISTINGS = [
-{
-  id: 1,
-  title: 'Organic Chemistry Textbook (9th Ed.)',
-  category: 'Textbooks',
-  image: "/featured-1.png",
-  alt: 'Organic chemistry textbook open on clean white desk, well-lit study space',
-  currentBid: 450,
-  minBid: 300,
-  seller: 'Priya M.',
-  sellerAvatar: "/featured-1.png",
-  rating: 4.8,
-  reviews: 12,
-  timeLeft: '2h 14m',
-  bids: 5,
-  condition: 'Good',
-  college: 'IIT Bombay'
-},
-{
-  id: 2,
-  title: 'Yonex Badminton Racket',
-  category: 'Sports & Fitness',
-  image: "https://images.unsplash.com/photo-1733141731756-2d817614a15f",
-  alt: 'Badminton racket on gym floor with shuttlecock, bright indoor lighting',
-  currentBid: 650,
-  minBid: 400,
-  seller: 'Marcus T.',
-  sellerAvatar: "https://images.unsplash.com/photo-1733141731756-2d817614a15f",
-  rating: 4.6,
-  reviews: 8,
-  timeLeft: '5h 32m',
-  bids: 3,
-  condition: 'Like New',
-  college: 'BITS Pilani'
-},
-{
-  id: 3,
-  title: 'MacBook Pro 13" Charger (USB-C)',
-  category: 'Electronics',
-  image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0",
-  alt: 'MacBook charger cable on clean white surface, minimal tech product photo',
-  currentBid: 1200,
-  minBid: 900,
-  seller: 'Jordan K.',
-  sellerAvatar: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0",
-  rating: 5.0,
-  reviews: 21,
-  timeLeft: '1h 08m',
-  bids: 9,
-  condition: 'Like New',
-  college: 'IIT Delhi'
-},
-{
-  id: 4,
-  title: 'Lululemon Yoga Mat (6mm)',
-  category: 'Sports & Fitness',
-  image: "/featured-2.png",
-  alt: 'Purple yoga mat rolled out on light wood floor, bright airy studio space',
-  currentBid: 350,
-  minBid: 250,
-  seller: 'Aisha N.',
-  sellerAvatar: "/featured-2.png",
-  rating: 4.9,
-  reviews: 6,
-  timeLeft: '12h 00m',
-  bids: 2,
-  condition: 'Good',
-  college: 'VIT Vellore'
-}];
+  {
+    id: 1,
+    title: 'Organic Chemistry Textbook (9th Ed.)',
+    category: 'Textbooks',
+    image: "/featured-1.png",
+    alt: 'Organic chemistry textbook open on clean white desk, well-lit study space',
+    currentBid: 450,
+    minBid: 300,
+    seller: 'Priya M.',
+    sellerAvatar: "/featured-1.png",
+    rating: 4.8,
+    reviews: 12,
+    timeLeft: '2h 14m',
+    bids: 5,
+    condition: 'Good',
+    college: 'IIT Bombay'
+  },
+  {
+    id: 2,
+    title: 'Yonex Badminton Racket',
+    category: 'Sports & Fitness',
+    image: "https://images.unsplash.com/photo-1733141731756-2d817614a15f",
+    alt: 'Badminton racket on gym floor with shuttlecock, bright indoor lighting',
+    currentBid: 650,
+    minBid: 400,
+    seller: 'Marcus T.',
+    sellerAvatar: "https://images.unsplash.com/photo-1733141731756-2d817614a15f",
+    rating: 4.6,
+    reviews: 8,
+    timeLeft: '5h 32m',
+    bids: 3,
+    condition: 'Like New',
+    college: 'BITS Pilani'
+  },
+  {
+    id: 3,
+    title: 'MacBook Pro 13" Charger (USB-C)',
+    category: 'Electronics',
+    image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0",
+    alt: 'MacBook charger cable on clean white surface, minimal tech product photo',
+    currentBid: 1200,
+    minBid: 900,
+    seller: 'Jordan K.',
+    sellerAvatar: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0",
+    rating: 5.0,
+    reviews: 21,
+    timeLeft: '1h 08m',
+    bids: 9,
+    condition: 'Like New',
+    college: 'IIT Delhi'
+  },
+  {
+    id: 4,
+    title: 'Lululemon Yoga Mat (6mm)',
+    category: 'Sports & Fitness',
+    image: "/featured-2.png",
+    alt: 'Purple yoga mat rolled out on light wood floor, bright airy studio space',
+    currentBid: 350,
+    minBid: 250,
+    seller: 'Aisha N.',
+    sellerAvatar: "/featured-2.png",
+    rating: 4.9,
+    reviews: 6,
+    timeLeft: '12h 00m',
+    bids: 2,
+    condition: 'Good',
+    college: 'VIT Vellore'
+  }];
 
 
-function StarRating({ rating }: {rating: number;}) {
+function StarRating({ rating }: { rating: number; }) {
   return (
     <span className="flex items-center gap-0.5">
       {[1, 2, 3, 4, 5].map((s) =>
-      <svg key={s} width="10" height="10" viewBox="0 0 24 24" fill={s <= Math.round(rating) ? '#F59E0B' : '#D1D5DB'} stroke="none">
+        <svg key={s} width="10" height="10" viewBox="0 0 24 24" fill={s <= Math.round(rating) ? '#F59E0B' : '#D1D5DB'} stroke="none">
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
         </svg>
       )}
@@ -126,20 +126,19 @@ export default function FeaturedListings() {
         {/* Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {LISTINGS.map((item, i) =>
-          <div key={item.id} className={`aos-elem delay-${(i + 1) * 100} listing-card`}>
+            <div key={item.id} className={`aos-elem delay-${(i + 1) * 100} listing-card`}>
               {/* Image */}
               <div className="img-zoom relative h-44">
                 <AppImage
-                src={item.image}
-                alt={item.alt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" />
-              
+                  src={item.image}
+                  alt={item.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" />
+
                 {/* Condition badge */}
-                <span className={`absolute top-3 left-3 tag-pill text-[10px] ${
-              item.condition === 'Like New' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`
-              }>
+                <span className={`absolute top-3 left-3 tag-pill text-[10px] ${item.condition === 'Like New' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`
+                }>
                   {item.condition}
                 </span>
                 {/* Category */}
@@ -186,9 +185,9 @@ export default function FeaturedListings() {
 
                 {/* CTA */}
                 <Link
-                href="/listings"
-                className="block w-full text-center bg-accent text-white text-xs font-semibold py-2.5 rounded-xl hover:bg-accent/90 transition-colors duration-200">
-                
+                  href="/listings"
+                  className="block w-full text-center bg-accent text-white text-xs font-semibold py-2.5 rounded-xl hover:bg-accent/90 transition-colors duration-200">
+
                   Place Bid
                 </Link>
               </div>

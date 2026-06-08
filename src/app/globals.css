@@ -8,10 +8,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
-  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-display: var(--font-playfair), Georgia, serif;
   --color-navy: var(--ck-navy);
   --color-surface: var(--ck-surface);
   --color-surface-2: var(--ck-surface-2);
@@ -76,8 +76,8 @@
   --ck-muted-text: #6B7280;
   --ck-border: #E5E4E0;
   /* Font aliases used in inline styles */
-  --font-body: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
-  --font-display-var: var(--font-fraunces), 'Fraunces', Georgia, serif;
+  --font-body: var(--font-inter), 'Inter', system-ui, sans-serif;
+  --font-display-var: var(--font-playfair), 'Playfair Display', Georgia, serif;
 
   /* shadcn tokens — mapped to CampusKart palette */
   --background: oklch(0.978 0.003 80);
@@ -154,23 +154,23 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+    font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
   html {
-    font-family: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+    font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
     scroll-behavior: smooth;
   }
 }
 
 /* ─── Font utilities (explicit — Tailwind v4 may not generate these) ── */
 .font-display {
-  font-family: var(--font-fraunces), 'Fraunces', Georgia, serif;
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
 }
 .font-body, .font-sans {
-  font-family: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
 /* ─── Custom scrollbar ─────────────────────────────────────────── */
@@ -329,7 +329,7 @@
   width: 100%;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   outline: none;
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
 .input-field:focus {
   border-color: #4F46E5;
@@ -607,7 +607,7 @@ input[type="range"] { accent-color: var(--ck-accent); }
   outline: none;
   appearance: none;
   cursor: pointer;
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
 .select-field:focus {
   border-color: #4F46E5;

@@ -113,7 +113,7 @@ export default function ListingCard({ listing }: { listing: ListingCardType }) {
         <div className="flex items-end justify-between mb-2 pb-2 border-b border-border">
           <div>
             <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Price</p>
-            <p className="text-xl font-display font-semibold text-accent">
+            <p className="text-xl font-semibold text-accent">
               ₹{listing.price.toLocaleString("en-IN")}
             </p>
           </div>

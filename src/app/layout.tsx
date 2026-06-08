@@ -1,23 +1,21 @@
 import type { Metadata } from "next";
-import { Fraunces, DM_Sans, Geist_Mono } from "next/font/google";
+import { Playfair_Display, Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/shared/providers";
 import { Toaster } from "@/components/ui/sonner";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
   display: "swap",
   style: ["normal", "italic"],
-  axes: ["opsz", "SOFT", "WONK"],
 });
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
   style: ["normal", "italic"],
-  axes: ["opsz"],
 });
 
 const geistMono = Geist_Mono({
@@ -39,7 +37,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${fraunces.variable} ${dmSans.variable} ${geistMono.variable} h-full`}
+      className={`${playfair.variable} ${inter.variable} ${geistMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>

@@ -4,23 +4,23 @@ import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 
 const COLLEGES = [
-'Select your college...',
-'IIT Bombay',
-'IIT Delhi',
-'IIT Madras',
-'BITS Pilani',
-'NIT Trichy',
-'VIT Vellore',
-'Anna University',
-'Delhi Technological University'];
+  'Select your college...',
+  'IIT Bombay',
+  'IIT Delhi',
+  'IIT Madras',
+  'BITS Pilani',
+  'NIT Trichy',
+  'VIT Vellore',
+  'Anna University',
+  'Delhi Technological University'];
 
 
 const LIVE_BIDS = [
-{ item: 'Calculus Textbook', bid: '₹450', college: 'IIT Bombay' },
-{ item: 'Badminton Racket', bid: '₹650', college: 'BITS Pilani' },
-{ item: 'MacBook Charger', bid: '₹1,200', college: 'IIT Delhi' },
-{ item: 'Yoga Mat', bid: '₹350', college: 'VIT Vellore' },
-{ item: 'Mini Fridge', bid: '₹3,500', college: 'NIT Trichy' }];
+  { item: 'Calculus Textbook', bid: '₹450', college: 'IIT Bombay' },
+  { item: 'Badminton Racket', bid: '₹650', college: 'BITS Pilani' },
+  { item: 'MacBook Charger', bid: '₹1,200', college: 'IIT Delhi' },
+  { item: 'Yoga Mat', bid: '₹350', college: 'VIT Vellore' },
+  { item: 'Mini Fridge', bid: '₹3,500', college: 'NIT Trichy' }];
 
 
 export default function HeroSection() {
@@ -53,12 +53,12 @@ export default function HeroSection() {
       ref={heroRef}
       className="relative min-h-screen flex flex-col justify-end overflow-hidden grain-overlay"
       style={{ minHeight: '100vh' }}>
-      
+
       {/* Background Image with Parallax */}
       <div
         className="absolute inset-0 z-0"
         style={{ transform: `translateY(${parallaxY}px)`, willChange: 'transform' }}>
-        
+
         <AppImage
           src="/hero-banner.png"
           alt="Students on a vibrant college campus lawn, warm afternoon light, busy walkways, lush green trees, airy open space"
@@ -66,7 +66,7 @@ export default function HeroSection() {
           priority
           className="object-cover object-center"
           sizes="100vw" />
-        
+
       </div>
       {/* Gradient Scrim — dark at bottom for white text */}
       <div className="absolute inset-0 z-[1]" style={{
@@ -113,9 +113,9 @@ export default function HeroSection() {
                 onChange={(e) => setCollege(e?.target?.value)}
                 className="w-full bg-white/95 text-foreground text-sm font-medium rounded-xl px-4 py-3.5 outline-none border-none appearance-none cursor-pointer pr-10 shadow-lg"
                 style={{ fontFamily: 'var(--font-body)' }}>
-                
+
                 {COLLEGES?.map((c) =>
-                <option key={c} value={c === 'Select your college...' ? '' : c}>{c}</option>
+                  <option key={c} value={c === 'Select your college...' ? '' : c}>{c}</option>
                 )}
               </select>
               <svg className="absolute right-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -125,7 +125,7 @@ export default function HeroSection() {
             <Link
               href="/listings"
               className="btn-shimmer text-white font-semibold px-7 py-3.5 rounded-xl shadow-accent-md whitespace-nowrap text-sm hover:shadow-accent-lg transition-shadow duration-300 text-center">
-              
+
               Browse Listings
             </Link>
           </div>
@@ -135,7 +135,7 @@ export default function HeroSection() {
             <Link
               href="/signup"
               className="text-white/80 text-sm font-medium hover:text-white transition-colors flex items-center gap-2 group">
-              
+
               <span className="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white/10 transition-colors">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M5 12h14M12 5l7 7-7 7" />

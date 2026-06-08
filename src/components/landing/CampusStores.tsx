@@ -4,48 +4,48 @@ import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 
 const STORES = [
-{
-  id: 1,
-  name: "The Campus Grind",
-  type: "Café & Beverages",
-  image: "/campus-stores.png",
-  alt: 'Warm cozy campus café with coffee cups, wooden furniture, bright natural light streaming in',
-  rating: 4.7,
-  reviews: 84,
-  college: 'IIT Bombay',
-  items: 24,
-  featured: ['Cold Brew', 'Matcha Latte', 'Avocado Toast'],
-  badge: 'Popular',
-  badgeColor: 'bg-amber-100 text-amber-700'
-},
-{
-  id: 2,
-  name: "StudyFuel Kitchen",
-  type: "Meals & Bowls",
-  image: "https://images.unsplash.com/photo-1604908815567-c9727d53f92a",
-  alt: 'Colorful healthy grain bowls with fresh vegetables on clean white table, bright studio lighting',
-  rating: 4.9,
-  reviews: 112,
-  college: 'BITS Pilani',
-  items: 18,
-  featured: ['Grain Bowl', 'Protein Wrap', 'Smoothie'],
-  badge: 'Top Rated',
-  badgeColor: 'bg-emerald-100 text-emerald-700'
-},
-{
-  id: 3,
-  name: "Dorm Essentials Co.",
-  type: "Stationery & Supplies",
-  image: "https://images.unsplash.com/photo-1496128858413-b36217c2ce36",
-  alt: 'Neatly arranged stationery, notebooks, pens on bright desk, clean minimal product display',
-  rating: 4.5,
-  reviews: 47,
-  college: 'IIT Delhi',
-  items: 63,
-  featured: ['Notebooks', 'Highlighters', 'USB Hubs'],
-  badge: 'New',
-  badgeColor: 'bg-blue-100 text-blue-700'
-}];
+  {
+    id: 1,
+    name: "The Campus Grind",
+    type: "Café & Beverages",
+    image: "/campus-stores.png",
+    alt: 'Warm cozy campus café with coffee cups, wooden furniture, bright natural light streaming in',
+    rating: 4.7,
+    reviews: 84,
+    college: 'IIT Bombay',
+    items: 24,
+    featured: ['Cold Brew', 'Matcha Latte', 'Avocado Toast'],
+    badge: 'Popular',
+    badgeColor: 'bg-amber-100 text-amber-700'
+  },
+  {
+    id: 2,
+    name: "StudyFuel Kitchen",
+    type: "Meals & Bowls",
+    image: "https://images.unsplash.com/photo-1604908815567-c9727d53f92a",
+    alt: 'Colorful healthy grain bowls with fresh vegetables on clean white table, bright studio lighting',
+    rating: 4.9,
+    reviews: 112,
+    college: 'BITS Pilani',
+    items: 18,
+    featured: ['Grain Bowl', 'Protein Wrap', 'Smoothie'],
+    badge: 'Top Rated',
+    badgeColor: 'bg-emerald-100 text-emerald-700'
+  },
+  {
+    id: 3,
+    name: "Dorm Essentials Co.",
+    type: "Stationery & Supplies",
+    image: "https://images.unsplash.com/photo-1496128858413-b36217c2ce36",
+    alt: 'Neatly arranged stationery, notebooks, pens on bright desk, clean minimal product display',
+    rating: 4.5,
+    reviews: 47,
+    college: 'IIT Delhi',
+    items: 63,
+    featured: ['Notebooks', 'Highlighters', 'USB Hubs'],
+    badge: 'New',
+    badgeColor: 'bg-blue-100 text-blue-700'
+  }];
 
 
 export default function CampusStores() {
@@ -86,16 +86,16 @@ export default function CampusStores() {
         {/* Store Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
           {STORES?.map((store, i) =>
-          <div key={store?.id} className={`aos-elem delay-${(i + 1) * 100} listing-card`}>
+            <div key={store?.id} className={`aos-elem delay-${(i + 1) * 100} listing-card`}>
               {/* Image */}
               <div className="img-zoom relative h-44">
                 <AppImage
-                src={store?.image}
-                alt={store?.alt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 100vw, 33vw" />
-              
+                  src={store?.image}
+                  alt={store?.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 33vw" />
+
                 <span className={`absolute top-3 left-3 tag-pill text-[10px] ${store?.badgeColor}`}>
                   {store?.badge}
                 </span>
@@ -129,14 +129,14 @@ export default function CampusStores() {
                 {/* Featured items */}
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {store?.featured?.map((item) =>
-                <span key={item} className="tag-pill bg-surface text-muted border border-border text-[10px]">{item}</span>
-                )}
+                    <span key={item} className="tag-pill bg-surface text-muted border border-border text-[10px]">{item}</span>
+                  )}
                 </div>
 
                 <Link
-                href="/listings"
-                className="block w-full text-center border border-accent text-accent text-xs font-semibold py-2.5 rounded-xl hover:bg-accent hover:text-white transition-all duration-200">
-                
+                  href="/listings"
+                  className="block w-full text-center border border-accent text-accent text-xs font-semibold py-2.5 rounded-xl hover:bg-accent hover:text-white transition-all duration-200">
+
                   View Store
                 </Link>
               </div>
@@ -157,7 +157,7 @@ export default function CampusStores() {
           <Link
             href="/signup"
             className="flex-shrink-0 bg-white text-primary text-sm font-semibold px-7 py-3.5 rounded-xl hover:bg-surface transition-colors duration-200 shadow-card whitespace-nowrap">
-            
+
             Register Your Store
           </Link>
         </div>

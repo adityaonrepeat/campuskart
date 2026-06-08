@@ -109,7 +109,7 @@ export default function HowItWorks() {
               </span>
 
               {/* Icon */}
-              <div className={`w-12 h-12 rounded-xl ${step?.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
+              <div className={`w-14 h-14 rounded-2xl ${step?.color} flex items-center justify-center mb-6 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300 shadow-sm group-hover:shadow-md`}>
                 {step?.icon}
               </div>
 

@@ -8,61 +8,61 @@ import AppImage from '@/components/ui/AppImage';
 // Row 2: [Clothing & Accessories col-span-2] + [Food & Essentials col-span-1] = 3/3 ✓
 
 const CATEGORIES = [
-{
-  id: 'textbooks',
-  label: 'Textbooks',
-  count: '1,240 listings',
-  image: "/category-1.png",
-  alt: 'Stack of open textbooks on wooden desk, warm natural light, clean study environment',
-  colSpan: 'col-span-1',
-  rowSpan: '',
-  height: 'h-52',
-  accent: '#4F46E5'
-},
-{
-  id: 'electronics',
-  label: 'Electronics',
-  count: '892 listings',
-  image: "https://images.unsplash.com/photo-1639506060056-4d08c5ed6024",
-  alt: 'Laptop and gadgets on clean white desk, minimal tech setup, bright ambient light',
-  colSpan: 'col-span-1',
-  rowSpan: '',
-  height: 'h-52',
-  accent: '#6366F1'
-},
-{
-  id: 'sports',
-  label: 'Sports & Fitness',
-  count: '430 listings',
-  image: "/category-2.png",
-  alt: 'Sports equipment including badminton rackets, yoga mat, and water bottles on gym floor',
-  colSpan: 'col-span-1',
-  rowSpan: '',
-  height: 'h-52',
-  accent: '#818CF8'
-},
-{
-  id: 'clothing',
-  label: 'Clothing & Accessories',
-  count: '2,100 listings',
-  image: "https://images.unsplash.com/photo-1522897355400-c4fdec73d979",
-  alt: 'Neatly folded college sweatshirts and accessories on bright white surface, airy daylight',
-  colSpan: 'col-span-1 sm:col-span-2',
-  rowSpan: '',
-  height: 'h-52',
-  accent: '#A5B4FC'
-},
-{
-  id: 'food',
-  label: 'Food & Essentials',
-  count: '310 listings',
-  image: "/category-3.png",
-  alt: 'Fresh food bowls and healthy snacks on bright table, vibrant colors, well-lit cafeteria setting',
-  colSpan: 'col-span-1',
-  rowSpan: '',
-  height: 'h-52',
-  accent: '#C7D2FE'
-}];
+  {
+    id: 'textbooks',
+    label: 'Textbooks',
+    count: '1,240 listings',
+    image: "/category-1.png",
+    alt: 'Stack of open textbooks on wooden desk, warm natural light, clean study environment',
+    colSpan: 'col-span-1',
+    rowSpan: '',
+    height: 'h-52',
+    accent: '#4F46E5'
+  },
+  {
+    id: 'electronics',
+    label: 'Electronics',
+    count: '892 listings',
+    image: "https://images.unsplash.com/photo-1639506060056-4d08c5ed6024",
+    alt: 'Laptop and gadgets on clean white desk, minimal tech setup, bright ambient light',
+    colSpan: 'col-span-1',
+    rowSpan: '',
+    height: 'h-52',
+    accent: '#6366F1'
+  },
+  {
+    id: 'sports',
+    label: 'Sports & Fitness',
+    count: '430 listings',
+    image: "/category-2.png",
+    alt: 'Sports equipment including badminton rackets, yoga mat, and water bottles on gym floor',
+    colSpan: 'col-span-1',
+    rowSpan: '',
+    height: 'h-52',
+    accent: '#818CF8'
+  },
+  {
+    id: 'clothing',
+    label: 'Clothing & Accessories',
+    count: '2,100 listings',
+    image: "https://images.unsplash.com/photo-1522897355400-c4fdec73d979",
+    alt: 'Neatly folded college sweatshirts and accessories on bright white surface, airy daylight',
+    colSpan: 'col-span-1 sm:col-span-2',
+    rowSpan: '',
+    height: 'h-52',
+    accent: '#A5B4FC'
+  },
+  {
+    id: 'food',
+    label: 'Food & Essentials',
+    count: '310 listings',
+    image: "/category-3.png",
+    alt: 'Fresh food bowls and healthy snacks on bright table, vibrant colors, well-lit cafeteria setting',
+    colSpan: 'col-span-1',
+    rowSpan: '',
+    height: 'h-52',
+    accent: '#C7D2FE'
+  }];
 
 
 export default function CategoryGrid() {
@@ -104,18 +104,18 @@ export default function CategoryGrid() {
         {/* Bento Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {CATEGORIES?.map((cat, i) =>
-          <Link
-            key={cat?.id}
-            href="/listings"
-            className={`${cat?.colSpan} aos-elem delay-${(i + 1) * 100} img-zoom group relative ${cat?.height} rounded-2xl overflow-hidden border border-border cursor-pointer`}>
-            
+            <Link
+              key={cat?.id}
+              href="/listings"
+              className={`${cat?.colSpan} aos-elem delay-${(i + 1) * 100} img-zoom group relative ${cat?.height} rounded-3xl overflow-hidden border border-border/50 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer`}>
+
               <AppImage
-              src={cat?.image}
-              alt={cat?.alt}
-              fill
-              className="object-cover"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
-            
+                src={cat?.image}
+                alt={cat?.alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+
               {/* Scrim */}
               <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent z-[1]" />
 
