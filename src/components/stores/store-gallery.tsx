@@ -5,23 +5,25 @@ import Image from "next/image";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface StoreGalleryProps {
-  storefront: string[];
-  menu: string[];
+  images: string[];
   storeName: string;
+  /** Badges rendered over the main image (top corners). */
+  overlay?: React.ReactNode;
+  emptyIcon?: string;
 }
 
-type Lightbox = { images: string[]; index: number };
+export function StoreGallery({ images, storeName, overlay, emptyIcon = "🏪" }: StoreGalleryProps) {
+  const [active, setActive] = useState(0);
+  const [lightbox, setLightbox] = useState(false);
 
-export function StoreGallery({ storefront, menu, storeName }: StoreGalleryProps) {
-  const [lightbox, setLightbox] = useState<Lightbox | null>(null);
+  const safeActive = Math.min(active, Math.max(images.length - 1, 0));
+  const hasMany = images.length > 1;
 
-  const close = useCallback(() => setLightbox(null), []);
-  const open = useCallback((images: string[], index: number) => setLightbox({ images, index }), []);
-  const step = useCallback((dir: number) => {
-    setLightbox((lb) =>
-      lb ? { ...lb, index: (lb.index + dir + lb.images.length) % lb.images.length } : lb
-    );
-  }, []);
+  const close = useCallback(() => setLightbox(false), []);
+  const step = useCallback(
+    (dir: number) => setActive((p) => (p + dir + images.length) % images.length),
+    [images.length]
+  );
 
   useEffect(() => {
     if (!lightbox) return;
@@ -34,18 +36,80 @@ export function StoreGallery({ storefront, menu, storeName }: StoreGalleryProps)
     return () => window.removeEventListener("keydown", onKey);
   }, [lightbox, close, step]);
 
-  if (storefront.length === 0 && menu.length === 0) return null;
-
   return (
-    <div className="space-y-6 mb-6">
-      {storefront.length > 0 && (
-        <GallerySection label="Photos" images={storefront} storeName={storeName} onOpen={open} />
-      )}
-      {menu.length > 0 && (
-        <GallerySection label="Menu" images={menu} storeName={storeName} onOpen={open} />
+    <div>
+      {/* Main image */}
+      <div className="relative rounded-2xl overflow-hidden bg-white border border-border aspect-4/3 mb-3">
+        {images.length > 0 ? (
+          <button
+            type="button"
+            onClick={() => setLightbox(true)}
+            aria-label="Enlarge photo"
+            className="block w-full h-full"
+          >
+            <Image
+              src={images[safeActive]}
+              alt={storeName}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              priority
+            />
+          </button>
+        ) : (
+          <div className="w-full h-full bg-linear-to-br from-indigo-100 to-indigo-200 flex items-center justify-center">
+            <span className="text-7xl opacity-30">{emptyIcon}</span>
+          </div>
+        )}
+
+        {overlay}
+
+        {hasMany && (
+          <>
+            <button
+              type="button"
+              onClick={() => step(-1)}
+              aria-label="Previous photo"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/85 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-white transition-colors shadow-sm"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => step(1)}
+              aria-label="Next photo"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/85 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-white transition-colors shadow-sm"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <span className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-black/55 text-white text-[11px] font-medium pointer-events-none">
+              {safeActive + 1} / {images.length}
+            </span>
+          </>
+        )}
+      </div>
+
+      {/* Thumbnail strip */}
+      {hasMany && (
+        <div className="flex gap-2 flex-wrap">
+          {images.map((img, i) => (
+            <button
+              key={`${img}-${i}`}
+              type="button"
+              onClick={() => setActive(i)}
+              aria-label={`View photo ${i + 1}`}
+              className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all duration-200 shrink-0 ${
+                safeActive === i ? "border-accent shadow-md" : "border-border hover:border-accent/40"
+              }`}
+            >
+              <Image src={img} alt={`${storeName} ${i + 1}`} fill className="object-cover" sizes="64px" />
+            </button>
+          ))}
+        </div>
       )}
 
-      {lightbox && (
+      {/* Lightbox */}
+      {lightbox && images.length > 0 && (
         <div
           className="fixed inset-0 z-100 bg-black/90 flex items-center justify-center p-4 sm:p-8"
           onClick={close}
@@ -61,7 +125,7 @@ export function StoreGallery({ storefront, menu, storeName }: StoreGalleryProps)
             <X className="h-5 w-5" />
           </button>
 
-          {lightbox.images.length > 1 && (
+          {hasMany && (
             <>
               <button
                 type="button"
@@ -82,12 +146,9 @@ export function StoreGallery({ storefront, menu, storeName }: StoreGalleryProps)
             </>
           )}
 
-          <div
-            className="relative w-full max-w-4xl h-[80vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="relative w-full max-w-4xl h-[80vh]" onClick={(e) => e.stopPropagation()}>
             <Image
-              src={lightbox.images[lightbox.index]}
+              src={images[safeActive]}
               alt={storeName}
               fill
               className="object-contain"
@@ -96,51 +157,13 @@ export function StoreGallery({ storefront, menu, storeName }: StoreGalleryProps)
             />
           </div>
 
-          {lightbox.images.length > 1 && (
+          {hasMany && (
             <span className="absolute bottom-5 left-1/2 -translate-x-1/2 text-xs font-medium text-white/70">
-              {lightbox.index + 1} / {lightbox.images.length}
+              {safeActive + 1} / {images.length}
             </span>
           )}
         </div>
       )}
-    </div>
-  );
-}
-
-function GallerySection({
-  label,
-  images,
-  storeName,
-  onOpen,
-}: {
-  label: string;
-  images: string[];
-  storeName: string;
-  onOpen: (images: string[], index: number) => void;
-}) {
-  return (
-    <div>
-      <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-        {label}
-      </h2>
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
-        {images.map((img, i) => (
-          <button
-            key={`${img}-${i}`}
-            type="button"
-            onClick={() => onOpen(images, i)}
-            className="relative aspect-square rounded-xl overflow-hidden border border-border bg-muted group"
-          >
-            <Image
-              src={img}
-              alt={`${storeName} — ${label} ${i + 1}`}
-              fill
-              className="object-cover transition-transform duration-200 group-hover:scale-105"
-              sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, 20vw"
-            />
-          </button>
-        ))}
-      </div>
     </div>
   );
 }

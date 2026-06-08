@@ -17,6 +17,7 @@ export async function GET(_request: NextRequest) {
       conversation: {
         include: {
           listing: { select: { title: true, images: true, status: true } },
+          store: { select: { id: true, name: true, images: true, ownerId: true } },
           participants: {
             include: {
               user: { select: { id: true, name: true, avatarUrl: true, username: true } },
@@ -58,12 +59,18 @@ export async function GET(_request: NextRequest) {
   const data: ConversationListItem[] = visibleRows.map((p) => {
     const conv = p.conversation;
     const other = conv.participants.find((cp) => cp.userId !== session.user.id);
+    // Present the conversation as "the store" only to customers. The owner sees
+    // their customers as people, so their chats stay distinguishable.
+    const showAsStore = Boolean(conv.store) && conv.store?.ownerId !== session.user.id;
     return {
       id: conv.id,
       listingId: conv.listingId,
       listingTitle: conv.listing?.title ?? null,
       listingImage: conv.listing?.images[0] ?? null,
       listingStatus: conv.listing?.status ?? null,
+      storeId: conv.storeId,
+      storeName: showAsStore ? (conv.store?.name ?? null) : null,
+      storeImage: showAsStore ? (conv.store?.images[0] ?? null) : null,
       otherParticipant: {
         userId: other?.user.id ?? "",
         name: other?.user.name ?? "Unknown",
@@ -102,12 +109,14 @@ export async function POST(request: NextRequest) {
 
   const record =
     body !== null && typeof body === "object" ? (body as Record<string, unknown>) : {};
-  const listingId = "listingId" in record ? String(record.listingId) : undefined;
+  const listingId =
+    "listingId" in record && record.listingId ? String(record.listingId) : undefined;
+  const storeId = "storeId" in record && record.storeId ? String(record.storeId) : undefined;
   const message = typeof record.message === "string" ? record.message.trim() : undefined;
 
-  if (!listingId) {
+  if (!listingId && !storeId) {
     return NextResponse.json(
-      { success: false, error: "listingId is required" },
+      { success: false, error: "listingId or storeId is required" },
       { status: 400 }
     );
   }
@@ -119,37 +128,65 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const listing = await db.listing.findUnique({
-    where: { id: listingId },
-    select: { id: true, status: true, sellerId: true, collegeId: true },
-  });
+  // Resolve the chat peer (listing seller or store owner) + the conversation anchor.
+  let peerId: string;
+  let collegeId: string;
 
-  if (!listing) {
-    return NextResponse.json({ success: false, error: "Listing not found" }, { status: 404 });
+  if (storeId) {
+    const store = await db.store.findUnique({
+      where: { id: storeId },
+      select: { status: true, ownerId: true, collegeId: true },
+    });
+
+    if (!store) {
+      return NextResponse.json({ success: false, error: "Store not found" }, { status: 404 });
+    }
+    if (store.status !== "ACTIVE") {
+      return NextResponse.json(
+        { success: false, error: "This store is not available.", code: "STORE_NOT_ACTIVE" },
+        { status: 409 }
+      );
+    }
+    if (store.collegeId !== session.user.collegeId) {
+      return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
+    }
+    if (store.ownerId === session.user.id) {
+      return NextResponse.json(
+        { success: false, error: "Cannot start a conversation with your own store." },
+        { status: 400 }
+      );
+    }
+    peerId = store.ownerId;
+    collegeId = store.collegeId;
+  } else {
+    const listing = await db.listing.findUnique({
+      where: { id: listingId },
+      select: { status: true, sellerId: true, collegeId: true },
+    });
+
+    if (!listing) {
+      return NextResponse.json({ success: false, error: "Listing not found" }, { status: 404 });
+    }
+    if (listing.status !== "ACTIVE") {
+      return NextResponse.json(
+        { success: false, error: "This listing is no longer active.", code: "LISTING_NOT_ACTIVE" },
+        { status: 409 }
+      );
+    }
+    if (listing.sellerId === session.user.id) {
+      return NextResponse.json(
+        { success: false, error: "Cannot start a conversation with yourself." },
+        { status: 400 }
+      );
+    }
+    peerId = listing.sellerId;
+    collegeId = listing.collegeId;
   }
 
-  if (listing.status !== "ACTIVE") {
-    return NextResponse.json(
-      {
-        success: false,
-        error: "This listing is no longer active.",
-        code: "LISTING_NOT_ACTIVE",
-      },
-      { status: 409 }
-    );
-  }
-
-  if (listing.sellerId === session.user.id) {
-    return NextResponse.json(
-      { success: false, error: "Cannot start a conversation with yourself." },
-      { status: 400 }
-    );
-  }
-
-  // Find-or-create the buyer↔seller conversation for this listing (dedupe).
+  // Find-or-create the buyer↔peer conversation for this listing/store (dedupe).
   const existing = await db.conversation.findFirst({
     where: {
-      listingId,
+      ...(storeId ? { storeId } : { listingId }),
       participants: { some: { userId: session.user.id } },
     },
     select: { id: true },
@@ -161,10 +198,10 @@ export async function POST(request: NextRequest) {
     (
       await db.conversation.create({
         data: {
-          listingId,
-          collegeId: listing.collegeId,
+          ...(storeId ? { storeId } : { listingId }),
+          collegeId,
           participants: {
-            create: [{ userId: session.user.id }, { userId: listing.sellerId }],
+            create: [{ userId: session.user.id }, { userId: peerId }],
           },
         },
         select: { id: true },

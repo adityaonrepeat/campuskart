@@ -13,6 +13,9 @@ export interface ConversationListItem {
   listingTitle: string | null;
   listingImage: string | null;
   listingStatus: string | null;
+  storeId: string | null;
+  storeName: string | null;
+  storeImage: string | null;
   otherParticipant: ConversationParticipant;
   lastMessage: string | null;
   lastMessageAt: string | null; // ISO string

@@ -29,12 +29,15 @@ export function ConversationList() {
     staleTime: 0,
   });
 
-  const filtered = data?.filter(
-    (c) =>
-      !search.trim() ||
-      c.otherParticipant.name.toLowerCase().includes(search.toLowerCase()) ||
-      (c.listingTitle?.toLowerCase().includes(search.toLowerCase()) ?? false)
-  );
+  const filtered = data?.filter((c) => {
+    if (!search.trim()) return true;
+    const q = search.toLowerCase();
+    return (
+      c.otherParticipant.name.toLowerCase().includes(q) ||
+      (c.storeName?.toLowerCase().includes(q) ?? false) ||
+      (c.listingTitle?.toLowerCase().includes(q) ?? false)
+    );
+  });
 
   return (
     <div className="flex flex-col flex-1 min-h-0">

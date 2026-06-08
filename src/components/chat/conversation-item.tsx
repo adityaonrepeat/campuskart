@@ -30,6 +30,12 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
   const { otherParticipant, lastMessage, lastMessageAt, unreadCount } = conversation;
   const hasUnread = unreadCount > 0;
 
+  // Customers see the store's identity; the owner (storeName comes back null) sees
+  // each customer as a person, so their chats stay distinguishable.
+  const isStore = Boolean(conversation.storeName);
+  const displayName = conversation.storeName ?? otherParticipant.name;
+  const displayImage = conversation.storeImage ?? otherParticipant.avatarUrl;
+
   const router = useRouter();
   const queryClient = useQueryClient();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -61,17 +67,17 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
           {/* Avatar — rounded square with online dot */}
           <div className="relative shrink-0">
             <div className="w-11 h-11 rounded-xl overflow-hidden bg-accent-muted">
-              {otherParticipant.avatarUrl ? (
+              {displayImage ? (
                 <Image
-                  src={otherParticipant.avatarUrl}
-                  alt={otherParticipant.name}
+                  src={displayImage}
+                  alt={displayName}
                   width={44}
                   height={44}
                   className="h-full w-full object-cover"
                 />
               ) : (
                 <div className="h-full w-full flex items-center justify-center text-sm font-semibold text-accent">
-                  {getInitials(otherParticipant.name)}
+                  {getInitials(displayName)}
                 </div>
               )}
             </div>
@@ -85,7 +91,7 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-1 mb-0.5">
               <span className="text-sm font-semibold text-foreground truncate">
-                {otherParticipant.name}
+                {displayName}
               </span>
               {lastMessageAt && (
                 <span className="text-[10px] text-muted-foreground shrink-0">
@@ -97,8 +103,13 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
               {lastMessage ?? "Start chatting"}
             </p>
             <div className="flex items-center justify-between">
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium bg-blue-100 text-blue-700">
-                👤 Seller
+              <span
+                className={cn(
+                  "text-[10px] px-1.5 py-0.5 rounded-full font-medium",
+                  isStore ? "bg-indigo-100 text-indigo-700" : "bg-blue-100 text-blue-700"
+                )}
+              >
+                {isStore ? "🏪 Store" : "👤 Seller"}
               </span>
               {hasUnread && (
                 <span className="w-4 h-4 rounded-full bg-accent text-white text-[9px] font-bold flex items-center justify-center">

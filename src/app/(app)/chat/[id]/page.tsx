@@ -24,7 +24,7 @@ export default async function ChatThreadPage({
     where: { id },
     include: {
       listing: { select: { id: true, title: true, status: true, images: true } },
-      store: { select: { id: true, name: true, images: true } },
+      store: { select: { id: true, name: true, images: true, ownerId: true } },
       participants: {
         include: {
           user: { select: { id: true, name: true, avatarUrl: true, username: true } },
@@ -42,11 +42,12 @@ export default async function ChatThreadPage({
   if (!other) notFound();
 
   // A conversation is anchored to either a store or a listing.
-  // For stores, the header title (the store name) is self-explanatory, so we show
-  // the store as the peer. For listings, the peer is the other person and we show a
-  // "Re:" item chip so the user knows *which* item they're discussing among several.
-  const peerName = conv.store ? conv.store.name : other.user.name;
-  const peerImage = conv.store ? (conv.store.images?.[0] ?? null) : other.user.avatarUrl;
+  // For store chats, customers see the store as the peer; the owner sees the actual
+  // customer (so their threads stay distinct). For listings, the peer is the other
+  // person and we show a "Re:" item chip to clarify which item is being discussed.
+  const showAsStore = Boolean(conv.store) && conv.store?.ownerId !== session.user.id;
+  const peerName = showAsStore ? conv.store!.name : other.user.name;
+  const peerImage = showAsStore ? (conv.store!.images?.[0] ?? null) : other.user.avatarUrl;
 
   const itemChip = !conv.store && conv.listing
     ? {
