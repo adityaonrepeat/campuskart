@@ -17,9 +17,10 @@ interface AppHeaderProps {
   user: { name: string; avatarUrl?: string | null };
   forceScrolled?: boolean;
   showAdmin?: boolean;
+  inFlow?: boolean; // when true: sticky top-0 (in document flow); default: fixed
 }
 
-export default function AppHeader({ user, forceScrolled = true, showAdmin = false }: AppHeaderProps) {
+export default function AppHeader({ user, forceScrolled = true, showAdmin = false, inFlow = false }: AppHeaderProps) {
   const [scrolled, setScrolled] = useState(forceScrolled);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
@@ -52,7 +53,7 @@ export default function AppHeader({ user, forceScrolled = true, showAdmin = fals
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`${inFlow ? "sticky top-0" : "fixed top-0 left-0 right-0"} z-50 transition-all duration-300 ${
           scrolled
             ? 'bg-white/95 backdrop-blur-md border-b border-[#E5E4E0] shadow-sm py-3'
             : 'bg-transparent py-5'
@@ -184,6 +185,29 @@ export default function AppHeader({ user, forceScrolled = true, showAdmin = fals
                 {link.label}
               </Link>
             ))}
+            {showAdmin && (
+              <Link
+                href="/admin"
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center gap-3 text-base font-medium py-3 border-b border-[#E5E4E0]/50 transition-colors ${
+                  pathname.startsWith('/admin')
+                    ? 'text-[#4F46E5]'
+                    : 'text-[#111111] hover:text-[#4F46E5]'
+                }`}
+              >
+                Admin
+              </Link>
+            )}
+            <Link
+              href="/listings/new"
+              onClick={() => setMobileOpen(false)}
+              className="inline-flex items-center gap-2 mt-1 px-4 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent/90 transition-colors"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              List an Item
+            </Link>
           </nav>
 
           <button

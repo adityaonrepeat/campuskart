@@ -14,8 +14,7 @@ export function ChatLayoutShell({ sidebar, children }: ChatLayoutShellProps) {
 
   return (
     <div
-      className="bg-white rounded-2xl border border-border overflow-hidden flex"
-      style={{ height: "calc(100dvh - 110px)", minHeight: "520px" }}
+      className={`chat-shell bg-white overflow-hidden flex${hasThread ? " chat-thread-mobile-fullscreen" : ""}`}
     >
       {/* Sidebar — full width when no thread; hidden on mobile when thread is open */}
       <div className={hasThread ? "chat-sidebar thread-open" : "chat-sidebar"}>
