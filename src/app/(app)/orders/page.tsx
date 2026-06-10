@@ -243,7 +243,7 @@ export default async function OrdersPage({ searchParams }: PageProps) {
             </div>
             <Link
               href="/listings/new"
-              className="btn-shimmer flex items-center gap-1.5 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-[0_2px_12px_rgba(79,70,229,0.25)] hover:shadow-[0_4px_20px_rgba(79,70,229,0.35)] transition-shadow whitespace-nowrap"
+              className="flex items-center gap-1.5 bg-accent text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-accent/90 transition-colors whitespace-nowrap"
             >
               <svg
                 width="14"

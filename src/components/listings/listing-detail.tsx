@@ -244,7 +244,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                     {listing.seller.college?.name ?? ""}
                   </span>
                 </div>
-                <h1 className="font-display text-2xl sm:text-3xl font-semibold text-primary leading-snug">
+                <h1 className="font-sans text-2xl sm:text-3xl font-semibold text-primary leading-snug">
                   {listing.title}
                 </h1>
               </div>
@@ -260,7 +260,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                 <div className="flex items-end justify-between mb-5">
                   <div>
                     <p className="text-xs text-accent font-semibold uppercase tracking-wider mb-1">Current Price</p>
-                    <p className="font-display text-4xl font-semibold text-accent">
+                    <p className="font-sans text-4xl font-semibold text-accent">
                       ₹{listing.price.toLocaleString("en-IN")}
                     </p>
                     <p className="text-sm font-medium text-muted mt-1">
@@ -292,7 +292,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                       type="button"
                       className={cn(
                         "w-full py-3.5 rounded-xl text-white font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200",
-                        isActive ? "btn-shimmer hover:shadow-accent-lg" : "bg-gray-400 cursor-not-allowed"
+                        isActive ? "bg-accent hover:bg-accent/90" : "bg-gray-400 cursor-not-allowed"
                       )}
                       disabled={!isActive}
                       onClick={() => isActive && setChatOpen(true)}
