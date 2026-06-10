@@ -97,12 +97,12 @@ export default function HeroSection() {
           {/* Headline */}
           <h1 className="font-display text-[clamp(2.8rem,7vw,5.5rem)] leading-[0.95] font-semibold text-white mb-6 tracking-tight">
             Your campus.<br />
-            <span className="italic font-normal text-indigo-300">Your marketplace.</span>
+            <span className="italic font-normal text-indigo-400 tracking-wide">Your marketplace.</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-white/75 text-lg sm:text-xl font-light leading-relaxed mb-10 max-w-xl">
-            List items, place bids, and connect with verified students at your college. Textbooks, gear, food — all picked up on campus.
+          <p className="text-indigo-100 text-lg sm:text-xl font-normal leading-relaxed mb-10 max-w-xl">
+            From monitored listings to verified campus stores. Chat with sellers, check reviews, and pick up everything right on your campus.
           </p>
 
           {/* College Selector + CTA */}
@@ -131,7 +131,7 @@ export default function HeroSection() {
           </div>
 
           {/* Secondary CTA */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
             <Link
               href="/signup"
               className="text-white/80 text-sm font-medium hover:text-white transition-colors flex items-center gap-2 group">
