@@ -173,9 +173,9 @@ export default function FeaturedListings() {
                 {/* Bid info */}
                 <div className="flex items-end justify-between mb-3">
                   <div>
-                    <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Current Bid</p>
-                    <p className="text-xl font-display font-semibold text-accent">₹{item.currentBid.toLocaleString('en-IN')}</p>
-                    <p className="text-[10px] text-muted">Min: ₹{item.minBid.toLocaleString('en-IN')} · {item.bids} bids</p>
+                    <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Current Price</p>
+                    <p className="text-xl font-semibold text-accent" style={{ fontFamily: "var(--font-dm-sans)" }}>₹{item.currentBid.toLocaleString('en-IN')}</p>
+                    <p className="text-[10px] text-muted">Min: ₹{item.minBid.toLocaleString('en-IN')}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Ends In</p>
@@ -188,7 +188,7 @@ export default function FeaturedListings() {
                   href="/listings"
                   className="block w-full text-center bg-accent text-white text-xs font-semibold py-2.5 rounded-xl hover:bg-accent/90 transition-colors duration-200">
 
-                  Place Bid
+                  Buy Now
                 </Link>
               </div>
             </div>

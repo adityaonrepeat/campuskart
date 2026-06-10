@@ -97,7 +97,7 @@ export default function HeroSection() {
           {/* Headline */}
           <h1 className="font-display text-[clamp(2.8rem,7vw,5.5rem)] leading-[0.95] font-semibold text-white mb-6 tracking-tight">
             Your campus.<br />
-            <span className="italic font-normal text-accent-light">Your marketplace.</span>
+            <span className="italic font-normal text-indigo-300">Your marketplace.</span>
           </h1>
 
           {/* Subheadline */}
