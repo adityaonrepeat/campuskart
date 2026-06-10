@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
+import { Prisma } from "@prisma/client";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { conversationCreateRatelimit } from "@/lib/rate-limit";
@@ -42,19 +43,24 @@ export async function GET(_request: NextRequest) {
     return last !== null && last > p.hiddenAt;
   });
 
-  const unreadCounts = await Promise.all(
-    visibleRows.map(async (p) => {
-      const count = await db.message.count({
-        where: {
-          conversationId: p.conversationId,
-          senderId: { not: session.user.id },
-          ...(p.lastReadAt ? { createdAt: { gt: p.lastReadAt } } : {}),
-        },
-      });
-      return { conversationId: p.conversationId, count };
-    })
-  );
-  const unreadMap = new Map(unreadCounts.map((r) => [r.conversationId, r.count]));
+  const conversationIds = visibleRows.map((p) => p.conversationId);
+  let unreadMap = new Map<string, number>();
+  if (conversationIds.length > 0) {
+    const unreadRows = await db.$queryRaw<{ conversationId: string; count: number }[]>(
+      Prisma.sql`
+        SELECT m."conversationId", COUNT(*)::int AS count
+        FROM "Message" m
+        JOIN "ConversationParticipant" cp
+          ON cp."conversationId" = m."conversationId"
+          AND cp."userId" = ${session.user.id}
+        WHERE m."senderId" != ${session.user.id}
+          AND m."conversationId" = ANY(ARRAY[${Prisma.join(conversationIds)}])
+          AND (cp."lastReadAt" IS NULL OR m."createdAt" > cp."lastReadAt")
+        GROUP BY m."conversationId"
+      `
+    );
+    unreadMap = new Map(unreadRows.map((r) => [r.conversationId, r.count]));
+  }
 
   const data: ConversationListItem[] = visibleRows.map((p) => {
     const conv = p.conversation;
