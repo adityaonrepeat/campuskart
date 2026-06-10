@@ -20,6 +20,7 @@ import { StoreGallery } from "@/components/stores/store-gallery";
 import { StoreChatButton } from "@/components/stores/store-chat-button";
 import { STORE_CATEGORY_LABELS } from "@/types/store";
 import type { Role } from "@prisma/client";
+import { isStoreOpenNow } from "@/lib/store-utils";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -99,6 +100,7 @@ export default async function StoreDetailPage({ params }: PageProps) {
   const canReview = !isOwner && store.status === "ACTIVE";
   const categoryLabel = STORE_CATEGORY_LABELS[store.category] ?? store.category;
   const isActive = store.status === "ACTIVE";
+  const isOpenNow = isActive && isStoreOpenNow(store.hours);
   const reviewCount = store.reviews.length;
   const avg =
     reviewCount > 0
@@ -169,10 +171,10 @@ export default async function StoreDetailPage({ params }: PageProps) {
                   <div className="absolute top-4 left-4 right-4 flex items-start justify-between pointer-events-none">
                     <span
                       className={`tag-pill text-xs font-semibold ${
-                        isActive ? "bg-emerald-500 text-white" : "bg-gray-600 text-white"
+                        isOpenNow ? "bg-emerald-500 text-white" : "bg-gray-600 text-white"
                       }`}
                     >
-                      {isActive ? "Open now" : "Closed"}
+                      {isOpenNow ? "Open now" : "Closed"}
                     </span>
                     {store.isVerified && (
                       <span className="tag-pill text-xs font-semibold bg-white/95 text-accent flex items-center gap-1 shadow-sm">
@@ -204,7 +206,7 @@ export default async function StoreDetailPage({ params }: PageProps) {
                     </>
                   )}
                 </div>
-                <h1 className="font-display text-2xl sm:text-3xl font-semibold text-primary leading-snug">
+                <h1 className="font-sans text-2xl sm:text-3xl font-semibold text-primary leading-snug">
                   {store.name}
                 </h1>
                 <div className="flex items-center gap-1.5 mt-2">
@@ -309,10 +311,10 @@ export default async function StoreDetailPage({ params }: PageProps) {
                 )}
               </div>
 
-              {/* Run by */}
+              {/* Store Owner */}
               <div className="bg-white rounded-2xl border border-border p-5">
                 <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                  Run by
+                  Store Owner
                 </h2>
                 <div className="flex items-center gap-3">
                   {store.owner.avatarUrl ? (

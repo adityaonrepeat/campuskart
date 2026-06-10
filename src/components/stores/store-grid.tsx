@@ -3,6 +3,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { StoreCard } from "./store-card";
 import { Button } from "@/components/ui/button";
+import { isStoreOpenNow } from "@/lib/store-utils";
 import type { PaginatedResponse } from "@/types/api";
 import type { StoreCard as StoreCardType } from "@/types/store";
 
@@ -23,9 +24,10 @@ async function fetchStores(
 
 interface StoreGridProps {
   filters?: { tag?: string; search?: string };
+  openOnly?: boolean;
 }
 
-export function StoreGrid({ filters = {} }: StoreGridProps) {
+export function StoreGrid({ filters = {}, openOnly = false }: StoreGridProps) {
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ["stores", filters],
@@ -53,7 +55,10 @@ export function StoreGrid({ filters = {} }: StoreGridProps) {
     );
   }
 
-  const stores = data?.pages.flatMap((p) => p.items) ?? [];
+  const allStores = data?.pages.flatMap((p) => p.items) ?? [];
+  const stores = openOnly
+    ? allStores.filter((s) => s.status === "ACTIVE" && isStoreOpenNow(s.hours))
+    : allStores;
   const featured = stores.filter((s) => s.isVerified);
   const regular = stores.filter((s) => !s.isVerified);
 

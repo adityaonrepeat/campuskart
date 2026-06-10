@@ -3,6 +3,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { STORE_CATEGORY_LABELS } from "@/types/store";
 import type { StoreCard } from "@/types/store";
+import { isStoreOpenNow } from "@/lib/store-utils";
 
 interface StoreCardProps {
   store: StoreCard;
@@ -13,6 +14,7 @@ export function StoreCard({ store, featured = false }: StoreCardProps) {
   const reviewCount = store._count.reviews;
   const categoryLabel = STORE_CATEGORY_LABELS[store.category] ?? store.category;
   const isActive = store.status === "ACTIVE";
+  const isOpenNow = isActive && isStoreOpenNow(store.hours);
   const visibleTags = store.tags.slice(0, 3);
 
   return (
@@ -50,11 +52,11 @@ export function StoreCard({ store, featured = false }: StoreCardProps) {
           <span
             className={cn(
               "flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold",
-              isActive ? "bg-green-500 text-white" : "bg-gray-500 text-white"
+              isOpenNow ? "bg-green-500 text-white" : "bg-gray-500 text-white"
             )}
           >
-            <span className={cn("w-1.5 h-1.5 rounded-full", isActive ? "bg-white" : "bg-gray-300")} />
-            {isActive ? "OPEN" : "CLOSED"}
+            <span className={cn("w-1.5 h-1.5 rounded-full", isOpenNow ? "bg-white" : "bg-gray-300")} />
+            {isOpenNow ? "OPEN" : "CLOSED"}
           </span>
         </div>
 
@@ -69,7 +71,7 @@ export function StoreCard({ store, featured = false }: StoreCardProps) {
       {/* Card body */}
       <div className="p-4">
         <div className="flex items-start justify-between gap-2 mb-1.5">
-          <h3 className="font-display text-base font-semibold text-primary group-hover:text-accent transition-colors leading-tight line-clamp-1">
+          <h3 className="font-sans text-base font-semibold text-primary group-hover:text-accent transition-colors leading-tight line-clamp-1">
             {store.name}
           </h3>
           <div className="flex items-center gap-1 shrink-0">
@@ -119,7 +121,7 @@ export function StoreCard({ store, featured = false }: StoreCardProps) {
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
                 </svg>
-                <span className="truncate max-w-27.5">{store.hours}</span>
+                <span className="truncate">{store.hours}</span>
               </>
             ) : store.location ? (
               <>

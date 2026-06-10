@@ -81,7 +81,7 @@ export default async function StoresPage({ searchParams }: PageProps) {
           </div>
 
           {/* Food tag pills */}
-          <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-none">
+          <div className="flex gap-2 mt-5 overflow-x-auto pb-1 scrollbar-none">
             {FOOD_TAGS.map((t) => {
               const isActive = (tag ?? "") === t.value;
               const href = t.value
@@ -106,8 +106,8 @@ export default async function StoresPage({ searchParams }: PageProps) {
       </div>
 
       {/* Store grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        <StoreGrid filters={{ tag, search }} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+        <StoreGrid filters={{ tag, search }} openOnly={open === "1"} />
       </div>
     </div>
   );
