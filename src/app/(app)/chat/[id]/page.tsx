@@ -66,7 +66,7 @@ export default async function ChatThreadPage({
   return (
     <>
       {/* Thread header */}
-      <div className="flex items-center gap-3 p-4 border-b border-border shrink-0">
+      <div className="flex items-center gap-3 px-4 h-[72px] border-b border-border shrink-0">
         {/* Back — mobile only */}
         <Link
           href="/chat"
