@@ -70,7 +70,7 @@ export default function HeroSection() {
       </div>
       {/* Gradient Scrim — dark at bottom for white text */}
       <div className="absolute inset-0 z-[1]" style={{
-        background: 'linear-gradient(to bottom, rgba(26,26,46,0.55) 0%, rgba(26,26,46,0.25) 40%, rgba(26,26,46,0.80) 100%)'
+        background: 'linear-gradient(to bottom, rgba(10,10,25,0.75) 0%, rgba(10,10,25,0.55) 40%, rgba(10,10,25,0.92) 100%)'
       }} />
       {/* Live Bid Ticker — top bar */}
       <div className="absolute top-20 left-0 right-0 z-10 flex justify-center pt-4 px-4">
