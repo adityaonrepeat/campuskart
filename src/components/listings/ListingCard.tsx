@@ -39,21 +39,13 @@ export default function ListingCard({ listing }: { listing: ListingCardType }) {
   const isSold = listing.status === "SOLD";
   const isArchived = listing.status === "ARCHIVED";
   const isDimmed = isSold || isArchived;
-  const sellerName = listing.seller?.name ?? "Unknown";
-  const initials = sellerName
-    .split(" ")
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-
   return (
     <Link
       href={href}
       className={`listing-card group block ${isDimmed ? "opacity-70" : ""}`}
     >
       {/* Image */}
-      <div className="img-zoom relative h-60">
+      <div className="img-zoom relative h-66.5">
         {listing.images[0] ? (
           <AppImage
             src={listing.images[0]}
@@ -83,31 +75,13 @@ export default function ListingCard({ listing }: { listing: ListingCardType }) {
       </div>
 
       {/* Body */}
-      <div className="px-3 pt-2.5 pb-3">
+      <div className="px-4 pt-3 pb-4">
         <span className="text-[10px] font-semibold text-accent uppercase tracking-wider">
           {CATEGORY_LABEL[listing.category] ?? listing.category}
         </span>
         <h3 className="font-semibold text-foreground text-base leading-snug mt-0.5 mb-1.5 line-clamp-2 group-hover:text-accent transition-colors">
           {listing.title}
         </h3>
-
-        {/* Seller row */}
-        <div className="flex items-center gap-2 mb-1.5">
-          <div className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-border bg-accent-muted flex items-center justify-center text-[8px] font-semibold text-accent">
-            {listing.seller?.avatarUrl ? (
-              <AppImage
-                src={listing.seller.avatarUrl}
-                alt={sellerName}
-                width={20}
-                height={20}
-                className="object-cover"
-              />
-            ) : (
-              initials
-            )}
-          </div>
-          <span className="text-xs text-muted truncate">{sellerName}</span>
-        </div>
 
         {/* Price */}
         <div className="flex items-end justify-between mb-2 pb-2 border-b border-border">
