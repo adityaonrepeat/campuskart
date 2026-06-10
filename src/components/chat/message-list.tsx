@@ -1,12 +1,32 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, Fragment } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { MessageBubble } from "./message-bubble";
 import { TypingIndicator } from "./typing-indicator";
 import { Button } from "@/components/ui/button";
 import type { PaginatedResponse } from "@/types/api";
 import type { Message } from "@/types/chat";
+
+function isSameDay(a: Date, b: Date): boolean {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
+
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+function getDateLabel(date: Date): string {
+  const now = new Date();
+  const todayMs = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const msgDayMs = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  if (msgDayMs === todayMs) return "Today";
+  if (msgDayMs === todayMs - 86_400_000) return "Yesterday";
+  const base = `${date.getDate()} ${MONTHS[date.getMonth()]}`;
+  return date.getFullYear() === now.getFullYear() ? base : `${base} ${date.getFullYear()}`;
+}
 
 interface MessageListProps {
   conversationId: string;
@@ -79,23 +99,28 @@ export function MessageList({ conversationId, currentUserId }: MessageListProps)
           </Button>
         </div>
       )}
-      {!hasNextPage && allMessages.length > 0 && (
-        <p className="text-center text-[11px] text-muted-foreground py-2">
-          Beginning of conversation
-        </p>
-      )}
       {allMessages.length === 0 && (
         <div className="flex-1 flex items-center justify-center">
           <p className="text-sm text-muted-foreground">No messages yet. Say hello!</p>
         </div>
       )}
-      {allMessages.map((msg) => (
-        <MessageBubble
-          key={msg.id}
-          message={msg}
-          isOwn={msg.senderId === currentUserId}
-        />
-      ))}
+      {allMessages.map((msg, i) => {
+        const prevMsg = allMessages[i - 1];
+        const msgDate = new Date(msg.createdAt);
+        const showSep = !prevMsg || !isSameDay(msgDate, new Date(prevMsg.createdAt));
+        return (
+          <Fragment key={msg.id}>
+            {showSep && (
+              <div className="flex items-center gap-3 py-1">
+                <div className="flex-1 h-px bg-border" />
+                <span className="text-[11px] text-muted-foreground shrink-0">{getDateLabel(msgDate)}</span>
+                <div className="flex-1 h-px bg-border" />
+              </div>
+            )}
+            <MessageBubble message={msg} isOwn={msg.senderId === currentUserId} />
+          </Fragment>
+        );
+      })}
       <TypingIndicator conversationId={conversationId} currentUserId={currentUserId} />
       <div ref={bottomRef} />
     </div>
