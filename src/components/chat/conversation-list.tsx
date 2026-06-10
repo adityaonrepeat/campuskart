@@ -42,12 +42,12 @@ export function ConversationList() {
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {/* Search bar only */}
-      <div className="p-3 border-b border-border shrink-0">
-        <div className="relative">
+      <div className="px-4 border-b border-border shrink-0 h-[72px] flex items-center">
+        <div className="relative w-full">
           <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
-            width="14"
-            height="14"
+            className="absolute left-3 top-[12px] -translate-y-1/2 text-muted-foreground pointer-events-none"
+            width="16"
+            height="16"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -60,8 +60,8 @@ export function ConversationList() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search conversations..."
-            className="w-full pl-8 pr-3 py-2 text-xs rounded-xl border border-border bg-surface focus:outline-none focus:ring-2 focus:ring-accent/30"
+            placeholder="Search"
+            className="w-full pl-9 pr-4 h-10 text-sm rounded-full border-transparent bg-surface-2 placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-accent transition-colors"
           />
         </div>
       </div>

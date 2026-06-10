@@ -60,9 +60,13 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
       <div
         className={cn(
           "relative group flex items-start gap-3 px-4 py-4 hover:bg-surface transition-colors border-b border-border/50",
-          isActive && "bg-accent-muted border-l-2 border-l-accent"
+          isActive && "bg-accent-muted"
         )}
       >
+        {/* Active Indicator */}
+        {isActive && (
+          <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-accent" />
+        )}
         <Link href={`/chat/${conversation.id}`} className="flex items-start gap-3 flex-1 min-w-0">
           {/* Avatar — rounded square with online dot */}
           <div className="relative shrink-0">
