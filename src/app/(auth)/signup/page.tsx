@@ -46,7 +46,7 @@ export default function SignUpPage() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
             <AppLogo size={36} />
-            <span className="font-display text-xl font-semibold text-white">CampusKart</span>
+            <span className="text-xl font-semibold tracking-tight text-white" style={{ fontFamily: "var(--font-dm-sans)" }}>CampusKart</span>
           </Link>
 
           {/* Main text */}
@@ -94,7 +94,7 @@ export default function SignUpPage() {
           {/* Mobile logo */}
           <Link href="/" className="flex items-center gap-2 mb-8 lg:hidden">
             <AppLogo size={32} />
-            <span className="font-display text-lg font-semibold text-primary">CampusKart</span>
+            <span className="text-lg font-semibold tracking-tight text-[#3730A3]" style={{ fontFamily: "var(--font-dm-sans)" }}>CampusKart</span>
           </Link>
 
           <RegisterForm />

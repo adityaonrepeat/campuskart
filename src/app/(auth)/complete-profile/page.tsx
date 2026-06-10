@@ -21,7 +21,7 @@ export default async function CompleteProfilePage() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 mb-8">
           <AppLogo size={36} />
-          <span className="font-display text-xl font-semibold text-[#1A1A2E]">CampusKart</span>
+          <span className="text-xl font-semibold tracking-tight text-[#3730A3]" style={{ fontFamily: "var(--font-dm-sans)" }}>CampusKart</span>
         </Link>
 
         <h1 className="font-display text-2xl font-semibold text-[#1A1A2E] mb-1">
