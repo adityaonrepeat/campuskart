@@ -69,13 +69,17 @@ export function ConversationList() {
       {/* List */}
       <div className="flex-1 overflow-y-auto">
         {isLoading && (
-          <div className="divide-y">
+          <div>
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="flex items-center gap-3 px-4 py-3 animate-pulse">
-                <div className="h-11 w-11 rounded-xl bg-muted shrink-0" />
-                <div className="flex-1 space-y-2">
-                  <div className="h-3 bg-muted rounded w-1/3" />
-                  <div className="h-3 bg-muted rounded w-1/2" />
+              <div key={i} className="flex items-start gap-3 px-4 py-4 animate-pulse border-b border-border/50">
+                <div className="h-11 w-11 rounded-xl bg-muted shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <div className="h-3.5 bg-muted rounded w-1/3" />
+                    <div className="h-2.5 bg-muted rounded w-8" />
+                  </div>
+                  <div className="h-3 bg-muted rounded w-1/2 mb-1.5" />
+                  <div className="h-4 w-14 bg-muted rounded-full" />
                 </div>
               </div>
             ))}

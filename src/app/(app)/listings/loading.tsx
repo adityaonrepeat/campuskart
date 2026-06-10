@@ -8,9 +8,9 @@ export default function ListingsLoading() {
   return (
     <div className="min-h-screen bg-[#F8F7F4]">
       {/* Navbar skeleton */}
-      <div className="sticky top-0 z-40 bg-white border-b border-[#E5E4E0] h-16" />
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#E5E4E0] h-16" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-24">
+      <div className="listings-page-wrap max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8">
           {/* Sidebar skeleton — desktop only */}
           <div className="listings-sidebar">
@@ -32,15 +32,18 @@ export default function ListingsLoading() {
 
           {/* Main content skeleton */}
           <div className="flex-1 min-w-0">
-            {/* Search + Sort + Button row */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-              <Pulse className="h-10 w-full rounded-[10px]" />
-              <Pulse className="h-10 w-full rounded-[10px]" />
-              <Pulse className="h-10 w-full rounded-xl" />
-            </div>
+            {/* Full-width search bar */}
+            <Pulse className="h-10 w-full rounded-xl mb-4" />
 
-            {/* Tabs */}
-            <Pulse className="h-10 w-full rounded-xl mb-6" />
+            {/* Chips + sort row */}
+            <div className="flex items-center justify-between gap-3 mb-6">
+              <div className="flex items-center gap-1.5">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Pulse key={i} className="h-8 w-24 rounded-full" />
+                ))}
+              </div>
+              <Pulse className="h-9 w-28 rounded-lg" />
+            </div>
 
             {/* Grid */}
             <ListingGridSkeleton count={6} />
