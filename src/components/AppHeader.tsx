@@ -64,9 +64,10 @@ export default function AppHeader({ user, forceScrolled = true, showAdmin = fals
           <Link href="/listings" className="flex items-center gap-2.5 group">
             <AppLogo size={36} />
             <span
-              className={`font-serif text-xl font-semibold tracking-tight transition-colors duration-300 ${
-                scrolled ? 'text-[#1A1A2E]' : 'text-white'
+              className={`text-xl font-semibold tracking-tight transition-colors duration-300 ${
+                scrolled ? 'text-[#3730A3]' : 'text-white'
               }`}
+              style={{ fontFamily: "var(--font-dm-sans)" }}
             >
               CampusKart
             </span>
