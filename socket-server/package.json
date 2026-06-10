@@ -6,8 +6,9 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "postinstall": "prisma generate",
-    "generate": "prisma generate"
+    "sync-schema": "node scripts/sync-schema.js",
+    "postinstall": "npm run sync-schema && prisma generate",
+    "generate": "npm run sync-schema && prisma generate"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",

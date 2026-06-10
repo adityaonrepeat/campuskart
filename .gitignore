@@ -75,3 +75,5 @@ prisma/make-admin.ts
 # Socket server — nested deps and secrets
 socket-server/node_modules/
 socket-server/.env
+socket-server/prisma/
+socket-server/dist/
