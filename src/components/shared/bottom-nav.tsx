@@ -97,14 +97,6 @@ export function BottomNav({ showAdmin = false }: { showAdmin?: boolean }) {
                 href={href}
                 className="flex flex-1 flex-col items-center justify-center gap-1 relative group py-2"
               >
-                {/* Active top indicator */}
-                <span
-                  className={cn(
-                    "absolute top-0 left-1/2 -translate-x-1/2 h-0.5 rounded-b-full transition-all duration-300",
-                    isActive ? "w-8 bg-[#4F46E5]" : "w-0 bg-transparent"
-                  )}
-                />
-
                 {/* Icon */}
                 <span className="relative">
                   <span
