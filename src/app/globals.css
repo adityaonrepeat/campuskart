@@ -421,7 +421,7 @@
 }
 
 .listings-page-wrap {
-  padding-top: 88px; /* 22 * 4px — mobile */
+  padding-top: 82px; /* mobile */
 }
 @media (min-width: 1024px) {
   .listings-page-wrap {
