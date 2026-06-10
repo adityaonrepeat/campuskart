@@ -420,6 +420,15 @@
   }
 }
 
+.listings-page-wrap {
+  padding-top: 88px; /* 22 * 4px — mobile */
+}
+@media (min-width: 1024px) {
+  .listings-page-wrap {
+    padding-top: 96px; /* 24 * 4px — desktop with sidebar */
+  }
+}
+
 .listings-search-sort {
   display: flex;
   flex-direction: column;
@@ -449,6 +458,23 @@
 }
 
 /* ─── Chat layout (Tailwind v4 base-after-variant fix) ─────────── */
+.chat-shell {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Mobile: full-screen overlay covers both navbars when thread is open */
+@media (max-width: 639px) {
+  .chat-thread-mobile-fullscreen {
+    position: fixed;
+    inset: 0;
+    flex: none;
+    height: 100dvh;
+    z-index: 60;
+  }
+}
+
 .chat-sidebar {
   display: flex;
   flex-direction: column;
@@ -584,6 +610,32 @@ input[type="range"] { accent-color: var(--ck-accent); }
     bottom: 4rem;
     right: 2rem;
     z-index: 10;
+  }
+}
+
+/* ─── Listings sort/action bar (Tailwind v4 responsive workaround) ── */
+.sort-btn-desktop {
+  display: none;
+}
+@media (min-width: 640px) {
+  .sort-btn-desktop {
+    display: block;
+  }
+}
+.sort-btn-mobile {
+  display: block;
+}
+@media (min-width: 640px) {
+  .sort-btn-mobile {
+    display: none;
+  }
+}
+.list-item-btn-desktop {
+  display: none;
+}
+@media (min-width: 640px) {
+  .list-item-btn-desktop {
+    display: flex;
   }
 }
 

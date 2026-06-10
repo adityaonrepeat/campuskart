@@ -34,7 +34,7 @@ export default async function ListingsPage({ searchParams }: PageProps) {
     <div className="min-h-screen bg-[#F8F7F4]">
       <AppHeader user={{ name: session?.user.name ?? "User", avatarUrl: session?.user.avatarUrl }} forceScrolled showAdmin={session?.user.role === "MODERATOR" || session?.user.role === "ADMIN"} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-24">
+      <div className="listings-page-wrap max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8">
           <div className="listings-sidebar">
             <FilterSidebar />
