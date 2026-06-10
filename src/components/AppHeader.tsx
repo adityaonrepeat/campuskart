@@ -59,9 +59,9 @@ export default function AppHeader({ user, forceScrolled = true, showAdmin = fals
             : 'bg-transparent py-5'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
           {/* Logo */}
-          <Link href="/listings" className="flex items-center gap-2.5 group">
+          <Link href="/listings" className="flex items-center gap-2.5 group shrink-0">
             <AppLogo size={36} />
             <span
               className={`text-xl font-semibold tracking-tight transition-colors duration-300 ${
@@ -74,7 +74,7 @@ export default function AppHeader({ user, forceScrolled = true, showAdmin = fals
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="header-desktop-nav">
+          <nav className="header-desktop-nav flex-1 justify-center">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.label}
@@ -103,7 +103,7 @@ export default function AppHeader({ user, forceScrolled = true, showAdmin = fals
           </nav>
 
           {/* Desktop CTAs */}
-          <div className="header-desktop-cta">
+          <div className="header-desktop-cta shrink-0">
             <Link href="/profile" className="flex items-center gap-2 group" title={user.name}>
               <div className="w-9 h-9 rounded-full bg-[#EEF2FF] flex items-center justify-center text-sm font-semibold text-[#4F46E5] border-2 border-[#E5E4E0] group-hover:border-[#4F46E5] transition-colors duration-200 select-none">
                 {initials}
@@ -125,7 +125,7 @@ export default function AppHeader({ user, forceScrolled = true, showAdmin = fals
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className={`header-mobile-btn p-2 rounded-lg transition-colors ${
+            className={`header-mobile-btn ml-auto p-2 rounded-lg transition-colors ${
               scrolled ? 'text-[#111111]' : 'text-white'
             }`}
             aria-label="Toggle menu"
