@@ -9,7 +9,7 @@ export default function Footer() {
           <div className="sm:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
               <AppLogo size={32} />
-              <span className="text-white font-semibold text-lg font-display">CampusKart</span>
+              <span className="text-white font-semibold text-lg tracking-tight" style={{ fontFamily: "var(--font-dm-sans)" }}>CampusKart</span>
             </div>
             <p className="text-sm leading-relaxed text-white/50 max-w-xs">
               The campus-exclusive marketplace. Buy, sell, and connect with verified students at your college.
@@ -35,13 +35,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-white/30">
-            © {new Date().getFullYear()} CampusKart. Campus-only marketplace. All rights reserved.
-          </p>
-          <p className="text-xs text-white/30">
-            Verified students only&nbsp;·&nbsp;Campus pickup&nbsp;·&nbsp;Real-time chat
-          </p>
+        <div className="border-t border-white/10 pt-6 flex items-center justify-center">
+          <p className="text-xs text-white/30">© {new Date().getFullYear()} CampusKart. All rights reserved.</p>
         </div>
       </div>
     </footer>

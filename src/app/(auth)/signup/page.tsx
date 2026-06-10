@@ -16,10 +16,10 @@ const SOCIAL_AVATARS = [
 ];
 
 const FEATURES = [
-  { icon: "🎓", text: "Verified students only — safe campus community" },
-  { icon: "💬", text: "In-app chat with sellers, no phone numbers needed" },
-  { icon: "📍", text: "Campus self-pickup, no shipping hassle" },
-  { icon: "⭐", text: "Ratings and reviews on every deal" },
+  "Verified students only — safe campus community",
+  "In-app chat with sellers, no phone numbers needed",
+  "Campus self-pickup, no shipping hassle",
+  "Ratings and reviews on every deal",
 ];
 
 export default function SignUpPage() {
@@ -62,11 +62,9 @@ export default function SignUpPage() {
             {/* Feature bullets */}
             <div className="space-y-4">
               {FEATURES.map((f) => (
-                <div key={f.text} className="flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-sm shrink-0">
-                    {f.icon}
-                  </span>
-                  <span className="text-white/80 text-sm font-medium">{f.text}</span>
+                <div key={f} className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-light shrink-0" />
+                  <span className="text-white/80 text-sm font-medium">{f}</span>
                 </div>
               ))}
             </div>

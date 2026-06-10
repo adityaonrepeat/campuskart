@@ -145,9 +145,9 @@ export default function CampusStores() {
         </div>
 
         {/* Register Store CTA */}
-        <div className="aos-elem delay-400 bg-primary rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="aos-elem delay-400 bg-primary rounded-3xl p-8 sm:p-10 flex flex-col items-center text-center gap-6">
           <div>
-            <h3 className="font-display text-2xl sm:text-3xl font-semibold text-white mb-2">
+            <h3 className="text-2xl sm:text-3xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-inter)" }}>
               Own a campus business?
             </h3>
             <p className="text-white/60 text-sm leading-relaxed max-w-md">
@@ -157,7 +157,6 @@ export default function CampusStores() {
           <Link
             href="/signup"
             className="flex-shrink-0 bg-white text-primary text-sm font-semibold px-7 py-3.5 rounded-xl hover:bg-surface transition-colors duration-200 shadow-card whitespace-nowrap">
-
             Register Your Store
           </Link>
         </div>

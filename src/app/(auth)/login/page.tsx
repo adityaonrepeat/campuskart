@@ -17,10 +17,10 @@ const SOCIAL_AVATARS = [
 ];
 
 const FEATURES = [
-  { icon: "🔒", text: "College-scoped — only your campus sees your listings" },
-  { icon: "💬", text: "Real-time chat with buyers and sellers" },
-  { icon: "🏪", text: "Campus stores, food, and services in one place" },
-  { icon: "⭐", text: "Ratings and reviews on every deal" },
+  "College-scoped — only your campus sees your listings",
+  "Real-time chat with buyers and sellers",
+  "Campus stores, food, and services in one place",
+  "Ratings and reviews on every deal",
 ];
 
 export default function LoginPage() {
@@ -63,11 +63,9 @@ export default function LoginPage() {
             {/* Feature bullets */}
             <div className="space-y-4">
               {FEATURES.map((f) => (
-                <div key={f.text} className="flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-sm shrink-0">
-                    {f.icon}
-                  </span>
-                  <span className="text-white/80 text-sm font-medium">{f.text}</span>
+                <div key={f} className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-light shrink-0" />
+                  <span className="text-white/80 text-sm font-medium">{f}</span>
                 </div>
               ))}
             </div>
