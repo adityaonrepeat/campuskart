@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 // ─── Enums ────────────────────────────────────────────────────────────────────
 
@@ -77,7 +77,7 @@ export type CreateReviewInput = z.infer<typeof createReviewSchema>;
 
 // ─── Prisma-derived types ─────────────────────────────────────────────────────
 
-const storeCardValidator = Prisma.validator<Prisma.StoreDefaultArgs>()({
+const storeCardArgs = {
   select: {
     id: true,
     name: true,
@@ -94,9 +94,9 @@ const storeCardValidator = Prisma.validator<Prisma.StoreDefaultArgs>()({
     owner: { select: { id: true, name: true, avatarUrl: true } },
     _count: { select: { reviews: { where: { isArchived: false } } } },
   },
-});
+} satisfies Prisma.StoreDefaultArgs;
 
-const storeDetailValidator = Prisma.validator<Prisma.StoreDefaultArgs>()({
+const storeDetailArgs = {
   select: {
     id: true,
     name: true,
@@ -133,9 +133,9 @@ const storeDetailValidator = Prisma.validator<Prisma.StoreDefaultArgs>()({
     },
     _count: { select: { reviews: { where: { isArchived: false } } } },
   },
-});
+} satisfies Prisma.StoreDefaultArgs;
 
-export type StoreCard = Prisma.StoreGetPayload<typeof storeCardValidator>;
-export type StoreDetail = Prisma.StoreGetPayload<typeof storeDetailValidator>;
+export type StoreCard = Prisma.StoreGetPayload<typeof storeCardArgs>;
+export type StoreDetail = Prisma.StoreGetPayload<typeof storeDetailArgs>;
 
 export type StoreReviewItem = StoreDetail["reviews"][number];

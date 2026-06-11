@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 // ─── Zod schemas ──────────────────────────────────────────────────────────────
 
@@ -40,7 +40,7 @@ export type UpdateListingInput = z.infer<typeof updateListingSchema>;
 
 // ─── Prisma-derived types ─────────────────────────────────────────────────────
 
-const listingCardValidator = Prisma.validator<Prisma.ListingDefaultArgs>()({
+const listingCardArgs = {
   select: {
     id: true,
     title: true,
@@ -54,9 +54,9 @@ const listingCardValidator = Prisma.validator<Prisma.ListingDefaultArgs>()({
     seller: { select: { id: true, name: true, avatarUrl: true } },
     college: { select: { name: true } },
   },
-});
+} satisfies Prisma.ListingDefaultArgs;
 
-const listingDetailValidator = Prisma.validator<Prisma.ListingDefaultArgs>()({
+const listingDetailArgs = {
   include: {
     seller: {
       select: {
@@ -68,14 +68,10 @@ const listingDetailValidator = Prisma.validator<Prisma.ListingDefaultArgs>()({
       },
     },
   },
-});
+} satisfies Prisma.ListingDefaultArgs;
 
-export type ListingCard = Prisma.ListingGetPayload<
-  typeof listingCardValidator
->;
-export type ListingDetail = Prisma.ListingGetPayload<
-  typeof listingDetailValidator
->;
+export type ListingCard = Prisma.ListingGetPayload<typeof listingCardArgs>;
+export type ListingDetail = Prisma.ListingGetPayload<typeof listingDetailArgs>;
 
 // ─── Filter types ─────────────────────────────────────────────────────────────
 

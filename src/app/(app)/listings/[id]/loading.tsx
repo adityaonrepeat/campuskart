@@ -25,7 +25,7 @@ export default function ListingDetailLoading() {
 
             {/* LEFT: image gallery */}
             <div>
-              <Pulse className="w-full rounded-2xl mb-3" style={{ aspectRatio: "4/3" }} />
+              <Pulse className="w-full rounded-2xl mb-3 aspect-4/3" />
               <div className="flex gap-2">
                 {Array.from({ length: 3 }).map((_, i) => (
                   <Pulse key={i} className="w-20 h-20 rounded-xl" />
