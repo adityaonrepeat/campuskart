@@ -68,7 +68,7 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
           <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-accent" />
         )}
         <Link href={`/chat/${conversation.id}`} className="flex items-start gap-3 flex-1 min-w-0">
-          {/* Avatar — rounded square with online dot */}
+          {/* Avatar: rounded square with online dot */}
           <div className="relative shrink-0">
             <div className="w-11 h-11 rounded-xl overflow-hidden bg-accent-muted">
               {displayImage ? (
@@ -124,7 +124,7 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
           </div>
         </Link>
 
-        {/* Delete — appears on hover */}
+        {/* Delete: appears on hover */}
         <button
           type="button"
           onClick={(e) => {
@@ -133,7 +133,7 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
           }}
           disabled={isDeleting}
           aria-label="Delete conversation"
-          className="opacity-0 group-hover:opacity-100 shrink-0 self-center text-muted-foreground/40 hover:text-destructive transition-all disabled:opacity-50"
+          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 shrink-0 self-center text-muted-foreground/40 hover:text-destructive transition-all disabled:opacity-50"
         >
           <Trash2 className="h-4 w-4" />
         </button>

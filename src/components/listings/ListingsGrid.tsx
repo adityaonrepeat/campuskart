@@ -111,7 +111,7 @@ export default function ListingsGrid({ filters }: ListingsGridProps) {
 
   return (
     <div ref={gridRef}>
-      {/* Search — full width */}
+      {/* Search: full width */}
       <div className="relative mb-4">
         <svg
           className="absolute left-3.5 top-[calc(50%-7.5px)] -translate-y-1/2 text-muted pointer-events-none"
@@ -153,7 +153,7 @@ export default function ListingsGrid({ filters }: ListingsGridProps) {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          {/* Desktop sort — @base-ui Menu (CSS-hidden on mobile) */}
+          {/* Desktop sort: @base-ui Menu (CSS-hidden on mobile) */}
           <div className="sort-btn-desktop">
             <Menu.Root>
               <Menu.Trigger
@@ -188,7 +188,7 @@ export default function ListingsGrid({ filters }: ListingsGridProps) {
             </Menu.Root>
           </div>
 
-          {/* Mobile sort — @base-ui Drawer (CSS-hidden on desktop) */}
+          {/* Mobile sort: @base-ui Drawer (CSS-hidden on desktop) */}
           <div className="sort-btn-mobile">
             <Drawer.Root open={mobileDrawerOpen} onOpenChange={setMobileDrawerOpen}>
               <Drawer.Trigger
@@ -229,7 +229,7 @@ export default function ListingsGrid({ filters }: ListingsGridProps) {
             </Drawer.Root>
           </div>
 
-          {/* List an Item — desktop only (mobile uses hamburger) */}
+          {/* List an Item: desktop only (mobile uses hamburger) */}
           <Link
             href="/listings/new"
             className="list-item-btn-desktop items-center gap-1.5 bg-accent text-white font-semibold rounded-xl text-sm px-4 py-2 hover:bg-accent/90 transition-colors whitespace-nowrap"

@@ -76,7 +76,7 @@ export async function moderateListing(
   return { success: true, data: { id: listingId } };
 }
 
-// ─── Store admin/mod actions ───────────────────────────────────────────────────
+// Store admin/mod actions
 
 export async function verifyStore(
   storeId: string

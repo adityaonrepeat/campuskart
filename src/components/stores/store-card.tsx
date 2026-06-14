@@ -88,7 +88,7 @@ export function StoreCard({ store, featured = false }: StoreCardProps) {
           {store.description}
         </p>
 
-        {/* Tags row — real tags from DB */}
+        {/* Tags row: real tags from DB */}
         {visibleTags.length > 0 ? (
           <div className="flex flex-wrap gap-1.5 mb-3">
             {visibleTags.map((t) => (

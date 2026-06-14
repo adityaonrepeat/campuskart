@@ -23,7 +23,7 @@ export async function updateProfile(
 
   const { name, username, avatarUrl, bio } = parsed.data;
 
-  // Unique username check — exclude current user
+  // Unique username check, exclude current user
   if (username !== session.user.username) {
     const existing = await db.user.findUnique({
       where: { username },

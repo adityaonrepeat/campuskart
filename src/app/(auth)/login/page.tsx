@@ -26,7 +26,7 @@ const FEATURES = [
 export default function LoginPage() {
   return (
     <div className="min-h-screen flex">
-      {/* Left Panel — Brand Visual */}
+      {/* Left Panel: Brand Visual */}
       <div className="auth-left-panel lg:w-[48%] bg-primary overflow-hidden">
         {/* Background image */}
         <div className="absolute inset-0">
@@ -87,7 +87,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right Panel — Form */}
+      {/* Right Panel: Form */}
       <div className="flex-1 flex flex-col justify-center items-center px-6 py-12 bg-white overflow-y-auto min-h-screen">
         <div className="w-full max-w-md">
           {/* Mobile logo */}

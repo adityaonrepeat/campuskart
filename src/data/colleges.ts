@@ -1,4 +1,4 @@
-// Static college list — mirrors prisma/seed.ts; used as fallback / type reference
+// Static college list; mirrors prisma/seed.ts, used as fallback / type reference
 export const COLLEGES = [
   { name: "Indian Institute of Technology Bombay", city: "Mumbai", state: "Maharashtra" },
   { name: "Indian Institute of Technology Delhi", city: "New Delhi", state: "Delhi" },

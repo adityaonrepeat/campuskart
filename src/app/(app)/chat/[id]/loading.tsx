@@ -7,7 +7,7 @@ export default function ChatThreadLoading() {
     <div className="flex flex-col h-full">
       {/* Thread header */}
       <div className="flex items-center gap-3 px-4 h-18 border-b border-border shrink-0">
-        {/* Back arrow — mobile only */}
+        {/* Back arrow: mobile only */}
         <Pulse className="sm:hidden h-5 w-5 rounded shrink-0" />
         {/* Avatar */}
         <Pulse className="h-10 w-10 rounded-xl shrink-0" />
@@ -16,7 +16,7 @@ export default function ChatThreadLoading() {
           <Pulse className="h-3.5 w-32" />
           <Pulse className="h-3 w-20" />
         </div>
-        {/* Item chip — always visible when present */}
+        {/* Item chip: always visible when present */}
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#F8F7F4] border border-[#E5E4E0] shrink-0">
           <Pulse className="w-8 h-8 rounded-full shrink-0" />
           <div className="space-y-1">
@@ -24,7 +24,7 @@ export default function ChatThreadLoading() {
             <Pulse className="h-3 w-28" />
           </div>
         </div>
-        {/* View Listing link — desktop only */}
+        {/* View Listing link: desktop only */}
         <Pulse className="hidden sm:block h-3.5 w-20 shrink-0" />
       </div>
 

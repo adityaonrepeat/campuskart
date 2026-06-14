@@ -68,11 +68,11 @@ export default function HeroSection() {
           sizes="100vw" />
 
       </div>
-      {/* Gradient Scrim — dark at bottom for white text */}
+      {/* Gradient Scrim: dark at bottom for white text */}
       <div className="absolute inset-0 z-[1]" style={{
         background: 'linear-gradient(to bottom, rgba(10,10,25,0.75) 0%, rgba(10,10,25,0.55) 40%, rgba(10,10,25,0.92) 100%)'
       }} />
-      {/* Live Bid Ticker — top bar */}
+      {/* Live Bid Ticker: top bar */}
       <div className="absolute top-20 left-0 right-0 z-10 flex justify-center pt-4 px-4">
         <div className="glass rounded-full px-4 py-2 flex items-center gap-3 max-w-xs sm:max-w-sm">
           <span className="relative flex h-2 w-2 flex-shrink-0">
@@ -85,7 +85,7 @@ export default function HeroSection() {
         </div>
       </div>
       {/* Hero Content */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-16 pt-32 sm:pb-24">
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-12 sm:pb-24 pt-20 sm:pt-32">
         <div className="max-w-3xl">
           {/* Eyebrow */}
           <div className="flex items-center gap-2 mb-6">
@@ -95,13 +95,13 @@ export default function HeroSection() {
           </div>
 
           {/* Headline */}
-          <h1 className="font-display text-[clamp(2.8rem,7vw,5.5rem)] leading-[0.95] font-semibold text-white mb-6 tracking-tight">
+          <h1 className="font-display text-[clamp(1.85rem,7vw,5.5rem)] leading-[0.95] font-semibold text-white mb-6 tracking-tight">
             Your campus.<br />
             <span className="italic font-semibold text-indigo-400 tracking-wide">Your marketplace.</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-indigo-100 text-lg sm:text-xl font-normal leading-relaxed mb-10 max-w-xl">
+          <p className="text-indigo-100 text-lg sm:text-xl font-normal leading-relaxed mb-5 sm:mb-10 max-w-xl">
             From monitored listings to verified campus stores. Chat with sellers, check reviews, and pick up everything right on your campus.
           </p>
 
@@ -131,7 +131,7 @@ export default function HeroSection() {
           </div>
 
           {/* Secondary CTA */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <Link
               href="/signup"
               className="text-white/80 text-sm font-medium hover:text-white transition-colors flex items-center gap-2 group">
@@ -150,7 +150,7 @@ export default function HeroSection() {
 
       </div>
 
-      {/* Floating Stats Card — positioned relative to section */}
+      {/* Floating Stats Card: positioned relative to section */}
       <div className="hero-stats-card">
         <div className="glass-dark rounded-2xl p-5 w-56 float-anim">
           <div className="flex items-center gap-2 mb-4">

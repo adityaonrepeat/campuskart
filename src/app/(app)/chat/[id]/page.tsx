@@ -67,7 +67,7 @@ export default async function ChatThreadPage({
     <>
       {/* Thread header */}
       <div className="flex items-center gap-3 px-4 h-[72px] border-b border-border shrink-0">
-        {/* Back — mobile only */}
+        {/* Back: mobile only */}
         <Link
           href="/chat"
           className="sm:hidden text-muted-foreground hover:text-foreground transition-colors"
@@ -104,7 +104,7 @@ export default async function ChatThreadPage({
           <OnlineStatusText userId={other.user.id} />
         </div>
 
-        {/* "Re:" item chip — listings only, so the user knows which item is being discussed */}
+        {/* "Re:" item chip: listings only, so the user knows which item is being discussed */}
         {itemChip && (
           <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface border border-border shrink-0">
             {itemChip.image && (
@@ -130,7 +130,7 @@ export default async function ChatThreadPage({
           </div>
         )}
 
-        {/* View Store / View Listing link — desktop only */}
+        {/* View Store / View Listing link: desktop only */}
         {viewLink && (
           <Link
             href={viewLink.href}

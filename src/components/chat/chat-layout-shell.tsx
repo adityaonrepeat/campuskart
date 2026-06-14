@@ -16,12 +16,12 @@ export function ChatLayoutShell({ sidebar, children }: ChatLayoutShellProps) {
     <div
       className={`chat-shell bg-white overflow-hidden flex${hasThread ? " chat-thread-mobile-fullscreen" : ""}`}
     >
-      {/* Sidebar — full width when no thread; hidden on mobile when thread is open */}
+      {/* Sidebar: full width when no thread; hidden on mobile when thread is open */}
       <div className={hasThread ? "chat-sidebar thread-open" : "chat-sidebar"}>
         {sidebar}
       </div>
 
-      {/* Content — visible on desktop always; mobile only when thread is open */}
+      {/* Content: visible on desktop always; mobile only when thread is open */}
       <div className={hasThread ? "chat-content thread-open" : "chat-content"}>
         {children}
       </div>

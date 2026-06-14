@@ -12,7 +12,7 @@ export default function ListingsLoading() {
 
       <div className="listings-page-wrap max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8">
-          {/* Sidebar skeleton — desktop only */}
+          {/* Sidebar skeleton: desktop only */}
           <div className="listings-sidebar">
             <div className="bg-white rounded-2xl border border-[#E5E4E0] p-5 space-y-4">
               <Pulse className="h-4 w-24" />

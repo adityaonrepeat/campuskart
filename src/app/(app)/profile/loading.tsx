@@ -12,7 +12,7 @@ export default function ProfileLoading() {
           {/* Top row: avatar · info · buttons */}
           <div className="flex flex-col sm:flex-row gap-5 items-start sm:items-center">
 
-            {/* Avatar — rounded-2xl to match initials div */}
+            {/* Avatar: rounded-2xl to match initials div */}
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gray-200 animate-pulse shrink-0" />
 
             {/* Info */}
@@ -32,7 +32,7 @@ export default function ProfileLoading() {
             </div>
           </div>
 
-          {/* Stats bar — 4 tiles */}
+          {/* Stats bar: 4 tiles */}
           <div className="grid grid-cols-4 gap-3 mt-5">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="bg-surface rounded-xl py-3 px-2 border border-border flex flex-col items-center gap-1.5">
@@ -50,7 +50,7 @@ export default function ProfileLoading() {
         {/* Tab pill */}
         <Pulse className="h-10 w-44 rounded-xl mb-5" />
 
-        {/* Listing grid — 3 cols on large, 2 on sm, 1 on xs */}
+        {/* Listing grid: 3 cols on large, 2 on sm, 1 on xs */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="rounded-2xl border border-border overflow-hidden bg-white">

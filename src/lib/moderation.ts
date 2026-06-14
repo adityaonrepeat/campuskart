@@ -1,6 +1,6 @@
 // Image moderation via Sightengine (https://sightengine.com/docs).
 // We moderate by passing the already-uploaded image URL (UploadThing cloud URL)
-// to the check endpoint — no re-upload of bytes from our server.
+// to the check endpoint; no re-upload of bytes from our server.
 
 const SIGHTENGINE_ENDPOINT = "https://api.sightengine.com/1.0/check.json";
 
@@ -9,7 +9,7 @@ const SIGHTENGINE_ENDPOINT = "https://api.sightengine.com/1.0/check.json";
 const MODELS = process.env.SIGHTENGINE_MODELS ?? "nudity-2.1,gore-2.0,violence,offensive";
 
 // Confidence threshold (0–1) above which a category flags the image as unsafe.
-// 0.2 is strict — catches borderline content like sports blood, suggestive images, etc.
+// 0.2 is strict; catches borderline content like sports blood, suggestive images, etc.
 const THRESHOLD = Number(process.env.SIGHTENGINE_THRESHOLD ?? 0.2);
 
 interface SightengineResponse {
@@ -49,7 +49,7 @@ function isResponseSafe(data: SightengineResponse): boolean {
 }
 
 // api.sightengine.com resolves to several EU IPs and Node's fetch (undici) has a
-// 10s connect timeout with no IP failover — a slow/unresponsive IP hangs the whole
+// 10s connect timeout with no IP failover; a slow/unresponsive IP hangs the whole
 // call. Retry with a short per-attempt timeout so DNS re-resolves to a live IP.
 const MAX_ATTEMPTS = 3;
 const PER_ATTEMPT_TIMEOUT_MS = 8_000;

@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
   const sort = searchParams.get("sort") ?? "newest";
   const tab = searchParams.get("tab") ?? "all";
 
-  // Composite cursor: "<createdAt ISO>|<id>" — prevents items with the same
+  // Composite cursor: "<createdAt ISO>|<id>"; prevents items with the same
   // millisecond timestamp from being silently dropped across pages.
   const cursorParts = cursor?.split("|");
   const cursorDate = cursorParts?.[0];

@@ -21,7 +21,7 @@ type AppSocket = Socket<
   SocketData
 >;
 
-// In-memory presence — no DB column for isOnline
+// In-memory presence; no DB column for isOnline
 // collegeId → Set<userId>
 const onlineUsers = new Map<string, Set<string>>();
 // userId → active socket count (handles multiple tabs)
@@ -56,7 +56,7 @@ export function registerSocketHandlers(io: AppServer, socket: AppSocket): void {
       .emit("server:user_online", userId);
   }
 
-  // ── client:join_conversation ──────────────────────────────────────────────
+  // client:join_conversation
   socket.on("client:join_conversation", async (conversationId, callback) => {
     try {
       const participant = await db.conversationParticipant.findUnique({
@@ -81,12 +81,12 @@ export function registerSocketHandlers(io: AppServer, socket: AppSocket): void {
     }
   });
 
-  // ── client:leave_conversation ─────────────────────────────────────────────
+  // client:leave_conversation
   socket.on("client:leave_conversation", (conversationId) => {
     void socket.leave(`conversation:${conversationId}`);
   });
 
-  // ── client:send_message ───────────────────────────────────────────────────
+  // client:send_message
   socket.on(
     "client:send_message",
     async (payload: SendMessagePayload, callback) => {
@@ -148,7 +148,7 @@ export function registerSocketHandlers(io: AppServer, socket: AppSocket): void {
           createdAt: message.createdAt.toISOString(),
         };
 
-        // Deliver to all room members (including sender — they replace the optimistic copy)
+        // Deliver to all room members (including sender; they replace the optimistic copy)
         io.to(`conversation:${conversationId}`).emit(
           "server:message_received",
           messageWithSender
@@ -161,7 +161,7 @@ export function registerSocketHandlers(io: AppServer, socket: AppSocket): void {
     }
   );
 
-  // ── client:typing_start ───────────────────────────────────────────────────
+  // client:typing_start
   socket.on("client:typing_start", (conversationId) => {
     if (!socket.rooms.has(`conversation:${conversationId}`)) return;
     socket
@@ -169,7 +169,7 @@ export function registerSocketHandlers(io: AppServer, socket: AppSocket): void {
       .emit("server:typing", { conversationId, userId, isTyping: true });
   });
 
-  // ── client:typing_stop ────────────────────────────────────────────────────
+  // client:typing_stop
   socket.on("client:typing_stop", (conversationId) => {
     if (!socket.rooms.has(`conversation:${conversationId}`)) return;
     socket
@@ -177,7 +177,7 @@ export function registerSocketHandlers(io: AppServer, socket: AppSocket): void {
       .emit("server:typing", { conversationId, userId, isTyping: false });
   });
 
-  // ── client:mark_read ──────────────────────────────────────────────────────
+  // client:mark_read
   socket.on("client:mark_read", async (conversationId) => {
     try {
       await db.conversationParticipant.update({
@@ -185,11 +185,11 @@ export function registerSocketHandlers(io: AppServer, socket: AppSocket): void {
         data: { lastReadAt: new Date() },
       });
     } catch {
-      // Best-effort — no ack, non-critical
+      // Best-effort; no ack, non-critical
     }
   });
 
-  // ── disconnect ────────────────────────────────────────────────────────────
+  // disconnect
   socket.on("disconnect", () => {
     const remaining = (socketCount.get(userId) ?? 1) - 1;
 
@@ -208,7 +208,7 @@ export function registerSocketHandlers(io: AppServer, socket: AppSocket): void {
       // Notify college that this user is offline
       io.to(`college:${collegeId}:presence`).emit("server:user_offline", userId);
 
-      // Write lastSeen once per session — fire and forget
+      // Write lastSeen once per session; fire and forget
       db.user
         .update({ where: { id: userId }, data: { lastSeen: new Date() } })
         .catch(() => {

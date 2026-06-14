@@ -25,7 +25,7 @@ export function StoreChatButton({
   const [isLoading, setIsLoading] = useState(false);
 
   async function startChat() {
-    // Already chatting with this store — just open the existing thread.
+    // Already chatting with this store; just open the existing thread.
     if (existingConversationId) {
       router.push(`/chat/${existingConversationId}`);
       return;

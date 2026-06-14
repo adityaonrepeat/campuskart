@@ -46,7 +46,7 @@ export function ProfileView({ user, listings }: ProfileViewProps) {
 
   return (
     <main className="min-h-screen bg-surface">
-      {/* ── Profile hero (white card) ─────────────────────────── */}
+      {/* Profile hero (white card) */}
       <div className="bg-white border-b border-border">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
@@ -88,17 +88,17 @@ export function ProfileView({ user, listings }: ProfileViewProps) {
                 </span>
               </div>
 
-              {/* Bio — only shown if user has set one */}
+              {/* Bio: only shown if user has set one */}
               {user.bio && (
                 <p className="text-sm text-muted leading-relaxed">{user.bio}</p>
               )}
             </div>
 
             {/* Buttons */}
-            <div className="flex gap-2 shrink-0">
+            <div className="flex gap-2 w-full sm:w-auto shrink-0">
               <Link
                 href="/profile/edit"
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-border text-sm font-semibold text-muted hover:text-foreground hover:border-accent/40 transition-colors"
+                className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-border text-sm font-semibold text-muted hover:text-foreground hover:border-accent/40 transition-colors"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
@@ -108,7 +108,7 @@ export function ProfileView({ user, listings }: ProfileViewProps) {
               </Link>
               <Link
                 href="/listings"
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent/90 transition-colors"
+                className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent/90 transition-colors"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
@@ -120,7 +120,7 @@ export function ProfileView({ user, listings }: ProfileViewProps) {
           </div>
 
           {/* Stats bar */}
-          <div className="grid grid-cols-4 gap-3 mt-5">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
             {[
               { label: 'Total Sales', value: user.soldCount },
               { label: 'Active Listings', value: user.activeListings },
@@ -136,7 +136,7 @@ export function ProfileView({ user, listings }: ProfileViewProps) {
         </div>
       </div>
 
-      {/* ── Tabs + content (off-white) ─────────────────────────── */}
+      {/* Tabs + content (off-white) */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
         {/* Tab nav */}

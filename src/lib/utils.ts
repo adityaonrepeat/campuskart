@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-/** First letters of up to two words, uppercased — e.g. "Aditya Singh" → "AS". */
+/** First letters of up to two words, uppercased (e.g. "Aditya Singh" -> "AS"). */
 export function getInitials(name: string): string {
   const initials = name
     .trim()

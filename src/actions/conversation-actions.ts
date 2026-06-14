@@ -8,7 +8,7 @@ import type { ApiResponse } from "@/types/api";
 
 /**
  * Hide a conversation from the current user's chat list ("delete for me").
- * Only the caller's participant row is flagged — the other person keeps theirs.
+ * Only the caller's participant row is flagged; the other person keeps theirs.
  * A hidden conversation re-appears automatically when a newer message arrives
  * (see the visibility filter in GET /api/conversations).
  */

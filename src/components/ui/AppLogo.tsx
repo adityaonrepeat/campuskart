@@ -11,7 +11,7 @@ export default function AppLogo({ size = 32, className }: AppLogoProps) {
       style={{
         width: size,
         height: size,
-        background: 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)',
+        background: '#4F46E5',
       }}
     >
       {/* viewBox padded by 1 unit on all sides so the cart handle + wheels never clip */}

@@ -18,7 +18,7 @@ export interface MessageWithSender {
   senderName: string;
   senderAvatar: string | null;
   content: string;
-  createdAt: string; // ISO string — no Date objects over the wire
+  createdAt: string; // ISO string; no Date objects over the wire
 }
 
 export interface SocketError {

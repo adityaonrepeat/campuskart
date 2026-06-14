@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { Prisma } from "@prisma/client";
 
-// ─── Zod schemas ──────────────────────────────────────────────────────────────
+// Zod schemas
 
 export const createListingSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(100),
@@ -38,7 +38,7 @@ export const updateListingSchema = createListingSchema.partial().extend({
 export type CreateListingInput = z.infer<typeof createListingSchema>;
 export type UpdateListingInput = z.infer<typeof updateListingSchema>;
 
-// ─── Prisma-derived types ─────────────────────────────────────────────────────
+// Prisma-derived types
 
 const listingCardArgs = {
   select: {
@@ -73,7 +73,7 @@ const listingDetailArgs = {
 export type ListingCard = Prisma.ListingGetPayload<typeof listingCardArgs>;
 export type ListingDetail = Prisma.ListingGetPayload<typeof listingDetailArgs>;
 
-// ─── Filter types ─────────────────────────────────────────────────────────────
+// Filter types
 
 export interface ListingFilters {
   category?: string;

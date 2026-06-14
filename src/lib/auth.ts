@@ -15,7 +15,7 @@ export const auth = betterAuth({
 
           const typed = user as { collegeId?: string; username?: string };
 
-          // OAuth signups have no username — generate one from name/email
+          // OAuth signups have no username; generate one from name/email
           if (!typed.username) {
             const base = (user.name ?? user.email.split("@")[0])
               .toLowerCase()
@@ -30,7 +30,7 @@ export const auth = betterAuth({
               : generated;
           }
 
-          // OAuth signups have no collegeId yet — /complete-profile collects it after
+          // OAuth signups have no collegeId yet; /complete-profile collects it after
           if (!typed.collegeId) return { data: user };
           const college = await db.college.findUnique({
             where: { id: typed.collegeId },

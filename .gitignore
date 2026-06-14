@@ -42,7 +42,6 @@ next-env.d.ts
 
 /src/generated/prisma
 
-# Claude Code — internal project files (never publish)
 .claude/
 .mcp.json
 CLAUDE.md

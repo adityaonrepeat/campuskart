@@ -170,7 +170,7 @@ export default async function AdminStoresPage({ searchParams }: PageProps) {
       </section>
       )}
 
-      {/* Archived — only admins see this (can permanently delete) */}
+      {/* Archived: only admins see this (can permanently delete) */}
       {showArchived && archived.length > 0 && (
         <section className="space-y-3">
           <h2 className="font-semibold text-muted-foreground">Archived ({archived.length})</h2>

@@ -3,7 +3,7 @@
 import { useSocketStore } from "@/stores/socket-store";
 
 // Stable reference so the zustand selector doesn't return a fresh [] each render
-// (useSyncExternalStore requires a cached snapshot — a new [] triggers an infinite loop).
+// (useSyncExternalStore requires a cached snapshot; a new [] triggers an infinite loop).
 const EMPTY_TYPING: string[] = [];
 
 interface TypingIndicatorProps {

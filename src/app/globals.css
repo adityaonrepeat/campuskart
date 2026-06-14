@@ -165,7 +165,7 @@
   }
 }
 
-/* ─── Font utilities (explicit — Tailwind v4 may not generate these) ── */
+/* Font utilities (explicit; Tailwind v4 may not generate these) */
 .font-display {
   font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
 }
@@ -173,12 +173,12 @@
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
-/* ─── Custom scrollbar ─────────────────────────────────────────── */
+/* Custom scrollbar */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: var(--ck-surface); }
 ::-webkit-scrollbar-thumb { background: var(--ck-border); border-radius: 4px; }
 
-/* ─── Grain overlay ────────────────────────────────────────────── */
+/* Grain overlay */
 .grain-overlay::after {
   content: '';
   position: absolute;
@@ -189,7 +189,7 @@
   z-index: 1;
 }
 
-/* ─── Glass morphism ────────────────────────────────────────────── */
+/* Glass morphism */
 .glass {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(16px);
@@ -203,7 +203,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* ─── Scroll-reveal animations ─────────────────────────────────── */
+/* Scroll-reveal animations */
 .aos-elem {
   opacity: 0;
   transform: translateY(8px);
@@ -216,7 +216,7 @@
 .delay-400 { transition-delay: 400ms; }
 .delay-500 { transition-delay: 500ms; }
 
-/* ─── Shimmer button ────────────────────────────────────────────── */
+/* Shimmer button */
 @keyframes shimmer-move {
   0%   { background-position: -200% center; }
   100% { background-position: 200% center; }
@@ -227,27 +227,27 @@
   animation: shimmer-move 3s linear infinite;
 }
 
-/* ─── Ping dot ──────────────────────────────────────────────────── */
+/* Ping dot */
 @keyframes ping-dot {
   75%, 100% { transform: scale(2); opacity: 0; }
 }
 .ping-dot { animation: ping-dot 1.5s cubic-bezier(0, 0, 0.2, 1) infinite; }
 
-/* ─── Bid pulse ─────────────────────────────────────────────────── */
+/* Bid pulse */
 @keyframes bid-pulse {
   0%, 100% { transform: scale(1); }
   50%       { transform: scale(1.05); }
 }
 .bid-pulse { animation: bid-pulse 2s ease-in-out infinite; }
 
-/* ─── Float animation ───────────────────────────────────────────── */
+/* Float animation */
 @keyframes float-up {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-8px); }
 }
 .float-anim { animation: float-up 4s ease-in-out infinite; }
 
-/* ─── Card hover lift ───────────────────────────────────────────── */
+/* Card hover lift */
 .card-lift {
   transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
               box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1),
@@ -258,7 +258,7 @@
   box-shadow: 0 20px 40px rgba(79, 70, 229, 0.12);
 }
 
-/* ─── Listing card ──────────────────────────────────────────────── */
+/* Listing card */
 .listing-card {
   background: #fff;
   border: 1.5px solid var(--ck-border);
@@ -274,12 +274,12 @@
   border-color: rgba(79, 70, 229, 0.25);
 }
 
-/* ─── Image zoom ────────────────────────────────────────────────── */
+/* Image zoom */
 .img-zoom { overflow: hidden; }
 .img-zoom img { transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
 .img-zoom:hover img { transform: scale(1.08); }
 
-/* ─── Tag pill ──────────────────────────────────────────────────── */
+/* Tag pill */
 .tag-pill {
   display: inline-flex;
   align-items: center;
@@ -290,7 +290,7 @@
   letter-spacing: 0.02em;
 }
 
-/* ─── Verified badge ────────────────────────────────────────────── */
+/* Verified badge */
 .verified-badge {
   display: inline-flex;
   align-items: center;
@@ -314,11 +314,11 @@
   font-weight: 600;
 }
 
-/* ─── Auth panel ────────────────────────────────────────────────── */
+/* Auth panel */
 .auth-tab-active   { color: #4F46E5; border-bottom: 2px solid #4F46E5; }
 .auth-tab-inactive { color: var(--ck-muted-text); border-bottom: 2px solid transparent; }
 
-/* ─── Input / select fields ─────────────────────────────────────── */
+/* Input / select fields */
 .input-field {
   border: 1.5px solid var(--ck-border);
   border-radius: 10px;
@@ -337,11 +337,11 @@
 }
 .input-field::placeholder { color: #9CA3AF; }
 
-/* ─── Star rating ───────────────────────────────────────────────── */
+/* Star rating */
 .star-filled { color: #F59E0B; }
 .star-empty  { color: #D1D5DB; }
 
-/* ─── Scan line ─────────────────────────────────────────────────── */
+/* Scan line */
 @keyframes scan-line {
   0%   { top: 0%; opacity: 0; }
   10%  { opacity: 1; }
@@ -357,19 +357,19 @@
   pointer-events: none;
 }
 
-/* ─── Progress bar fill ──────────────────────────────────────────── */
+/* Progress bar fill */
 @keyframes fill-bar {
   from { width: 0%; }
   to   { width: var(--target-width); }
 }
 
-/* ─── Ticker scroll ──────────────────────────────────────────────── */
+/* Ticker scroll */
 @keyframes ticker-left {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
-/* ─── Underline link ─────────────────────────────────────────────── */
+/* Underline link */
 .underline-link { position: relative; }
 .underline-link::after {
   content: '';
@@ -383,7 +383,7 @@
 }
 .underline-link:hover::after { width: 100%; }
 
-/* ─── Bid badge ──────────────────────────────────────────────────── */
+/* Bid badge */
 .bid-badge {
   background: linear-gradient(135deg, #4F46E5, #818CF8);
   color: white;
@@ -395,7 +395,7 @@
   text-transform: uppercase;
 }
 
-/* ─── Listings page responsive workarounds (Tailwind v4 base-after-variant fix) ── */
+/* Listings page responsive workarounds (Tailwind v4 base-after-variant fix) */
 .listings-page-header {
   display: flex;
   flex-direction: column;
@@ -425,7 +425,7 @@
 }
 @media (min-width: 1024px) {
   .listings-page-wrap {
-    padding-top: 96px; /* 24 * 4px — desktop with sidebar */
+    padding-top: 96px; /* 24 * 4px; desktop with sidebar */
   }
 }
 
@@ -457,7 +457,7 @@
   }
 }
 
-/* ─── Chat layout (Tailwind v4 base-after-variant fix) ─────────── */
+/* Chat layout (Tailwind v4 base-after-variant fix) */
 .chat-shell {
   flex: 1;
   min-height: 0;
@@ -509,7 +509,7 @@
   }
 }
 
-/* ─── Checkbox / range ───────────────────────────────────────────── */
+/* Checkbox / range */
 .checkbox-custom {
   width: 18px;
   height: 18px;
@@ -520,20 +520,20 @@
 }
 input[type="range"] { accent-color: var(--ck-accent); }
 
-/* ─── Scroll indicator ──────────────────────────────────────────── */
+/* Scroll indicator */
 @keyframes scroll-indicator {
   0%   { transform: translateY(-100%); }
   100% { transform: translateY(300%); }
 }
 
-/* ─── Mobile menu slide ─────────────────────────────────────────── */
+/* Mobile menu slide */
 @keyframes slide-down {
   from { opacity: 0; transform: translateY(-10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 .mobile-menu-open { animation: slide-down 0.25s ease forwards; }
 
-/* ─── Section header two-col row (workaround: Tailwind v4/Turbopack
+/* Section header two-col row (workaround: Tailwind v4/Turbopack
    generates base utilities after responsive variants in @layer utilities,
    so flex-col overrides md:flex-row. Plain @media outside the layer wins.) */
 .section-header-row {
@@ -551,7 +551,7 @@ input[type="range"] { accent-color: var(--ck-accent); }
   }
 }
 
-/* ─── Header responsive visibility (md:flex / md:hidden Tailwind v4 workaround) */
+/* Header responsive visibility (md:flex / md:hidden Tailwind v4 workaround) */
 .header-desktop-nav,
 .header-desktop-cta {
   display: none;
@@ -585,7 +585,7 @@ input[type="range"] { accent-color: var(--ck-accent); }
   }
 }
 
-/* ─── Hero CTA row (same Tailwind v4 workaround: flex-col overrides sm:flex-row) */
+/* Hero CTA row (same Tailwind v4 workaround: flex-col overrides sm:flex-row) */
 .hero-cta-row {
   display: flex;
   flex-direction: column;
@@ -599,7 +599,7 @@ input[type="range"] { accent-color: var(--ck-accent); }
   }
 }
 
-/* ─── Hero stats card (same fix: hidden overrides lg:block in v4) ─── */
+/* Hero stats card (same fix: hidden overrides lg:block in v4) */
 .hero-stats-card {
   display: none;
 }
@@ -613,7 +613,7 @@ input[type="range"] { accent-color: var(--ck-accent); }
   }
 }
 
-/* ─── Listings sort/action bar (Tailwind v4 responsive workaround) ── */
+/* Listings sort/action bar (Tailwind v4 responsive workaround) */
 .sort-btn-desktop {
   display: none;
 }
@@ -639,14 +639,14 @@ input[type="range"] { accent-color: var(--ck-accent); }
   }
 }
 
-/* ─── Filter sidebar section ─────────────────────────────────────── */
+/* Filter sidebar section */
 .filter-section {
   border-bottom: 1px solid var(--ck-border);
   padding-bottom: 20px;
   margin-bottom: 20px;
 }
 
-/* ─── Select field ───────────────────────────────────────────────── */
+/* Select field */
 .select-field {
   border: 1.5px solid var(--ck-border);
   border-radius: 10px;
@@ -665,7 +665,7 @@ input[type="range"] { accent-color: var(--ck-accent); }
   border-color: #4F46E5;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
-/* ─── Auth left panel — visible on lg+ (Tailwind v4 hidden lg:flex workaround) ── */
+/* Auth left panel: visible on lg+ (Tailwind v4 hidden lg:flex workaround) */
 .auth-left-panel {
   display: none;
 }
@@ -678,7 +678,7 @@ input[type="range"] { accent-color: var(--ck-accent); }
   }
 }
 
-/* ─── Bottom nav — hidden on desktop (Tailwind v4 lg:hidden workaround) ── */
+/* Bottom nav: hidden on desktop (Tailwind v4 lg:hidden workaround) */
 .bottom-nav-wrap {
   display: flex;
   flex-direction: column;
@@ -689,7 +689,7 @@ input[type="range"] { accent-color: var(--ck-accent); }
   }
 }
 
-/* ─── App layout bottom padding — only when bottom nav is visible ──── */
+/* App layout bottom padding: only when bottom nav is visible */
 .app-main-pb {
   padding-bottom: 5rem; /* matches bottom nav height on mobile */
 }

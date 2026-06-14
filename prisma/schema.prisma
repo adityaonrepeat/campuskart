@@ -6,7 +6,7 @@ datasource db {
   provider = "postgresql"
 }
 
-// ─── Better Auth required models ─────────────────────────────────────────────
+// Better Auth required models
 
 enum Role {
   USER
@@ -94,7 +94,7 @@ model Verification {
   @@index([identifier])
 }
 
-// ─── App models ───────────────────────────────────────────────────────────────
+// App models
 
 model College {
   id    String @id @default(cuid())
@@ -227,7 +227,7 @@ model ModerationLog {
   @@index([createdAt(sort: Desc)])
 }
 
-// ─── Campus Stores ─────────────────────────────────────────────────────────────
+// Campus Stores
 
 enum StoreCategory {
   FOOD_DRINKS

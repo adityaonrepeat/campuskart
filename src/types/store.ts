@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { Prisma } from "@prisma/client";
 
-// ─── Enums ────────────────────────────────────────────────────────────────────
+// Enums
 
 export const STORE_CATEGORIES = [
   "FOOD_DRINKS",
@@ -25,7 +25,7 @@ export const STORE_CATEGORY_LABELS: Record<(typeof STORE_CATEGORIES)[number], st
   OTHER: "Other",
 };
 
-// ─── Zod schemas ──────────────────────────────────────────────────────────────
+// Zod schemas
 
 // Empty string → undefined transforms keep field types clean (no `unknown`)
 const optionalUrl = z
@@ -75,7 +75,7 @@ export type CreateStoreInput = z.infer<typeof createStoreSchema>;
 export type UpdateStoreInput = z.infer<typeof updateStoreSchema>;
 export type CreateReviewInput = z.infer<typeof createReviewSchema>;
 
-// ─── Prisma-derived types ─────────────────────────────────────────────────────
+// Prisma-derived types
 
 const storeCardArgs = {
   select: {

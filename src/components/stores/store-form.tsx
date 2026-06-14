@@ -202,7 +202,7 @@ export function StoreForm({ store }: StoreFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 
-      {/* ── Basic info ── */}
+      {/* Basic info */}
       <section className="space-y-5">
         <SectionHeader icon="store" title="Store info" />
 
@@ -246,7 +246,7 @@ export function StoreForm({ store }: StoreFormProps) {
         </div>
       </section>
 
-      {/* ── Delivery or Pickup ── */}
+      {/* Delivery or Pickup */}
       <section className="space-y-3">
         <div>
           <Label>Do you deliver to hostels? <span className="text-destructive">*</span></Label>
@@ -276,7 +276,7 @@ export function StoreForm({ store }: StoreFormProps) {
         </div>
       </section>
 
-      {/* ── Tags ── */}
+      {/* Tags */}
       <section className="space-y-4">
         <SectionHeader icon="tag" title="Food / item tags" sub="Help students find you by what you sell" />
 
@@ -333,7 +333,7 @@ export function StoreForm({ store }: StoreFormProps) {
         )}
       </section>
 
-      {/* ── Hours ── */}
+      {/* Hours */}
       <section className="space-y-4">
         <SectionHeader icon="clock" title="Opening hours" sub="When are you open for orders?" />
         <HoursPicker
@@ -343,7 +343,7 @@ export function StoreForm({ store }: StoreFormProps) {
         {errors.hours && <p className="text-xs text-destructive">{errors.hours.message}</p>}
       </section>
 
-      {/* ── Contact & location ── */}
+      {/* Contact & location */}
       <section className="space-y-4">
         <SectionHeader icon="phone" title="Contact & location" sub="How students reach you" />
 
@@ -374,7 +374,7 @@ export function StoreForm({ store }: StoreFormProps) {
         </div>
       </section>
 
-      {/* ── Storefront photos ── */}
+      {/* Storefront photos */}
       <section className="space-y-4">
         <SectionHeader
           icon="image"
@@ -393,7 +393,7 @@ export function StoreForm({ store }: StoreFormProps) {
         {errors.images && <p className="text-xs text-destructive">{errors.images.message}</p>}
       </section>
 
-      {/* ── Menu / product photos ── */}
+      {/* Menu / product photos */}
       <section className="space-y-4">
         <SectionHeader
           icon="menu"
@@ -412,7 +412,7 @@ export function StoreForm({ store }: StoreFormProps) {
         {errors.menuImages && <p className="text-xs text-destructive">{errors.menuImages.message}</p>}
       </section>
 
-      {/* ── Default quick replies notice ── */}
+      {/* Default quick replies notice */}
       <div className="flex gap-3 p-4 rounded-xl bg-surface border border-border">
         <svg className="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366F1" strokeWidth="2">
           <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
@@ -425,7 +425,7 @@ export function StoreForm({ store }: StoreFormProps) {
         </div>
       </div>
 
-      {/* ── Actions ── */}
+      {/* Actions */}
       <div className="flex gap-3 pt-2 pb-6">
         <Button type="button" variant="outline" onClick={() => router.back()} disabled={isSubmitting} className="rounded-xl px-6">
           Cancel
@@ -439,7 +439,7 @@ export function StoreForm({ store }: StoreFormProps) {
   );
 }
 
-// ── Shared section header ──────────────────────────────────────────────────────
+// Shared section header
 
 type IconName = "store" | "tag" | "clock" | "phone" | "image" | "menu";
 
