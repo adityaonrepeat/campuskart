@@ -8,11 +8,41 @@ A college-scoped marketplace for students — buy/sell items, browse campus stor
 
 ---
 
+## Architecture
+
+```mermaid
+flowchart TD
+    Browser["Browser\nReact 19 · Zustand · React Query"]
+
+    Browser -- "HTTP / RSC" --> Vercel
+    Browser -- "WebSocket (cookie auth)" --> Render
+
+    subgraph Vercel["Vercel — serverless"]
+        NextJS["Next.js 16\nApp Router · Route Handlers · Server Actions\nBetter Auth — email/password + Google OAuth"]
+    end
+
+    subgraph Render["Render — stateful process"]
+        SocketIO["Socket.IO Server\nin-memory presence · real-time messages · typing"]
+    end
+
+    SocketIO -- "GET /api/auth/get-session" --> NextJS
+
+    NextJS --> Neon[("Neon PostgreSQL\nPrisma ORM")]
+    NextJS --> UT["UploadThing\npresigned image upload"]
+    NextJS --> SE["Sightengine\nimage + text moderation"]
+    NextJS --> Redis[("Upstash Redis\nrate limiting")]
+
+    SocketIO --> Neon
+    SocketIO --> Redis
+```
+
+---
+
 ## Features
 
 | Feature | Status |
 |---------|--------|
-| Email/password auth with college selection | ✅ |
+| Email/password + Google OAuth auth with college selection | ✅ |
 | College-scoped listings (CRUD + image upload + moderation) | ✅ |
 | Contact Seller → opens real-time chat thread | ✅ |
 | Chat with store (in-app, find-or-create on first contact) | ✅ |
@@ -22,8 +52,8 @@ A college-scoped marketplace for students — buy/sell items, browse campus stor
 | User profiles (own / public / edit + avatar) | ✅ |
 | Campus Stores (browse, register, categories, tags, reviews, open hours) | ✅ |
 | Admin panel (MODERATOR/ADMIN roles — remove listings, verify stores, mod log) | ✅ |
-| Image moderation (Sightengine, synchronous, before DB insert) | ✅ |
-| Rate limiting on auth + listing create + socket messages (Upstash Redis) | ✅ |
+| Content moderation — image + text (Sightengine, synchronous, before DB insert) | ✅ |
+| Rate limiting on auth, listing create, conversation create + socket messages (Upstash Redis) | ✅ |
 | Fixed Price / Negotiable listing types (seller picks per listing) | ✅ |
 
 ---

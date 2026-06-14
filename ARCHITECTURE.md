@@ -1,26 +1,35 @@
 # CampusKart — Architecture
 
-> For the full detailed version (data flows, rate limits, debugging lessons) see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+> For data flows, API contracts, and debugging lessons see [docs/](./docs/) — CODEBASE · API_FLOW · DECISIONS · DEBUGGING.
 
 ---
 
 ## System diagram
 
-```
-                    ┌──────────────────────────────────────────┐
-   Browser ───────▶ │  Next.js 16 app (Vercel, serverless)     │
-   (React 19)       │  • App Router RSC pages                  │
-        │           │  • Route Handlers (reads → React Query)  │──▶ Neon Postgres (Prisma)
-        │           │  • Server Actions (mutations)            │──▶ UploadThing (image storage)
-        │           │  • Better Auth (email/password)          │──▶ Sightengine (image moderation)
-        │           └──────────────────────────────────────────┘   Upstash Redis (rate limits)
-        │ WebSocket (cookie auth)
-        ▼
-   ┌──────────────────────────────────────┐
-   │  Socket.IO server (Render, stateful) │──▶ Neon Postgres (own Prisma client)
-   │  • in-memory presence maps           │──▶ validates session via Next.js /api/auth/get-session
-   │  • real-time messages + typing       │──▶ Upstash Redis (message rate limit)
-   └──────────────────────────────────────┘
+```mermaid
+flowchart TD
+    Browser["Browser\nReact 19 · Zustand · React Query"]
+
+    Browser -- "HTTP / RSC" --> Vercel
+    Browser -- "WebSocket (cookie auth)" --> Render
+
+    subgraph Vercel["Vercel — serverless"]
+        NextJS["Next.js 16\nApp Router · Route Handlers · Server Actions\nBetter Auth — email/password + Google OAuth"]
+    end
+
+    subgraph Render["Render — stateful process"]
+        SocketIO["Socket.IO Server\nin-memory presence · real-time messages · typing"]
+    end
+
+    SocketIO -- "GET /api/auth/get-session" --> NextJS
+
+    NextJS --> Neon[("Neon PostgreSQL\nPrisma ORM")]
+    NextJS --> UT["UploadThing\npresigned image upload"]
+    NextJS --> SE["Sightengine\nimage + text moderation"]
+    NextJS --> Redis[("Upstash Redis\nrate limiting")]
+
+    SocketIO --> Neon
+    SocketIO --> Redis
 ```
 
 Two deploy targets because Vercel is serverless and cannot hold long-lived WebSocket connections.
@@ -43,7 +52,7 @@ Two deploy targets because Vercel is serverless and cannot hold long-lived WebSo
 
 **Socket sender trust** — `senderId` is never accepted from the socket client payload. The socket server sets `socket.data.userId` during handshake validation and uses that exclusively.
 
-**Image moderation** — Sightengine check runs synchronously inside the create/update Server Action, before any DB write. A flagged image deletes the UploadThing file and returns `IMAGE_FLAGGED`. A provider error returns `MODERATION_UNAVAILABLE` (fail closed — listing not created, files kept for retry).
+**Content moderation** — Both image and text are moderated synchronously inside the create/update Server Action, before any DB write. Text (`checkTextIsSafe`) runs first; images (`checkImagesAreSafe`) run second. A flagged result deletes the UploadThing files and returns `TEXT_FLAGGED` / `IMAGE_FLAGGED`. A provider error returns `MODERATION_UNAVAILABLE` (fail closed — listing not created, files kept for retry).
 
 **Sold listing guard** — `POST /api/conversations` returns `409 LISTING_NOT_ACTIVE` if the listing is not `ACTIVE`. Contacting a seller about a sold item is blocked.
 
@@ -75,7 +84,7 @@ ModerationLog   — moderatorId, listingId, listingTitle, sellerName, collegeId,
 
 ## Auth and roles
 
-Better Auth handles sessions (email + password + username plugin). Custom fields: `collegeId`, `role`.
+Better Auth handles sessions (email/password + Google OAuth + username plugin). Custom fields: `collegeId`, `role`.
 
 | Role | Access |
 |------|--------|
@@ -93,11 +102,16 @@ Better Auth handles sessions (email + password + username plugin). Custom fields
 1. Client compresses (browser-image-compression)
 2. UploadThing presigned upload — bytes never touch our server
 3. Server Action:
+   checkTextIsSafe(title, description)
+     → Sightengine text/check.json (POST, profanity/sexual/hate/violence/drug/weapon/extremism)
+     → flagged  →  delete files + return TEXT_FLAGGED
+     → throws   →  delete files + return MODERATION_UNAVAILABLE
+
    checkImagesAreSafe(urls)
      → Sightengine check.json (GET by image URL, up to 3 retries with 8s timeout)
-     → throws / provider error  →  MODERATION_UNAVAILABLE (keep files, allow retry)
-     → score ≥ threshold        →  delete files via utapi + return IMAGE_FLAGGED
-     → safe                     →  db.listing.create / db.listing.update
+     → score ≥ threshold  →  delete files via utapi + return IMAGE_FLAGGED
+     → throws             →  delete files + return MODERATION_UNAVAILABLE
+     → safe               →  db.listing.create / db.listing.update
 ```
 
 ---
@@ -136,7 +150,8 @@ Store listings (`Listing.storeId` set) are excluded from the main browse feed. `
 | sign-in | 10 / 15 min | IP | `proxy.ts` |
 | sign-up | 5 / 15 min | IP | `proxy.ts` |
 | listing create | 5 / 1 h | userId | `createListing` action |
-| socket messages | see `rate-limiter.ts` | userId | `client:send_message` handler |
+| conversation create | 20 / 1 h | userId | `POST /api/conversations` |
+| socket messages | 30 / 1 min | userId | `client:send_message` handler |
 
 The socket message limiter **fails open** — if Redis is unavailable, messages are allowed through rather than blocking all chat.
 
