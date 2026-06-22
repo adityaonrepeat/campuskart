@@ -9,7 +9,7 @@ export const COLLEGES = [
   { name: "Indian Institute of Technology Hyderabad", city: "Hyderabad", state: "Telangana" },
   { name: "Indian Institute of Technology Guwahati", city: "Guwahati", state: "Assam" },
   { name: "Indian Institute of Science", city: "Bengaluru", state: "Karnataka" },
-  { name: "National Institute of Technology Trichy", city: "Tiruchirappalli", state: "Tamil Nadu" },
+  { name: "National Institute of Technology Agartala", city: "Agartala", state: "Tripura" },
   { name: "National Institute of Technology Warangal", city: "Warangal", state: "Telangana" },
   { name: "National Institute of Technology Surathkal", city: "Mangaluru", state: "Karnataka" },
   { name: "National Institute of Technology Calicut", city: "Kozhikode", state: "Kerala" },

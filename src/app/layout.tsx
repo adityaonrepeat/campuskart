@@ -30,7 +30,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "CampusKart — Your Campus Marketplace",
+  title: "CampusKart - Your Campus Marketplace",
   description: "Buy and sell within your college community. Verified students only, campus pickup, real-time chat.",
 };
 

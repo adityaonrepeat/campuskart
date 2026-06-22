@@ -9,7 +9,7 @@ const COLLEGES = [
   'IIT Delhi',
   'IIT Madras',
   'BITS Pilani',
-  'NIT Trichy',
+  'NIT Agartala',
   'VIT Vellore',
   'Anna University',
   'Delhi Technological University'];
@@ -20,7 +20,7 @@ const LIVE_BIDS = [
   { item: 'Badminton Racket', bid: '₹650', college: 'BITS Pilani' },
   { item: 'MacBook Charger', bid: '₹1,200', college: 'IIT Delhi' },
   { item: 'Yoga Mat', bid: '₹350', college: 'VIT Vellore' },
-  { item: 'Mini Fridge', bid: '₹3,500', college: 'NIT Trichy' }];
+  { item: 'Mini Fridge', bid: '₹3,500', college: 'NIT Agartala' }];
 
 
 export default function HeroSection() {
@@ -51,8 +51,7 @@ export default function HeroSection() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex flex-col justify-end overflow-hidden grain-overlay"
-      style={{ minHeight: '100vh' }}>
+      className="relative hero-section flex flex-col justify-end overflow-hidden grain-overlay">
 
       {/* Background Image with Parallax */}
       <div
@@ -80,7 +79,7 @@ export default function HeroSection() {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
           </span>
           <span className="text-white/90 text-xs font-medium truncate">
-            Live bid: <span className="text-white font-semibold">{current?.item}</span> — {current?.bid} at {current?.college}
+            Live bid: <span className="text-white font-semibold">{current?.item}</span> - {current?.bid} at {current?.college}
           </span>
         </div>
       </div>
@@ -95,7 +94,7 @@ export default function HeroSection() {
           </div>
 
           {/* Headline */}
-          <h1 className="font-display text-[clamp(1.85rem,7vw,5.5rem)] leading-[0.95] font-semibold text-white mb-6 tracking-tight">
+          <h1 className="font-display text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.95] font-semibold text-white mb-6 tracking-tight">
             Your campus.<br />
             <span className="italic font-semibold text-indigo-400 tracking-wide">Your marketplace.</span>
           </h1>
@@ -171,7 +170,7 @@ export default function HeroSection() {
         </div>
       </div>
       {/* Scroll indicator */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2">
+      <div className="hero-scroll-indicator absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex-col items-center gap-2">
         <span className="text-white/40 text-[10px] tracking-[0.4em] uppercase">Scroll</span>
         <div className="w-px h-10 bg-white/20 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full bg-white/60" style={{ height: '40%', animation: 'scroll-indicator 2s ease-in-out infinite' }} />

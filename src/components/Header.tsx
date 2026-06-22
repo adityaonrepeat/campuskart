@@ -85,24 +85,32 @@ export default function Header({ forceScrolled = false }: { forceScrolled?: bool
             </Link>
           </div>
 
-          {/* Mobile Hamburger */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className={`header-mobile-btn p-2 rounded-lg transition-colors ${
-              scrolled ? 'text-foreground' : 'text-white'
-            }`}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? (
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
-          </button>
+          {/* Mobile: Join Free + Hamburger */}
+          <div className="header-mobile-btn flex items-center gap-2">
+            <Link
+              href="/signup"
+              className="btn-shimmer text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-[0_2px_8px_rgba(79,70,229,0.25)]"
+            >
+              Join Free
+            </Link>
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className={`p-2 rounded-lg transition-colors ${
+                scrolled ? 'text-foreground' : 'text-white'
+              }`}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -116,12 +124,23 @@ export default function Header({ forceScrolled = false }: { forceScrolled?: bool
 
       {/* Mobile Menu Panel */}
       {mobileOpen && (
-        <div className="header-mobile-panel fixed top-0 left-0 right-0 z-50 bg-white pt-20 pb-8 px-6 shadow-xl mobile-menu-open">
-          <div className="flex items-center gap-2.5 mb-8">
-            <AppLogo size={32} />
-            <span className="text-lg font-semibold text-primary" style={{ fontFamily: "var(--font-dm-sans)" }}>CampusKart</span>
+        <div className="header-mobile-panel fixed top-0 left-0 right-0 z-50 bg-white pt-5 pb-8 px-6 shadow-xl mobile-menu-open">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2.5">
+              <AppLogo size={32} />
+              <span className="text-lg font-semibold text-primary" style={{ fontFamily: "var(--font-dm-sans)" }}>CampusKart</span>
+            </div>
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="p-2 rounded-lg text-muted hover:text-foreground transition-colors"
+              aria-label="Close menu"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-          <nav className="flex flex-col gap-1 mb-8">
+          <nav className="flex flex-col gap-1 mb-6">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
@@ -135,18 +154,18 @@ export default function Header({ forceScrolled = false }: { forceScrolled?: bool
           </nav>
           <div className="flex flex-col gap-3">
             <Link
-              href="/login"
-              onClick={() => setMobileOpen(false)}
-              className="text-center py-3 rounded-xl border border-border text-foreground font-medium text-sm hover:bg-surface transition-colors"
-            >
-              Log In
-            </Link>
-            <Link
               href="/signup"
               onClick={() => setMobileOpen(false)}
               className="btn-shimmer text-white text-center py-3 rounded-xl font-semibold text-sm shadow-[0_2px_12px_rgba(79,70,229,0.20)]"
             >
               Join Free
+            </Link>
+            <Link
+              href="/login"
+              onClick={() => setMobileOpen(false)}
+              className="text-center py-3 rounded-xl border border-border text-foreground font-medium text-sm hover:bg-surface transition-colors"
+            >
+              Log In
             </Link>
           </div>
         </div>

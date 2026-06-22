@@ -520,10 +520,31 @@
 }
 input[type="range"] { accent-color: var(--ck-accent); }
 
+/* Hero section: min-height and mobile content positioning.
+   padding-bottom on the flex container shifts the justify-end anchor
+   upward, reducing empty space above the content stack on mobile. */
+.hero-section {
+  min-height: 100svh;
+  padding-bottom: 5rem;
+}
+@media (min-width: 1024px) {
+  .hero-section {
+    padding-bottom: 0;
+  }
+}
+
 /* Scroll indicator */
 @keyframes scroll-indicator {
   0%   { transform: translateY(-100%); }
   100% { transform: translateY(300%); }
+}
+.hero-scroll-indicator {
+  display: none;
+}
+@media (min-width: 768px) {
+  .hero-scroll-indicator {
+    display: flex;
+  }
 }
 
 /* Mobile menu slide */
@@ -569,7 +590,9 @@ input[type="range"] { accent-color: var(--ck-accent); }
   }
 }
 .header-mobile-btn {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 @media (min-width: 768px) {
   .header-mobile-btn {
@@ -607,8 +630,8 @@ input[type="range"] { accent-color: var(--ck-accent); }
   .hero-stats-card {
     display: block;
     position: absolute;
-    bottom: 4rem;
-    right: 2rem;
+    bottom: 7rem;
+    right: 12rem;
     z-index: 10;
   }
 }
