@@ -104,7 +104,7 @@ export function RegisterForm() {
           <label className="block text-xs font-semibold text-[#111111] mb-1.5">Full Name</label>
           <input
             type="text"
-            placeholder="e.g. Aditya Singh"
+            placeholder="John Doe"
             className="input-field"
             {...register("name")}
           />
@@ -116,7 +116,7 @@ export function RegisterForm() {
           <label className="block text-xs font-semibold text-[#111111] mb-1.5">Username</label>
           <input
             type="text"
-            placeholder="e.g. aditya_s"
+            placeholder="john_cs27"
             className="input-field"
             {...register("username")}
           />
@@ -149,7 +149,7 @@ export function RegisterForm() {
           <label className="block text-xs font-semibold text-[#111111] mb-1.5">Email Address</label>
           <input
             type="email"
-            placeholder="you@gmail.com"
+            placeholder="john@gmail.com"
             autoComplete="email"
             className="input-field"
             {...register("email")}

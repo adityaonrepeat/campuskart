@@ -56,7 +56,7 @@ export default function SignUpPage() {
               <span className="italic font-normal text-accent-light">Your deals.</span>
             </h1>
             <p className="text-white/60 text-lg font-light leading-relaxed max-w-sm mb-10">
-              Join 28,400+ verified students buying and selling on campus — all picked up right where you live and study.
+              Join 100+ verified students buying and selling on campus — all picked up right where you live and study.
             </p>
 
             {/* Feature bullets */}

@@ -79,7 +79,7 @@ export default function HeroSection() {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
           </span>
           <span className="text-white/90 text-xs font-medium truncate">
-            Live bid: <span className="text-white font-semibold">{current?.item}</span> - {current?.bid} at {current?.college}
+            Live now: <span className="text-white font-semibold">{current?.item}</span> - {current?.bid} at {current?.college}
           </span>
         </div>
       </div>
@@ -87,20 +87,20 @@ export default function HeroSection() {
       <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-12 sm:pb-24 pt-20 sm:pt-32">
         <div className="max-w-3xl">
           {/* Eyebrow */}
-          <div className="flex items-center gap-2 mb-6">
+          <div className="hero-eyebrow flex items-center gap-2">
             <span className="tag-pill bg-white/10 text-white/90 backdrop-blur-sm border border-white/20 text-xs tracking-widest uppercase">
               Campus-Exclusive Marketplace
             </span>
           </div>
 
           {/* Headline */}
-          <h1 className="font-display text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.95] font-semibold text-white mb-6 tracking-tight">
+          <h1 className="hero-h1 font-display text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.95] font-semibold text-white tracking-tight">
             Your campus.<br />
-            <span className="italic font-semibold text-indigo-400 tracking-wide">Your marketplace.</span>
+            <span className="hero-marketplace-line italic font-semibold text-indigo-400 tracking-wide">Your marketplace.</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-indigo-100 text-lg sm:text-xl font-normal leading-relaxed mb-5 sm:mb-10 max-w-xl">
+          <p className="hero-desc text-indigo-100 text-lg sm:text-xl font-normal leading-relaxed max-w-xl">
             From monitored listings to verified campus stores. Chat with sellers, check reviews, and pick up everything right on your campus.
           </p>
 
@@ -117,7 +117,7 @@ export default function HeroSection() {
                   <option key={c} value={c === 'Select your college...' ? '' : c}>{c}</option>
                 )}
               </select>
-              <svg className="absolute right-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg className="absolute right-3 text-muted pointer-events-none" style={{ top: '50%', transform: 'translateY(-50%)' }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M6 9l6 6 6-6" />
               </svg>
             </div>
@@ -158,13 +158,13 @@ export default function HeroSection() {
           </div>
           <div className="space-y-3">
             <div>
-              <p className="text-white text-2xl font-display font-semibold">4,820</p>
+              <p className="text-white text-2xl font-display font-semibold">200+</p>
               <p className="text-white/50 text-xs">active listings</p>
             </div>
             <div className="h-px bg-white/10" />
             <div>
-              <p className="text-white text-2xl font-display font-semibold">128</p>
-              <p className="text-white/50 text-xs">bids in last hour</p>
+              <p className="text-white text-2xl font-display font-semibold">12</p>
+              <p className="text-white/50 text-xs">listings in last hour</p>
             </div>
           </div>
         </div>

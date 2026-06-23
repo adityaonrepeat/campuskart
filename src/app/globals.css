@@ -332,8 +332,8 @@
   font-family: var(--font-inter), system-ui, sans-serif;
 }
 .input-field:focus {
-  border-color: #4F46E5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.08);
 }
 .input-field::placeholder { color: #9CA3AF; }
 
@@ -520,17 +520,32 @@
 }
 input[type="range"] { accent-color: var(--ck-accent); }
 
-/* Hero section: min-height and mobile content positioning.
-   padding-bottom on the flex container shifts the justify-end anchor
-   upward, reducing empty space above the content stack on mobile. */
+
+/* Hero section: 100svh + lift content on mobile only */
 .hero-section {
   min-height: 100svh;
-  padding-bottom: 5rem;
+  padding-bottom: 3.5rem;
 }
 @media (min-width: 1024px) {
   .hero-section {
+    min-height: 100vh;
     padding-bottom: 0;
   }
+}
+
+/* Hero content spacing: more relaxed gaps on mobile */
+.hero-marketplace-line { display: block; margin-top: 0.5rem; }
+@media (min-width: 1024px) {
+  .hero-marketplace-line { margin-top: 0; }
+}
+
+.hero-eyebrow { margin-bottom: 2rem; }
+.hero-h1      { margin-bottom: 2rem; }
+.hero-desc    { margin-bottom: 2.5rem; }
+@media (min-width: 1024px) {
+  .hero-eyebrow { margin-bottom: 1.5rem; }   /* original mb-6 */
+  .hero-h1      { margin-bottom: 1.5rem; }   /* original mb-6 */
+  .hero-desc    { margin-bottom: 2.5rem; }   /* original sm:mb-10 */
 }
 
 /* Scroll indicator */
