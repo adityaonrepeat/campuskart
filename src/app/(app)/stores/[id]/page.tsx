@@ -94,7 +94,7 @@ export default async function StoreDetailPage({ params }: PageProps) {
   const isMod = role === "MODERATOR" || role === "ADMIN";
 
   if (store.status !== "ACTIVE" && !isOwner && !isMod) notFound();
-  if (!isOwner && !isMod && store.collegeId !== session.user.collegeId) notFound();
+  if (!isOwner && role !== "ADMIN" && store.collegeId !== session.user.collegeId) notFound();
 
   const myReview = store.reviews.find((r) => r.userId === session.user.id);
   const canReview = !isOwner && store.status === "ACTIVE";
