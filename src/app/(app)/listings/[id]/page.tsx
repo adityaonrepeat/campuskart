@@ -30,9 +30,8 @@ export default async function ListingDetailPage({ params }: PageProps) {
     },
   });
 
-  const role = session.user.role ?? "USER";
-  const isMod = role === "ADMIN" || role === "MODERATOR";
-  if (!listing || (!isMod && listing.collegeId !== session.user.collegeId)) {
+  const isAdmin = (session.user.role ?? "USER") === "ADMIN";
+  if (!listing || (!isAdmin && listing.collegeId !== session.user.collegeId)) {
     notFound();
   }
 
