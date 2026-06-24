@@ -105,7 +105,7 @@ export default function AppHeader({ user, forceScrolled = true, showAdmin = fals
           {/* Desktop CTAs */}
           <div className="header-desktop-cta shrink-0">
             <Link href="/profile" className="flex items-center gap-2 group" title={user.name}>
-              <div className="w-9 h-9 rounded-full bg-[#EEF2FF] flex items-center justify-center text-sm font-semibold text-[#4F46E5] border-2 border-[#E5E4E0] group-hover:border-[#4F46E5] transition-colors duration-200 select-none">
+              <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-sm font-semibold text-white ring-2 ring-accent/20 group-hover:ring-accent/70 transition-all duration-200 select-none">
                 {initials}
               </div>
             </Link>
@@ -166,7 +166,7 @@ export default function AppHeader({ user, forceScrolled = true, showAdmin = fals
           </div>
           {/* User identity */}
           <div className="flex items-center gap-3 mb-6 pb-6 border-b border-[#E5E4E0]">
-            <div className="w-11 h-11 rounded-full bg-[#EEF2FF] flex items-center justify-center text-base font-semibold text-[#4F46E5] select-none">
+            <div className="w-11 h-11 rounded-full bg-accent flex items-center justify-center text-base font-semibold text-white select-none">
               {initials}
             </div>
             <div>

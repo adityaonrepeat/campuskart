@@ -130,7 +130,7 @@ export default function ListingsGrid({ filters }: ListingsGridProps) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search listings..."
-          className="w-full h-10 pl-10 pr-4 rounded-xl border border-[#E5E4E0] bg-white text-sm text-[#111111] placeholder:text-[#9CA3AF] outline-none focus:border-accent focus:ring-2 focus:ring-accent/10 transition-all"
+          className="w-full h-10 pl-10 pr-4 rounded-xl border border-(--ck-border) bg-white text-sm text-[#111111] placeholder:text-[#9CA3AF] outline-none focus:border-accent focus:ring-2 focus:ring-accent/10 transition-all"
         />
       </div>
 
