@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { StoreForm } from "@/components/stores/store-form";
 
-export const metadata = { title: "List your store — CampusKart" };
+export const metadata = { title: "List your store - CampusKart" };
 
 export default async function NewStorePage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -55,15 +55,15 @@ export default async function NewStorePage() {
           {/* Info chips */}
           <div className="flex flex-wrap gap-2 mt-5">
             {[
-              { icon: "⚡", text: "Fast verification" },
-              { icon: "💬", text: "Chat with buyers" },
-              { icon: "🎯", text: "College-scoped visibility" },
+              { text: "Fast verification" },
+              { text: "Chat with buyers" },
+              { text: "College-scoped visibility" },
             ].map((chip) => (
               <span
                 key={chip.text}
                 className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-white/70 text-xs font-medium"
               >
-                {chip.icon} {chip.text}
+                {chip.text}
               </span>
             ))}
           </div>

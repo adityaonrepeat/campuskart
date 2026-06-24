@@ -102,7 +102,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps) {
           {listings.map((listing) => {
             const image = listing.images[0];
             return (
-              <div key={listing.id} className="flex items-center gap-3 p-4 border rounded-xl bg-card">
+              <div key={listing.id} className="flex items-start gap-3 p-4 border rounded-xl bg-white">
                 <Link
                   href={`/listings/${listing.id}`}
                   className="relative w-14 h-14 shrink-0 rounded-lg overflow-hidden border bg-muted"
@@ -117,24 +117,19 @@ export default async function AdminListingsPage({ searchParams }: PageProps) {
                 </Link>
 
                 <div className="flex-1 min-w-0 space-y-0.5">
-                  <div className="flex items-start justify-between gap-2">
-                    <Link
-                      href={`/listings/${listing.id}`}
-                      className="text-sm font-medium leading-tight hover:underline line-clamp-1"
-                    >
-                      {listing.title}
-                    </Link>
-                    <span className="text-sm font-semibold text-primary whitespace-nowrap shrink-0">
-                      ₹{listing.price.toLocaleString("en-IN")}
-                    </span>
-                  </div>
+                  <Link
+                    href={`/listings/${listing.id}`}
+                    className="text-sm font-medium leading-tight hover:underline line-clamp-1 block"
+                  >
+                    {listing.title}
+                  </Link>
                   <p className="text-xs text-muted-foreground truncate">
                     {listing.seller.name}
                     {role === "ADMIN" && ` · ${listing.college.name}`}
                   </p>
                   <div className="flex items-center gap-2">
                     <span
-                      className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${STATUS_STYLE[listing.status] ?? "bg-muted"}`}
+                      className={`inline-flex items-center h-4 text-[10px] font-semibold px-2 rounded-full ${STATUS_STYLE[listing.status] ?? "bg-muted"}`}
                     >
                       {listing.status}
                     </span>
@@ -144,7 +139,10 @@ export default async function AdminListingsPage({ searchParams }: PageProps) {
                   </div>
                 </div>
 
-                <div className="shrink-0">
+                <div className="shrink-0 flex flex-col items-end justify-between self-stretch pr-3">
+                  <span className="text-sm font-semibold text-primary whitespace-nowrap">
+                    ₹{listing.price.toLocaleString("en-IN")}
+                  </span>
                   <RemoveListingButton listingId={listing.id} title={listing.title} isAdmin={role === "ADMIN"} />
                 </div>
               </div>

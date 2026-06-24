@@ -19,15 +19,15 @@ import { Textarea } from "@/components/ui/textarea";
 const FULFILLMENT_TAGS = ["Delivery Available", "Self Pickup"];
 
 const PRESET_TAGS = [
-  "Cafe", "Biryani", "Cake", "Dosa", "Chicken",
-  "Chowmin", "Lachha Paratha", "Pizza", "Burger", "Tea", "Snacks",
+  "Cafe", "Biryani", "Cake", "Dosa",
+  "Noodles", "Pizza", "Burger", "Tea", "Snacks",
 ];
 
 const DAY_PRESETS = [
   { label: "Everyday", value: "Everyday" },
-  { label: "Mon–Sat", value: "Mon–Sat" },
-  { label: "Mon–Fri", value: "Mon–Fri" },
-  { label: "Weekends", value: "Sat–Sun" },
+  { label: "Mon-Sat", value: "Mon-Sat" },
+  { label: "Mon-Fri", value: "Mon-Fri" },
+  { label: "Weekends", value: "Sat-Sun" },
 ];
 
 function to12h(t: string): string {
@@ -45,7 +45,7 @@ interface HoursPickerProps {
 }
 
 function HoursPicker({ initialValue, onChange }: HoursPickerProps) {
-  const [dayPreset, setDayPreset] = useState("Mon–Sat");
+  const [dayPreset, setDayPreset] = useState("Mon-Sat");
   const [openTime, setOpenTime] = useState("09:00");
   const [closeTime, setCloseTime] = useState("21:00");
 
@@ -58,7 +58,7 @@ function HoursPicker({ initialValue, onChange }: HoursPickerProps) {
   }, [initialValue]);
 
   useEffect(() => {
-    onChange(`${dayPreset}, ${to12h(openTime)} – ${to12h(closeTime)}`);
+    onChange(`${dayPreset}, ${to12h(openTime)} - ${to12h(closeTime)}`);
   }, [dayPreset, openTime, closeTime, onChange]);
 
   return (
@@ -92,7 +92,7 @@ function HoursPicker({ initialValue, onChange }: HoursPickerProps) {
             className="flex h-9 w-full rounded-lg border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           />
         </div>
-        <div className="pt-5 text-muted-foreground text-sm">—</div>
+        <div className="pt-5 text-muted-foreground text-sm">-</div>
         <div className="space-y-1 flex-1">
           <p className="text-xs text-muted-foreground font-medium">Closes at</p>
           <input
@@ -108,7 +108,7 @@ function HoursPicker({ initialValue, onChange }: HoursPickerProps) {
       <p className="text-xs text-muted-foreground">
         Preview:{" "}
         <span className="font-medium text-foreground">
-          {dayPreset}, {to12h(openTime)} – {to12h(closeTime)}
+          {dayPreset}, {to12h(openTime)} - {to12h(closeTime)}
         </span>
       </p>
     </div>
@@ -250,7 +250,7 @@ export function StoreForm({ store }: StoreFormProps) {
       <section className="space-y-3">
         <div>
           <Label>Do you deliver to hostels? <span className="text-destructive">*</span></Label>
-          <p className="text-xs text-muted-foreground mt-0.5">Select one — students will see this on your store card</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Select one - students will see this on your store card</p>
         </div>
         <div className="flex gap-3">
           {FULFILLMENT_TAGS.map((tag) => {

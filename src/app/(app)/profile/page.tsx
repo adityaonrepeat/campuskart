@@ -18,6 +18,7 @@ export default async function ProfilePage() {
       bio: true,
       createdAt: true,
       college: { select: { name: true, city: true } },
+      store: { select: { status: true } },
       _count: {
         select: {
           listings: { where: { status: "ACTIVE" } },
@@ -62,6 +63,7 @@ export default async function ProfilePage() {
         activeListings: user._count.listings,
         totalListed: listings.length,
         soldCount,
+        isVerified: user.store?.status === "ACTIVE",
       }}
       listings={listings}
     />

@@ -65,12 +65,12 @@ export function StoreGrid({ filters = {}, openOnly = false }: StoreGridProps) {
   if (stores.length === 0) {
     return (
       <div className="text-center py-20">
-        <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center mx-auto mb-4">
+        <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center mx-auto mb-2">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="1.5">
             <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
           </svg>
         </div>
-        <p className="font-display text-lg font-semibold text-primary mb-1">No stores found</p>
+        <p className="font-sans text-lg font-semibold text-primary mb-1">No stores found</p>
         <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>
       </div>
     );

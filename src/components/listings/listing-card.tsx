@@ -22,10 +22,10 @@ export function ListingCard({ listing, className }: ListingCardProps) {
   const isDimmed = isSold || isArchived;
 
   return (
-    <Link href={`/listings/${listing.id}`} className={cn("block group", className)}>
+    <Link href={`/listings/${listing.id}`} className={cn("block group h-full", className)}>
       <div
         className={cn(
-          "rounded-xl border overflow-hidden bg-card transition-shadow hover:shadow-md",
+          "h-full flex flex-col rounded-xl border overflow-hidden bg-card transition-shadow hover:shadow-md",
           isDimmed && "opacity-70"
         )}
       >
@@ -60,7 +60,7 @@ export function ListingCard({ listing, className }: ListingCardProps) {
           )}
         </div>
 
-        <div className="p-3 space-y-1">
+        <div className="p-3 space-y-1 flex flex-col flex-1">
           <p className="font-semibold text-sm leading-snug line-clamp-2">
             {listing.title}
           </p>

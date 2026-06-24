@@ -47,26 +47,7 @@ export default async function ProfileEditPage() {
               <h1 className="font-display text-2xl sm:text-3xl font-semibold text-white leading-tight">
                 Edit profile
               </h1>
-              <p className="text-white/60 text-sm mt-1.5 leading-relaxed max-w-lg">
-                Update your name, username, and bio — visible to everyone on your campus.
-              </p>
             </div>
-          </div>
-
-          {/* Info chips */}
-          <div className="flex flex-wrap gap-2 mt-5">
-            {[
-              { icon: "✏️", text: "Changes go live instantly" },
-              { icon: "👤", text: "Visible to your campus" },
-              { icon: "🔒", text: "Username must be unique" },
-            ].map((chip) => (
-              <span
-                key={chip.text}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-white/70 text-xs font-medium"
-              >
-                {chip.icon} {chip.text}
-              </span>
-            ))}
           </div>
         </div>
       </div>

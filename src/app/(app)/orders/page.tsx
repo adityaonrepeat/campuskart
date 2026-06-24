@@ -87,7 +87,7 @@ function SellingCard({ item }: { item: SellingItem }) {
       </div>
 
       <div className="flex flex-col items-end gap-2 shrink-0">
-        <span className="text-lg font-bold text-[#4F46E5]">
+        <span className="font-sans text-lg font-semibold text-[#4F46E5]">
           ₹{item.price.toLocaleString("en-IN")}
         </span>
         {item.status === "ACTIVE" && (
@@ -138,7 +138,7 @@ function BuyingCard({ item }: { item: BuyingItem }) {
       </div>
 
       <div className="flex flex-col items-end gap-2 shrink-0">
-        <span className="text-lg font-bold text-[#4F46E5]">
+        <span className="font-sans text-lg font-semibold text-[#4F46E5]">
           ₹{item.price.toLocaleString("en-IN")}
         </span>
         <Link
@@ -231,7 +231,7 @@ export default async function OrdersPage({ searchParams }: PageProps) {
         forceScrolled
       />
 
-      {/* Hero section: white background */}
+      {/* Hero */}
       <div className="pt-24 pb-8 bg-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 sm:gap-4 mb-6">

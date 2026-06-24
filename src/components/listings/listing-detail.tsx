@@ -21,12 +21,12 @@ const CONDITION_LABEL: Record<string, string> = {
 };
 
 const CATEGORY_LABEL: Record<string, string> = {
-  BOOKS: "Textbooks",
+  BOOKS: "Books",
   ELECTRONICS: "Electronics",
   CLOTHING: "Clothing",
   FURNITURE: "Furniture",
   NOTES: "Notes",
-  SPORTS: "Sports & Fitness",
+  SPORTS: "Sports",
   OTHER: "Other",
 };
 
@@ -63,6 +63,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
   const router = useRouter();
   const queryClient = useQueryClient();
   const [activeImage, setActiveImage] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"details" | "seller">("details");
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMessage, setChatMessage] = useState("");
@@ -161,7 +162,11 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
 
             {/* LEFT: Images */}
             <div>
-              <div className="relative rounded-2xl overflow-hidden bg-white border border-border aspect-4/3 mb-3">
+              {/* Main image */}
+              <div
+                className="relative rounded-2xl overflow-hidden bg-white border border-border aspect-4/3 mb-3 cursor-zoom-in group/img"
+                onClick={() => listing.images[activeImage] && setLightboxOpen(true)}
+              >
                 {listing.images[activeImage] ? (
                   <Image
                     src={listing.images[activeImage]}
@@ -177,34 +182,60 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                   </div>
                 )}
 
+                {/* Condition badge */}
                 <span className={cn("absolute top-4 right-4 tag-pill text-xs", conditionClass(listing.condition))}>
                   {conditionLabel}
                 </span>
 
-                {isSold && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                    <span className="tag-pill bg-red-600 text-white font-bold" style={{ fontSize: 14 }}>Sold</span>
-                  </div>
-                )}
-
+                {/* Negotiable badge */}
                 {listing.listingType === "NEGOTIABLE" && !isSold && (
                   <span className="absolute top-4 left-4 tag-pill bg-amber-100 text-amber-700 text-xs">
                     Negotiable
                   </span>
                 )}
 
+                {/* Sold overlay */}
+                {isSold && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                    <span className="tag-pill bg-red-600 text-white font-bold" style={{ fontSize: 14 }}>Sold</span>
+                  </div>
+                )}
+
+                {/* Image counter badge */}
+                {listing.images.length > 0 && (
+                  <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-full px-2.5 py-1">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" fill="white" stroke="none" />
+                      <path d="M21 15l-5-5L5 21" />
+                    </svg>
+                    <span className="text-white text-[11px] font-medium">{activeImage + 1} / {listing.images.length}</span>
+                  </div>
+                )}
+
+                {/* Zoom hint on hover */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity duration-200 pointer-events-none">
+                  <div className="bg-black/40 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center gap-1.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                      <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35M11 8v6M8 11h6" />
+                    </svg>
+                    <span className="text-white text-xs font-medium">Click to zoom</span>
+                  </div>
+                </div>
+
+                {/* Prev / Next arrows */}
                 {listing.images.length > 1 && (
                   <>
                     <button
                       type="button"
-                      onClick={() => setActiveImage((p) => (p - 1 + listing.images.length) % listing.images.length)}
+                      onClick={(e) => { e.stopPropagation(); setActiveImage((p) => (p - 1 + listing.images.length) % listing.images.length); }}
                       className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-white transition-colors shadow-sm"
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
                     </button>
                     <button
                       type="button"
-                      onClick={() => setActiveImage((p) => (p + 1) % listing.images.length)}
+                      onClick={(e) => { e.stopPropagation(); setActiveImage((p) => (p + 1) % listing.images.length); }}
                       className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-white transition-colors shadow-sm"
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6" /></svg>
@@ -213,6 +244,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                 )}
               </div>
 
+              {/* Thumbnail strip */}
               {listing.images.length > 1 && (
                 <div className="flex gap-2">
                   {listing.images.map((img, i) => (
@@ -341,7 +373,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                         {[
                           { label: "Condition", value: conditionLabel },
                           { label: "Category", value: categoryLabel },
-                          { label: "College", value: listing.seller.college?.name ?? "" },
+                          { label: "Listed", value: timeAgo(new Date(listing.createdAt)) },
                           { label: "Pickup", value: "On Campus" },
                         ].map((row) => (
                           <div key={row.label} className="bg-surface rounded-xl p-3">
@@ -350,9 +382,6 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                           </div>
                         ))}
                       </div>
-                      <p className="text-[10px] text-muted mt-4">
-                        Listed {timeAgo(new Date(listing.createdAt))}
-                      </p>
                     </div>
                   )}
 
@@ -526,6 +555,81 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Lightbox */}
+      {lightboxOpen && listing.images.length > 0 && (
+        <div
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/92"
+          onClick={() => setLightboxOpen(false)}
+        >
+          {/* X button */}
+          <button
+            type="button"
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            aria-label="Close"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Main image */}
+          <div
+            className="relative"
+            style={{ width: "min(80vw, 860px)", height: listing.images.length > 1 ? "min(72vh, 620px)" : "min(82vh, 700px)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={listing.images[activeImage]}
+              alt={listing.title}
+              fill
+              className="object-contain"
+              sizes="80vw"
+            />
+
+            {/* Prev arrow */}
+            {listing.images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setActiveImage((p) => (p - 1 + listing.images.length) % listing.images.length); }}
+                  className="absolute -left-14 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center transition-colors"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setActiveImage((p) => (p + 1) % listing.images.length); }}
+                  className="absolute -right-14 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center transition-colors"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M9 18l6-6-6-6" /></svg>
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Counter + thumbnail strip */}
+          {listing.images.length > 1 && (
+            <div className="mt-4 flex flex-col items-center gap-3" onClick={(e) => e.stopPropagation()}>
+              <span className="text-white/50 text-xs font-medium">{activeImage + 1} / {listing.images.length}</span>
+              <div className="flex gap-2">
+                {listing.images.map((img, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setActiveImage(i)}
+                    className="relative w-14 h-14 rounded-lg overflow-hidden shrink-0 transition-all duration-200"
+                    style={{ border: activeImage === i ? "2px solid #fff" : "2px solid rgba(255,255,255,0.2)" }}
+                  >
+                    <Image src={img} alt={`Photo ${i + 1}`} fill className="object-cover" sizes="56px" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>

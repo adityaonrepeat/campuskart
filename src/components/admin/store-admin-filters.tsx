@@ -33,20 +33,20 @@ export function StoreAdminFilters({ isAdmin, colleges, defaultValues }: StoreAdm
   return (
     <div className="flex flex-col sm:flex-row gap-2">
       <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+        <Search className="absolute left-3 top-[29%] -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
         <input
           type="search"
           value={search}
           onChange={handleSearchChange}
-          placeholder="Search stores by name…"
-          className="w-full rounded-lg border bg-background pl-9 pr-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
+          placeholder="Search stores by name..."
+          className="w-full rounded-lg border border-border bg-white pl-9 pr-3 py-2 text-sm outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors placeholder:text-muted-foreground"
         />
       </div>
 
       <select
         defaultValue={defaultValues.status ?? "ALL"}
         onChange={(e) => updateParam("status", e.target.value === "ALL" ? "" : e.target.value)}
-        className="rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+        className="rounded-lg border border-border bg-white pl-3 pr-8 py-2 text-sm outline-none focus:ring-2 focus:ring-accent/30"
       >
         <option value="ALL">All</option>
         <option value="PENDING">Pending</option>
@@ -58,7 +58,7 @@ export function StoreAdminFilters({ isAdmin, colleges, defaultValues }: StoreAdm
         <select
           defaultValue={defaultValues.college ?? ""}
           onChange={(e) => updateParam("college", e.target.value)}
-          className="rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+          className="rounded-lg border border-border bg-white pl-3 pr-8 py-2 text-sm outline-none focus:ring-2 focus:ring-accent/30"
         >
           <option value="">All colleges</option>
           {colleges.map((c) => (

@@ -11,7 +11,7 @@ import { STORE_CATEGORY_LABELS } from "@/types/store";
 import { StoreStatus } from "@prisma/client";
 import type { Prisma, Role } from "@prisma/client";
 
-export const metadata = { title: "Store verification — Admin" };
+export const metadata = { title: "Store verification - Admin" };
 
 function VerifyButton({ storeId }: { storeId: string }) {
   return (
@@ -105,7 +105,7 @@ export default async function AdminStoresPage({ searchParams }: PageProps) {
   const showArchived = role === "ADMIN" && (!statusFilter || statusFilter === "ARCHIVED");
 
   return (
-    <div className="py-6 space-y-6">
+    <div className="space-y-4">
       <div className="space-y-3">
         <h1 className="text-xl font-bold">Store verification</h1>
         <StoreAdminFilters
@@ -170,7 +170,7 @@ export default async function AdminStoresPage({ searchParams }: PageProps) {
       </section>
       )}
 
-      {/* Archived: only admins see this (can permanently delete) */}
+      {/* Archived */}
       {showArchived && archived.length > 0 && (
         <section className="space-y-3">
           <h2 className="font-semibold text-muted-foreground">Archived ({archived.length})</h2>
@@ -213,7 +213,7 @@ function StoreRow({ store, actions }: StoreRowProps) {
   const storeHref = `/stores/${store.id}`;
 
   return (
-    <div className="rounded-xl border p-4">
+    <div className="rounded-xl border p-4 bg-white">
       <div className="flex items-start gap-3">
         <Link
           href={storeHref}
@@ -239,7 +239,7 @@ function StoreRow({ store, actions }: StoreRowProps) {
               {store.name}
               <ExternalLink className="h-3 w-3 text-muted-foreground" />
             </Link>
-            <span className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+            <span className="text-xs text-muted-foreground bg-white border border-border px-1.5 py-0.5 rounded">
               {categoryLabel}
             </span>
             <span className="text-[10px] text-muted-foreground">
@@ -259,7 +259,7 @@ function StoreRow({ store, actions }: StoreRowProps) {
           href={storeHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-muted/70 text-foreground text-xs font-semibold rounded-lg transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/40 hover:bg-muted/60 text-foreground text-xs font-semibold rounded-lg transition-colors"
         >
           <ExternalLink className="h-3.5 w-3.5" />
           Review

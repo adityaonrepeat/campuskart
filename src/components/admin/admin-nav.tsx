@@ -23,7 +23,7 @@ export function AdminNav({ isAdmin }: { isAdmin: boolean }) {
             "px-3 py-2 text-sm font-medium border-b-2 transition-colors",
             pathname.startsWith(tab.href)
               ? "border-primary text-foreground"
-              : "border-transparent text-muted-foreground hover:text-foreground"
+              : "border-transparent text-foreground/40 hover:text-foreground"
           )}
         >
           {tab.label}

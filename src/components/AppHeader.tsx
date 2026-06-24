@@ -124,21 +124,15 @@ export default function AppHeader({ user, forceScrolled = true, showAdmin = fals
 
           {/* Mobile hamburger */}
           <button
-            onClick={() => setMobileOpen(!mobileOpen)}
+            onClick={() => setMobileOpen(true)}
             className={`header-mobile-btn ml-auto p-2 rounded-lg transition-colors ${
               scrolled ? 'text-[#111111]' : 'text-white'
             }`}
-            aria-label="Toggle menu"
+            aria-label="Open menu"
           >
-            {mobileOpen ? (
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
           </button>
         </div>
       </header>
@@ -153,9 +147,25 @@ export default function AppHeader({ user, forceScrolled = true, showAdmin = fals
 
       {/* Mobile panel */}
       {mobileOpen && (
-        <div className="header-mobile-panel fixed top-0 left-0 right-0 z-50 bg-white pt-20 pb-8 px-6 shadow-xl mobile-menu-open">
+        <div className="header-mobile-panel fixed top-0 left-0 right-0 z-50 bg-white pt-5 pb-8 px-6 shadow-xl mobile-menu-open">
+          {/* Panel header row */}
+          <div className="flex items-center justify-between mb-6">
+            <Link href="/listings" className="flex items-center gap-2.5">
+              <AppLogo size={32} />
+              <span className="text-lg font-semibold text-[#3730A3]" style={{ fontFamily: "var(--font-dm-sans)" }}>CampusKart</span>
+            </Link>
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="p-2 rounded-lg text-[#6B7280] hover:text-[#111111] transition-colors"
+              aria-label="Close menu"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
           {/* User identity */}
-          <div className="flex items-center gap-3 mb-8 pb-6 border-b border-[#E5E4E0]">
+          <div className="flex items-center gap-3 mb-6 pb-6 border-b border-[#E5E4E0]">
             <div className="w-11 h-11 rounded-full bg-[#EEF2FF] flex items-center justify-center text-base font-semibold text-[#4F46E5] select-none">
               {initials}
             </div>
@@ -199,17 +209,18 @@ export default function AppHeader({ user, forceScrolled = true, showAdmin = fals
                 Admin
               </Link>
             )}
-            <Link
-              href="/listings/new"
-              onClick={() => setMobileOpen(false)}
-              className="inline-flex items-center gap-2 mt-1 px-4 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent/90 transition-colors"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-              List an Item
-            </Link>
           </nav>
+
+          <Link
+            href="/listings/new"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent/90 transition-colors mb-3"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            List an Item
+          </Link>
 
           <button
             onClick={handleSignOut}

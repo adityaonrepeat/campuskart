@@ -9,31 +9,28 @@ export default function ProfileLoading() {
       <div className="bg-white border-b border-border">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-          {/* Top row: avatar · info · buttons */}
-          <div className="flex flex-col sm:flex-row gap-5 items-start sm:items-center">
+          {/* Content */}
+          <div className="flex flex-col items-center gap-4">
 
-            {/* Avatar: rounded-2xl to match initials div */}
+            {/* Avatar */}
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gray-200 animate-pulse shrink-0" />
 
-            {/* Info */}
-            <div className="flex-1 min-w-0 space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <Pulse className="h-7 w-36" />
-                <Pulse className="h-4 w-20" />
-              </div>
-              <Pulse className="h-5 w-44 rounded-full" />
-              <Pulse className="h-4 w-64" />
+            {/* Info — centered */}
+            <div className="flex flex-col items-center gap-2">
+              <Pulse className="h-3.5 w-20" />
+              <Pulse className="h-8 w-44" />
+              <Pulse className="h-5 w-56 rounded-full" />
             </div>
 
             {/* Buttons */}
-            <div className="flex gap-2 shrink-0">
+            <div className="flex gap-2">
               <Pulse className="h-10 w-28 rounded-xl" />
               <Pulse className="h-10 w-28 rounded-xl" />
             </div>
           </div>
 
           {/* Stats bar: 4 tiles */}
-          <div className="grid grid-cols-4 gap-3 mt-5">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="bg-surface rounded-xl py-3 px-2 border border-border flex flex-col items-center gap-1.5">
                 <Pulse className="h-7 w-8" />
@@ -50,7 +47,7 @@ export default function ProfileLoading() {
         {/* Tab pill */}
         <Pulse className="h-10 w-44 rounded-xl mb-5" />
 
-        {/* Listing grid: 3 cols on large, 2 on sm, 1 on xs */}
+        {/* Listing grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="rounded-2xl border border-border overflow-hidden bg-white">

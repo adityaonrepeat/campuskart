@@ -4,7 +4,7 @@ import { RegisterForm } from "@/components/auth/register-form";
 import AppLogo from "@/components/ui/AppLogo";
 
 export const metadata = {
-  title: "Join CampusKart — Create Account",
+  title: "Join CampusKart - Create Account",
   description: "Create your free student account to browse and buy campus listings. Verified students only.",
   alternates: { canonical: "/signup" },
 };
@@ -16,7 +16,7 @@ const SOCIAL_AVATARS = [
 ];
 
 const FEATURES = [
-  "Verified students only — safe campus community",
+  "Verified students only - safe campus community",
   "In-app chat with sellers, no phone numbers needed",
   "Campus self-pickup, no shipping hassle",
   "Ratings and reviews on every deal",
@@ -56,7 +56,7 @@ export default function SignUpPage() {
               <span className="italic font-normal text-accent-light">Your deals.</span>
             </h1>
             <p className="text-white/60 text-lg font-light leading-relaxed max-w-sm mb-10">
-              Join 100+ verified students buying and selling on campus — all picked up right where you live and study.
+              Join 100+ verified students buying and selling on campus - all picked up right where you live and study.
             </p>
 
             {/* Feature bullets */}

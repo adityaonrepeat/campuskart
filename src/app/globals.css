@@ -258,12 +258,26 @@
   box-shadow: 0 20px 40px rgba(79, 70, 229, 0.12);
 }
 
+/* Listings page sidebar: sticky so filters stay visible while scrolling */
+.listings-sidebar {
+  position: sticky;
+  top: 5rem;
+  align-self: flex-start;
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.listings-sidebar::-webkit-scrollbar { display: none; }
+
 /* Listing card */
 .listing-card {
   background: #fff;
   border: 1.5px solid var(--ck-border);
   border-radius: 16px;
   overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
               box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1),
               border-color 0.25s ease;

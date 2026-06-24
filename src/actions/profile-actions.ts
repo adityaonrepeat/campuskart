@@ -8,8 +8,6 @@ import type { ApiResponse } from "@/types/api";
 import type { User } from "@prisma/client";
 import { updateProfileSchema, type UpdateProfileInput } from "@/types/profile";
 
-export { updateProfileSchema, type UpdateProfileInput };
-
 export async function updateProfile(
   input: UpdateProfileInput
 ): Promise<ApiResponse<Pick<User, "id" | "name" | "username" | "avatarUrl">>> {

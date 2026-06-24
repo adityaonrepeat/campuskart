@@ -5,7 +5,7 @@ import { LoginForm } from "@/components/auth/login-form";
 import AppLogo from "@/components/ui/AppLogo";
 
 export const metadata = {
-  title: "Log In — CampusKart",
+  title: "Log In - CampusKart",
   description: "Sign in to browse listings, chat with sellers, and discover what's available at your college.",
   alternates: { canonical: "/login" },
 };
@@ -17,7 +17,7 @@ const SOCIAL_AVATARS = [
 ];
 
 const FEATURES = [
-  "College-scoped — only your campus sees your listings",
+  "College-scoped - only your campus sees your listings",
   "Real-time chat with buyers and sellers",
   "Campus stores, food, and services in one place",
   "Ratings and reviews on every deal",

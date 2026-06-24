@@ -5,9 +5,9 @@ import { useState, useTransition } from "react";
 
 const CATEGORIES = [
   { label: "All", value: "" },
-  { label: "Textbooks", value: "BOOKS" },
+  { label: "Books", value: "BOOKS" },
   { label: "Electronics", value: "ELECTRONICS" },
-  { label: "Sports & Fitness", value: "SPORTS" },
+  { label: "Sports", value: "SPORTS" },
   { label: "Clothing", value: "CLOTHING" },
   { label: "Notes", value: "NOTES" },
   { label: "Furniture", value: "FURNITURE" },

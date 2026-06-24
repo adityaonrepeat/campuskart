@@ -19,7 +19,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div>
           <h1 className="text-xl font-bold">Admin</h1>
           <p className="text-xs text-muted-foreground">
-            {isAdmin ? "Global access — all colleges" : "Moderator — your college only"}
+            {isAdmin ? "Global access - all colleges" : "Moderator - your college only"}
           </p>
         </div>
         <span

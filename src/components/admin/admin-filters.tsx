@@ -39,15 +39,15 @@ export function AdminFilters({ isAdmin, colleges, defaultValues }: AdminFiltersP
           type="search"
           value={search}
           onChange={handleSearchChange}
-          placeholder="Search by title…"
-          className="w-full rounded-lg border bg-background pl-9 pr-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
+          placeholder="Search by title..."
+          className="w-full rounded-lg border border-border bg-white pl-9 pr-3 py-2 text-sm outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors placeholder:text-muted-foreground"
         />
       </div>
 
       <select
         defaultValue={defaultValues.status ?? "ACTIVE"}
         onChange={(e) => updateParam("status", e.target.value)}
-        className="rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+        className="rounded-lg border border-border bg-white pl-3 pr-8 py-2 text-sm outline-none focus:ring-2 focus:ring-accent/30"
       >
         <option value="ACTIVE">Active</option>
         <option value="SOLD">Sold</option>
@@ -59,7 +59,7 @@ export function AdminFilters({ isAdmin, colleges, defaultValues }: AdminFiltersP
         <select
           defaultValue={defaultValues.college ?? ""}
           onChange={(e) => updateParam("college", e.target.value)}
-          className="rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+          className="rounded-lg border border-border bg-white pl-3 pr-8 py-2 text-sm outline-none focus:ring-2 focus:ring-accent/30"
         >
           <option value="">All colleges</option>
           {colleges.map((c) => (

@@ -13,8 +13,8 @@ const FOOD_TAGS = [
   { label: "Cake", value: "Cake" },
   { label: "Dosa", value: "Dosa" },
   { label: "Chicken", value: "Chicken" },
-  { label: "Chowmin", value: "Chowmin" },
-  { label: "Lachha Paratha", value: "Lachha Paratha" },
+  { label: "Noodles", value: "Noodles" },
+  { label: "Pizza", value: "Pizza" },
 ];
 
 interface PageProps {

@@ -25,6 +25,7 @@ interface ProfileViewProps {
     activeListings: number;
     totalListed: number;
     soldCount: number;
+    isVerified: boolean;
   };
   listings: ListingCard[];
 }
@@ -41,17 +42,14 @@ function getInitials(name: string) {
 export function ProfileView({ user, listings }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<'listings' | 'reviews'>('listings');
 
-  const collegeDisplay =
-    user.collegeName + (user.collegeCity ? `, ${user.collegeCity}` : '');
-
   return (
     <main className="min-h-screen bg-surface">
       {/* Profile hero (white card) */}
       <div className="bg-white border-b border-border">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-          {/* Top row: avatar · info · buttons */}
-          <div className="flex flex-col sm:flex-row gap-5 items-start sm:items-center">
+          {/* Top row */}
+          <div className="flex flex-col items-center gap-4">
 
             {/* Avatar */}
             <div className="relative shrink-0">
@@ -60,42 +58,41 @@ export function ProfileView({ user, listings }: ProfileViewProps) {
                   {getInitials(user.name)}
                 </span>
               </div>
-              {/* Verified tick */}
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-accent flex items-center justify-center border-2 border-white">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
-                  <path d="M20 6L9 17l-5-5" />
-                </svg>
-              </div>
+              {/* Blue tick — only if store is verified (ACTIVE) */}
+              {user.isVerified && (
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-accent flex items-center justify-center border-2 border-white">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                    <path d="M20 6L9 17l-5-5" />
+                  </svg>
+                </div>
+              )}
             </div>
 
             {/* Info */}
-            <div className="flex-1 min-w-0">
-              {/* Name + @username same line */}
-              <div className="flex flex-wrap items-center gap-2 mb-1">
-                <h1 className="font-display text-2xl sm:text-3xl font-semibold text-primary">
-                  {user.name}
-                </h1>
-                <span className="text-sm text-muted">@{user.username}</span>
-              </div>
+            <div className="flex-1 min-w-0 text-center">
+              <p className="text-xs font-medium text-muted mb-0.5">@{user.username}</p>
+              <h1 className="font-display text-2xl sm:text-3xl font-semibold text-primary leading-tight mb-1.5">
+                {user.name}
+              </h1>
 
               {/* College badge */}
-              <div className="flex flex-wrap items-center gap-2 mb-2">
+              <div className="mb-2 flex justify-center">
                 <span className="verified-badge">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M20 6L9 17l-5-5" />
                   </svg>
-                  {collegeDisplay}
+                  {user.collegeName}
                 </span>
               </div>
 
-              {/* Bio: only shown if user has set one */}
+              {/* Bio */}
               {user.bio && (
                 <p className="text-sm text-muted leading-relaxed">{user.bio}</p>
               )}
             </div>
 
             {/* Buttons */}
-            <div className="flex gap-2 w-full sm:w-auto shrink-0">
+            <div className="flex gap-2 shrink-0">
               <Link
                 href="/profile/edit"
                 className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-border text-sm font-semibold text-muted hover:text-foreground hover:border-accent/40 transition-colors"
@@ -107,7 +104,7 @@ export function ProfileView({ user, listings }: ProfileViewProps) {
                 Edit Profile
               </Link>
               <Link
-                href="/listings"
+                href="/orders"
                 className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent/90 transition-colors"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -128,7 +125,7 @@ export function ProfileView({ user, listings }: ProfileViewProps) {
               { label: 'Reviews', value: 0 },
             ].map((stat) => (
               <div key={stat.label} className="text-center bg-surface rounded-xl py-3 border border-border">
-                <p className="font-display text-2xl font-semibold text-accent">{stat.value}</p>
+                <p className="font-sans text-2xl font-bold tracking-tight text-accent">{stat.value}</p>
                 <p className="text-[11px] text-muted mt-0.5">{stat.label}</p>
               </div>
             ))}
@@ -182,11 +179,11 @@ export function ProfileView({ user, listings }: ProfileViewProps) {
                   </span>
                 </div>
                 <div className="p-4">
-                  <h3 className="font-semibold text-sm text-foreground leading-snug mb-2 line-clamp-2">
+                  <h3 className="font-semibold text-sm text-foreground leading-snug mb-2 line-clamp-2" style={{ minHeight: '2.5rem' }}>
                     {item.title}
                   </h3>
                   <div className="flex items-center justify-between">
-                    <p className="font-display text-xl font-semibold text-accent">
+                    <p className="font-sans text-xl font-semibold text-accent">
                       ₹{item.price.toLocaleString('en-IN')}
                     </p>
                     <p className="text-[10px] text-muted">

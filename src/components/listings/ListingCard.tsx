@@ -5,12 +5,12 @@ import AppImage from "@/components/ui/AppImage";
 import type { ListingCard as ListingCardType } from "@/types/listing";
 
 const CATEGORY_LABEL: Record<string, string> = {
-  BOOKS: "Textbooks",
+  BOOKS: "Books",
   ELECTRONICS: "Electronics",
   CLOTHING: "Clothing",
   FURNITURE: "Furniture",
   NOTES: "Notes",
-  SPORTS: "Sports & Fitness",
+  SPORTS: "Sports",
   OTHER: "Other",
 };
 
@@ -42,7 +42,7 @@ export default function ListingCard({ listing }: { listing: ListingCardType }) {
   return (
     <Link
       href={href}
-      className={`listing-card group block ${isDimmed ? "opacity-70" : ""}`}
+      className={`listing-card group block h-full ${isDimmed ? "opacity-70" : ""}`}
     >
       {/* Image */}
       <div className="img-zoom relative h-66.5">
@@ -75,11 +75,11 @@ export default function ListingCard({ listing }: { listing: ListingCardType }) {
       </div>
 
       {/* Body */}
-      <div className="px-4 pt-3 pb-4">
+      <div className="px-4 pt-3 pb-4 flex flex-col flex-1">
         <span className="text-[10px] font-semibold text-accent uppercase tracking-wider">
           {CATEGORY_LABEL[listing.category] ?? listing.category}
         </span>
-        <h3 className="font-semibold text-foreground text-base leading-snug mt-0.5 mb-1.5 line-clamp-2 group-hover:text-accent transition-colors">
+        <h3 className="font-semibold text-foreground text-base leading-snug mt-0.5 mb-1.5 line-clamp-2 group-hover:text-accent transition-colors" style={{ minHeight: '2.75rem' }}>
           {listing.title}
         </h3>
 
