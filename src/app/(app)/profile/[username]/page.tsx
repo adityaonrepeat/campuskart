@@ -13,7 +13,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { username } = await params;
-  return { title: `@${username} — CampusKart` };
+  return { title: `@${username} - CampusKart` };
 }
 
 export default async function PublicProfilePage({ params }: PageProps) {

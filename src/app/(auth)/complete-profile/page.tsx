@@ -6,7 +6,7 @@ import AppLogo from "@/components/ui/AppLogo";
 import { CompleteProfileForm } from "./complete-profile-form";
 
 export const metadata = {
-  title: "Pick Your College — CampusKart",
+  title: "Pick Your College - CampusKart",
   description: "Select your college to finish setting up your CampusKart account.",
 };
 

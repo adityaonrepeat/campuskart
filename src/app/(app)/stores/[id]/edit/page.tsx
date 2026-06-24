@@ -10,7 +10,7 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-export const metadata = { title: "Edit store — CampusKart" };
+export const metadata = { title: "Edit store - CampusKart" };
 
 export default async function EditStorePage({ params }: PageProps) {
   const { id } = await params;

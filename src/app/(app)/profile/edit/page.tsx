@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { ProfileEditForm } from "@/components/profile/profile-edit-form";
 
-export const metadata = { title: "Edit Profile — CampusKart" };
+export const metadata = { title: "Edit Profile - CampusKart" };
 
 export default async function ProfileEditPage() {
   const session = await auth.api.getSession({ headers: await headers() });

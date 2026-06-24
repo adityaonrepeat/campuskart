@@ -9,10 +9,10 @@ import TrustSection from '@/components/landing/TrustSection';
 import CampusStores from '@/components/landing/CampusStores';
 
 export const metadata: Metadata = {
-  title: 'CampusKart — The Marketplace Built for Your Campus',
-  description: 'Buy, sell, and connect with verified students at your college. Textbooks, gear, food — all picked up on campus.',
+  title: 'CampusKart - The Marketplace Built for Your Campus',
+  description: 'Buy, sell, and connect with verified students at your college. Textbooks, gear, food - all picked up on campus.',
   openGraph: {
-    title: 'CampusKart — Campus-Exclusive Marketplace',
+    title: 'CampusKart - Campus-Exclusive Marketplace',
     description: 'Verified students. Campus pickup. Real-time chat.',
   },
 };

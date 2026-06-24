@@ -3,7 +3,7 @@
 A college-scoped marketplace for students — buy/sell items, browse campus stores, and chat with sellers in real time. Every listing, store, and conversation is scoped to the user's college. Cross-college data is never visible.
 
 <p align="center">
-  <img src="public/campuskart.png" alt="CampusKart screenshot" width="100%" />
+  <img src="public/campuskart-banner.png" alt="CampusKart banner" width="100%" />
 </p>
 
 ---
