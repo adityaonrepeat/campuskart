@@ -145,20 +145,46 @@ export default function CampusStores() {
         </div>
 
         {/* Register Store CTA */}
-        <div className="aos-elem delay-400 bg-primary rounded-3xl p-8 sm:p-10 flex flex-col items-center text-center gap-6">
-          <div>
-            <h3 className="text-2xl sm:text-3xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-inter)" }}>
-              Own a campus business?
-            </h3>
-            <p className="text-white/60 text-sm leading-relaxed max-w-md">
-              Register your café, restaurant, or store on CampusKart and reach thousands of verified students at your college — no delivery needed, just campus pickup.
-            </p>
+        <div className="aos-elem delay-400 bg-primary rounded-3xl overflow-hidden">
+          <div className="absolute inset-0 bg-linear-to-br from-accent/10 via-transparent to-transparent pointer-events-none rounded-3xl" />
+          <div className="relative z-10 px-8 py-16 sm:py-20 flex flex-col items-center text-center gap-7">
+
+            <div className="max-w-xl">
+              <h3 className="font-display text-4xl sm:text-5xl font-semibold text-white mb-4 leading-tight">
+                Your campus,<br />
+                <span className="italic font-normal">your customers.</span>
+              </h3>
+              <p className="text-white/55 text-sm sm:text-base leading-relaxed">
+                List your café, store, or service and connect directly with thousands of verified students at your college.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Link
+                href="/signup"
+                className="flex items-center justify-center gap-2 bg-white text-primary text-sm font-semibold px-6 py-3.5 rounded-xl hover:bg-surface transition-colors duration-200 shadow-card">
+                Register Your Store
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+              <Link
+                href="/stores"
+                className="flex items-center justify-center bg-white/10 hover:bg-white/15 text-white text-sm font-semibold px-6 py-3.5 rounded-xl transition-colors duration-200">
+                Browse Stores
+              </Link>
+            </div>
+
+            <div className="flex items-center gap-3">
+              {["0% fees", "Live in 5 min", "Verified stores only"].map((stat, i) => (
+                <React.Fragment key={stat}>
+                  {i > 0 && <span className="w-1 h-1 rounded-full bg-white/30 shrink-0" />}
+                  <span className="text-white/40 text-xs">{stat}</span>
+                </React.Fragment>
+              ))}
+            </div>
+
           </div>
-          <Link
-            href="/signup"
-            className="flex-shrink-0 bg-white text-primary text-sm font-semibold px-7 py-3.5 rounded-xl hover:bg-surface transition-colors duration-200 shadow-card whitespace-nowrap">
-            Register Your Store
-          </Link>
         </div>
       </div>
     </section>);
