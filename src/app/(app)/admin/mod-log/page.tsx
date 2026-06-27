@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import type { Role } from "@prisma/client";
+import { isAdmin } from "@/lib/permissions";
 
 const PAGE_SIZE = 30;
 
@@ -14,8 +14,7 @@ interface PageProps {
 export default async function ModLogPage({ searchParams }: PageProps) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
-  const role = (session.user.role ?? "USER") as Role;
-  if (role !== "ADMIN") redirect("/admin/listings");
+  if (!isAdmin(session.user)) redirect("/admin/listings");
 
   const { page: pageStr } = await searchParams;
   const page = Math.max(1, Number(pageStr ?? 1));

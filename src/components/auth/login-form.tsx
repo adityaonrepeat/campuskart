@@ -78,7 +78,7 @@ export function LoginForm() {
         </Link>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form method="post" onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {/* Email */}
         <div>
           <label className="block text-xs font-semibold text-[#111111] mb-1.5">

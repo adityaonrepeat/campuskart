@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { canViewStore } from "@/lib/permissions";
 
 export async function GET(
   _request: NextRequest,
@@ -56,18 +57,7 @@ export async function GET(
     return NextResponse.json({ success: false, error: "Store not found" }, { status: 404 });
   }
 
-  // Visitors can only see ACTIVE stores; owner and admin/mod can see any status
-  const isOwner = store.ownerId === session.user.id;
-  const isMod =
-    (session.user.role as string) === "MODERATOR" ||
-    (session.user.role as string) === "ADMIN";
-
-  if (store.status !== "ACTIVE" && !isOwner && !isMod) {
-    return NextResponse.json({ success: false, error: "Store not found" }, { status: 404 });
-  }
-
-  // College-scope: visitors must be in the same college
-  if (!isOwner && !isMod && store.collegeId !== session.user.collegeId) {
+  if (!canViewStore(session.user, store)) {
     return NextResponse.json({ success: false, error: "Store not found" }, { status: 404 });
   }
 

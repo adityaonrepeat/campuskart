@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import { AdminFilters } from "@/components/admin/admin-filters";
 import { RemoveListingButton } from "@/components/admin/remove-listing-button";
 import { ListingStatus } from "@prisma/client";
-import type { Role } from "@prisma/client";
+import { canModerate, isAdmin } from "@/lib/permissions";
 
 const PAGE_SIZE = 20;
 
@@ -26,8 +26,8 @@ interface PageProps {
 export default async function AdminListingsPage({ searchParams }: PageProps) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
-  const role = (session.user.role ?? "USER") as Role;
-  if (role !== "MODERATOR" && role !== "ADMIN") redirect("/listings");
+  if (!canModerate(session.user)) redirect("/listings");
+  const admin = isAdmin(session.user);
 
   const { search, status, college, page: pageStr } = await searchParams;
   const page = Math.max(1, Number(pageStr ?? 1));
@@ -39,7 +39,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps) {
         ? undefined
         : ListingStatus.ACTIVE;
 
-  const collegeFilter = role === "ADMIN" ? (college || undefined) : session.user.collegeId;
+  const collegeFilter = admin ? (college || undefined) : session.user.collegeId;
 
   const where = {
     ...(collegeFilter ? { collegeId: collegeFilter } : {}),
@@ -65,7 +65,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps) {
       },
     }),
     db.listing.count({ where }),
-    role === "ADMIN"
+    admin
       ? db.college.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } })
       : Promise.resolve([] as { id: string; name: string }[]),
   ]);
@@ -88,7 +88,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps) {
       </p>
 
       <AdminFilters
-        isAdmin={role === "ADMIN"}
+        isAdmin={admin}
         colleges={colleges}
         defaultValues={{ search, status: status ?? "ACTIVE", college }}
       />
@@ -125,7 +125,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps) {
                   </Link>
                   <p className="text-xs text-muted-foreground truncate">
                     {listing.seller.name}
-                    {role === "ADMIN" && ` · ${listing.college.name}`}
+                    {admin && ` · ${listing.college.name}`}
                   </p>
                   <div className="flex items-center gap-2">
                     <span
@@ -143,7 +143,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps) {
                   <span className="text-sm font-semibold text-primary whitespace-nowrap">
                     ₹{listing.price.toLocaleString("en-IN")}
                   </span>
-                  <RemoveListingButton listingId={listing.id} title={listing.title} isAdmin={role === "ADMIN"} />
+                  <RemoveListingButton listingId={listing.id} title={listing.title} isAdmin={admin} />
                 </div>
               </div>
             );

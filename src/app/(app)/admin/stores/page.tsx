@@ -9,7 +9,8 @@ import { verifyStore, removeStore } from "@/actions/admin-actions";
 import { StoreAdminFilters } from "@/components/admin/store-admin-filters";
 import { STORE_CATEGORY_LABELS } from "@/types/store";
 import { StoreStatus } from "@prisma/client";
-import type { Prisma, Role } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
+import { canModerate, isAdmin } from "@/lib/permissions";
 
 export const metadata = { title: "Store verification - Admin" };
 
@@ -61,11 +62,11 @@ export default async function AdminStoresPage({ searchParams }: PageProps) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
 
-  const role = (session.user.role ?? "USER") as Role;
-  if (role !== "MODERATOR" && role !== "ADMIN") redirect("/listings");
+  if (!canModerate(session.user)) redirect("/listings");
+  const admin = isAdmin(session.user);
 
   const { search, college, status } = await searchParams;
-  const collegeFilter = role === "ADMIN" ? (college || undefined) : session.user.collegeId;
+  const collegeFilter = admin ? (college || undefined) : session.user.collegeId;
   const statusFilter =
     status && VALID_STATUSES.has(status) ? (status as StoreStatus) : undefined;
 
@@ -89,9 +90,10 @@ export default async function AdminStoresPage({ searchParams }: PageProps) {
         isVerified: true,
         createdAt: true,
         owner: { select: { name: true, email: true } },
+        college: { select: { name: true } },
       },
     }),
-    role === "ADMIN"
+    admin
       ? db.college.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } })
       : Promise.resolve([] as { id: string; name: string }[]),
   ]);
@@ -102,14 +104,14 @@ export default async function AdminStoresPage({ searchParams }: PageProps) {
 
   const showPending = !statusFilter || statusFilter === "PENDING";
   const showActive = !statusFilter || statusFilter === "ACTIVE";
-  const showArchived = role === "ADMIN" && (!statusFilter || statusFilter === "ARCHIVED");
+  const showArchived = admin && (!statusFilter || statusFilter === "ARCHIVED");
 
   return (
     <div className="space-y-4">
       <div className="space-y-3">
         <h1 className="text-xl font-bold">Store verification</h1>
         <StoreAdminFilters
-          isAdmin={role === "ADMIN"}
+          isAdmin={admin}
           colleges={colleges}
           defaultValues={{ search, college, status: statusFilter }}
         />
@@ -135,10 +137,11 @@ export default async function AdminStoresPage({ searchParams }: PageProps) {
               <StoreRow
                 key={store.id}
                 store={store}
+                showCollege={admin}
                 actions={
                   <>
                     <VerifyButton storeId={store.id} />
-                    <RemoveButton storeId={store.id} label={role === "ADMIN" ? "Delete" : "Archive"} />
+                    <RemoveButton storeId={store.id} label={admin ? "Delete" : "Archive"} />
                   </>
                 }
               />
@@ -160,8 +163,9 @@ export default async function AdminStoresPage({ searchParams }: PageProps) {
               <StoreRow
                 key={store.id}
                 store={store}
+                showCollege={admin}
                 actions={
-                  <RemoveButton storeId={store.id} label={role === "ADMIN" ? "Delete" : "Archive"} />
+                  <RemoveButton storeId={store.id} label={admin ? "Delete" : "Archive"} />
                 }
               />
             ))}
@@ -179,6 +183,7 @@ export default async function AdminStoresPage({ searchParams }: PageProps) {
               <StoreRow
                 key={store.id}
                 store={store}
+                showCollege={admin}
                 actions={
                   <RemoveButton storeId={store.id} label="Delete permanently" />
                 }
@@ -202,11 +207,13 @@ type StoreRowProps = {
     isVerified: boolean;
     createdAt: Date;
     owner: { name: string; email: string };
+    college: { name: string };
   };
   actions: React.ReactNode;
+  showCollege?: boolean;
 };
 
-function StoreRow({ store, actions }: StoreRowProps) {
+function StoreRow({ store, actions, showCollege }: StoreRowProps) {
   const categoryLabel =
     STORE_CATEGORY_LABELS[store.category as keyof typeof STORE_CATEGORY_LABELS] ?? store.category;
 
@@ -242,6 +249,11 @@ function StoreRow({ store, actions }: StoreRowProps) {
             <span className="text-xs text-muted-foreground bg-white border border-border px-1.5 py-0.5 rounded">
               {categoryLabel}
             </span>
+            {showCollege && (
+              <span className="text-[10px] font-medium text-accent bg-accent-muted px-1.5 py-0.5 rounded">
+                {store.college.name}
+              </span>
+            )}
             <span className="text-[10px] text-muted-foreground">
               {store.images.length} photo{store.images.length !== 1 ? "s" : ""}
             </span>

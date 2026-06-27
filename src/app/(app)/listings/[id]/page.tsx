@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import AppHeader from "@/components/AppHeader";
 import { ListingDetailView } from "@/components/listings/listing-detail";
+import { canViewListing } from "@/lib/permissions";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -30,8 +31,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
     },
   });
 
-  const isAdmin = (session.user.role ?? "USER") === "ADMIN";
-  if (!listing || (!isAdmin && listing.collegeId !== session.user.collegeId)) {
+  if (!listing || !canViewListing(session.user, listing)) {
     notFound();
   }
 

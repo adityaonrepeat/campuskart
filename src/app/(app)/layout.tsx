@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { BottomNav } from "@/components/shared/bottom-nav";
 import { SocketInitializer } from "@/components/shared/socket-initializer";
-import type { Role } from "@prisma/client";
+import { canModerate } from "@/lib/permissions";
 
 export default async function AppLayout({
   children,
@@ -14,8 +14,7 @@ export default async function AppLayout({
   if (!session) redirect("/login");
   if (!session.user.collegeId) redirect("/complete-profile");
 
-  const role = (session.user.role ?? "USER") as Role;
-  const showAdmin = role === "MODERATOR" || role === "ADMIN";
+  const showAdmin = canModerate(session.user);
 
   return (
     <div className="min-h-screen app-main-pb">

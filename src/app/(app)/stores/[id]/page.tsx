@@ -19,7 +19,7 @@ import { StoreReviews } from "@/components/stores/store-reviews";
 import { StoreGallery } from "@/components/stores/store-gallery";
 import { StoreChatButton } from "@/components/stores/store-chat-button";
 import { STORE_CATEGORY_LABELS } from "@/types/store";
-import type { Role } from "@prisma/client";
+import { canModerate, canViewStore } from "@/lib/permissions";
 import { isStoreOpenNow } from "@/lib/store-utils";
 
 interface PageProps {
@@ -58,7 +58,6 @@ export default async function StoreDetailPage({ params }: PageProps) {
       description: true,
       category: true,
       images: true,
-      menuImages: true,
       tags: true,
       phone: true,
       whatsapp: true,
@@ -89,12 +88,10 @@ export default async function StoreDetailPage({ params }: PageProps) {
 
   if (!store) notFound();
 
-  const role = (session.user.role ?? "USER") as Role;
   const isOwner = store.ownerId === session.user.id;
-  const isMod = role === "MODERATOR" || role === "ADMIN";
+  const isMod = canModerate(session.user);
 
-  if (store.status !== "ACTIVE" && !isOwner && !isMod) notFound();
-  if (!isOwner && role !== "ADMIN" && store.collegeId !== session.user.collegeId) notFound();
+  if (!canViewStore(session.user, store)) notFound();
 
   const myReview = store.reviews.find((r) => r.userId === session.user.id);
   const canReview = !isOwner && store.status === "ACTIVE";
@@ -123,8 +120,7 @@ export default async function StoreDetailPage({ params }: PageProps) {
     : null;
   const hasDirectContact = Boolean(store.phone || whatsappHref || store.mapUrl);
 
-  // One gallery for the whole store: storefront photos first (cover), then menu photos.
-  const galleryImages = [...store.images, ...store.menuImages];
+  const galleryImages = store.images;
 
   return (
     <>

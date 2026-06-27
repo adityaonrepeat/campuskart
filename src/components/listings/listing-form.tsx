@@ -93,7 +93,7 @@ export function ListingForm({ listing }: ListingFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form method="post" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="space-y-1.5">
         <Label htmlFor="title">Title</Label>
         <Input

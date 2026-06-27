@@ -32,7 +32,7 @@ export function CompleteProfileForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form method="post" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
         <label className="block text-xs font-semibold text-[#111111] mb-1.5">
           College / University

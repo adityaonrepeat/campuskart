@@ -5,14 +5,13 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import type { ApiResponse } from "@/types/api";
-import type { Role } from "@prisma/client";
+import { canModerate, canModerateCollege, isAdmin } from "@/lib/permissions";
 
 async function getModerator() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return null;
-  const role = (session.user.role ?? "USER") as Role;
-  if (role !== "MODERATOR" && role !== "ADMIN") return null;
-  return { ...session.user, role };
+  if (!canModerate(session.user)) return null;
+  return session.user;
 }
 
 export async function moderateListing(
@@ -34,11 +33,11 @@ export async function moderateListing(
   if (!listing) return { success: false, error: "Listing not found" };
 
   // Moderators are college-scoped; admins can act on any listing
-  if (user.role === "MODERATOR" && listing.collegeId !== user.collegeId) {
+  if (!canModerateCollege(user, listing.collegeId)) {
     return { success: false, error: "Forbidden" };
   }
 
-  if (user.role === "ADMIN") {
+  if (isAdmin(user)) {
     // Log first (no FK on listingId), then hard delete
     await db.moderationLog.create({
       data: {
@@ -90,7 +89,7 @@ export async function verifyStore(
   });
   if (!store) return { success: false, error: "Store not found" };
 
-  if (user.role === "MODERATOR" && store.collegeId !== user.collegeId) {
+  if (!canModerateCollege(user, store.collegeId)) {
     return { success: false, error: "Forbidden" };
   }
 
@@ -118,11 +117,11 @@ export async function removeStore(
   });
   if (!store) return { success: false, error: "Store not found" };
 
-  if (user.role === "MODERATOR" && store.collegeId !== user.collegeId) {
+  if (!canModerateCollege(user, store.collegeId)) {
     return { success: false, error: "Forbidden" };
   }
 
-  if (user.role === "ADMIN") {
+  if (isAdmin(user)) {
     await db.store.delete({ where: { id: storeId } });
   } else {
     await db.store.update({
@@ -153,11 +152,11 @@ export async function removeStoreReview(
   });
   if (!review) return { success: false, error: "Review not found" };
 
-  if (user.role === "MODERATOR" && review.store.collegeId !== user.collegeId) {
+  if (!canModerateCollege(user, review.store.collegeId)) {
     return { success: false, error: "Forbidden" };
   }
 
-  if (user.role === "ADMIN") {
+  if (isAdmin(user)) {
     await db.storeReview.delete({ where: { id: reviewId } });
   } else {
     await db.storeReview.update({

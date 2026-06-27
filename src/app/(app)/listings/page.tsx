@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import ListingsGrid from "@/components/listings/ListingsGrid";
 import { FilterSidebar } from "@/components/listings/filter-sidebar";
 import AppHeader from "@/components/AppHeader";
+import { canModerate } from "@/lib/permissions";
 import type { ListingFilters } from "@/types/listing";
 
 interface PageProps {
@@ -32,7 +33,7 @@ export default async function ListingsPage({ searchParams }: PageProps) {
 
   return (
     <div className="min-h-screen bg-[#F8F7F4]">
-      <AppHeader user={{ name: session?.user.name ?? "User", avatarUrl: session?.user.avatarUrl }} forceScrolled showAdmin={session?.user.role === "MODERATOR" || session?.user.role === "ADMIN"} />
+      <AppHeader user={{ name: session?.user.name ?? "User", avatarUrl: session?.user.avatarUrl }} forceScrolled showAdmin={session ? canModerate(session.user) : false} />
 
       <div className="listings-page-wrap max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8">

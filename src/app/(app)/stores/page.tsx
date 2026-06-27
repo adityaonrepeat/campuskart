@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { StoreGrid } from "@/components/stores/store-grid";
 import { StoreSearchInput } from "@/components/stores/store-search-input";
 import AppHeader from "@/components/AppHeader";
+import { canModerate } from "@/lib/permissions";
 
 const FOOD_TAGS = [
   { label: "All", value: "" },
@@ -32,7 +33,7 @@ export default async function StoresPage({ searchParams }: PageProps) {
 
   return (
     <div>
-      <AppHeader user={{ name: session?.user.name ?? "User", avatarUrl: session?.user.avatarUrl }} forceScrolled showAdmin={session?.user.role === "MODERATOR" || session?.user.role === "ADMIN"} />
+      <AppHeader user={{ name: session?.user.name ?? "User", avatarUrl: session?.user.avatarUrl }} forceScrolled showAdmin={session ? canModerate(session.user) : false} />
 
       {/* Search + filters bar */}
       <div className="bg-white border-b border-border sticky top-16 z-30 mt-16">
