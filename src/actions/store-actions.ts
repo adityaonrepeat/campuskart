@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { UTApi } from "uploadthing/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { checkImagesAreSafe, checkTextIsSafe } from "@/lib/moderation";
 import {
   createStoreSchema,
   updateStoreSchema,
@@ -47,6 +48,46 @@ export async function createStore(
 
   const data = parsed.data;
 
+  try {
+    const textSafe = await checkTextIsSafe(data.name, data.description);
+    if (!textSafe) {
+      await utapi.deleteFiles(data.imageKeys);
+      return {
+        success: false,
+        error: "Your store details contain inappropriate text.",
+        code: "TEXT_FLAGGED",
+      };
+    }
+  } catch (err) {
+    console.error("[createStore] text moderation failed:", err);
+    await utapi.deleteFiles(data.imageKeys);
+    return {
+      success: false,
+      error: "Content moderation is temporarily unavailable. Please try again shortly.",
+      code: "MODERATION_UNAVAILABLE",
+    };
+  }
+
+  try {
+    const imagesSafe = await checkImagesAreSafe(data.images);
+    if (!imagesSafe.safe) {
+      await utapi.deleteFiles(data.imageKeys);
+      return {
+        success: false,
+        error: "One or more photos were flagged as inappropriate.",
+        code: "IMAGE_FLAGGED",
+      };
+    }
+  } catch (err) {
+    console.error("[createStore] image moderation failed:", err);
+    await utapi.deleteFiles(data.imageKeys);
+    return {
+      success: false,
+      error: "Image moderation is temporarily unavailable. Please try again shortly.",
+      code: "MODERATION_UNAVAILABLE",
+    };
+  }
+
   const store = await db.store.create({
     data: {
       name: data.name,
@@ -60,7 +101,6 @@ export async function createStore(
       quickReplies: DEFAULT_QUICK_REPLIES,
       tags: data.tags,
       images: data.images,
-      menuImages: data.menuImages,
       ownerId: user.id,
       collegeId: user.collegeId,
     },
@@ -79,7 +119,7 @@ export async function updateStore(
 
   const existing = await db.store.findUnique({
     where: { id: storeId },
-    select: { ownerId: true, images: true, menuImages: true },
+    select: { ownerId: true, name: true, description: true, images: true },
   });
   if (!existing) return { success: false, error: "Store not found" };
   if (existing.ownerId !== user.id) return { success: false, error: "Forbidden" };
@@ -90,6 +130,52 @@ export async function updateStore(
   }
 
   const data = parsed.data;
+
+  if (data.name !== undefined || data.description !== undefined) {
+    try {
+      const textSafe = await checkTextIsSafe(
+        data.name ?? existing.name,
+        data.description ?? existing.description
+      );
+      if (!textSafe) {
+        return {
+          success: false,
+          error: "Your store details contain inappropriate text.",
+          code: "TEXT_FLAGGED",
+        };
+      }
+    } catch (err) {
+      console.error("[updateStore] text moderation failed:", err);
+      return {
+        success: false,
+        error: "Content moderation is temporarily unavailable. Please try again shortly.",
+        code: "MODERATION_UNAVAILABLE",
+      };
+    }
+  }
+
+  if (data.images !== undefined) {
+    const newImages = data.images.filter((u) => !existing.images.includes(u));
+    if (newImages.length > 0) {
+      try {
+        const imagesSafe = await checkImagesAreSafe(newImages);
+        if (!imagesSafe.safe) {
+          return {
+            success: false,
+            error: "One or more photos were flagged as inappropriate.",
+            code: "IMAGE_FLAGGED",
+          };
+        }
+      } catch (err) {
+        console.error("[updateStore] image moderation failed:", err);
+        return {
+          success: false,
+          error: "Image moderation is temporarily unavailable. Please try again shortly.",
+          code: "MODERATION_UNAVAILABLE",
+        };
+      }
+    }
+  }
 
   const store = await db.store.update({
     where: { id: storeId },
@@ -104,16 +190,12 @@ export async function updateStore(
       ...(data.hours !== undefined && { hours: data.hours }),
       ...(data.tags !== undefined && { tags: data.tags }),
       ...(data.images !== undefined && { images: data.images }),
-      ...(data.menuImages !== undefined && { menuImages: data.menuImages }),
     },
   });
 
   const removedUrls: string[] = [];
   if (data.images !== undefined) {
     removedUrls.push(...existing.images.filter((u) => !data.images!.includes(u)));
-  }
-  if (data.menuImages !== undefined) {
-    removedUrls.push(...existing.menuImages.filter((u) => !data.menuImages!.includes(u)));
   }
   if (removedUrls.length > 0) {
     const oldKeys = removedUrls

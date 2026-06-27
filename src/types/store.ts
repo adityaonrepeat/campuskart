@@ -60,8 +60,6 @@ export const createStoreSchema = z.object({
   tags: z.array(z.string().max(30)).max(10).default([]),
   images: z.array(z.string().url("Invalid image URL")).max(10).default([]),
   imageKeys: z.array(z.string()).max(10).default([]),
-  menuImages: z.array(z.string().url("Invalid image URL")).max(10).default([]),
-  menuImageKeys: z.array(z.string()).max(10).default([]),
 });
 
 export const updateStoreSchema = createStoreSchema.partial();
@@ -103,7 +101,6 @@ const storeDetailArgs = {
     description: true,
     category: true,
     images: true,
-    menuImages: true,
     phone: true,
     whatsapp: true,
     location: true,

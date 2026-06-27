@@ -25,7 +25,6 @@ export default async function EditStorePage({ params }: PageProps) {
       description: true,
       category: true,
       images: true,
-      menuImages: true,
       phone: true,
       whatsapp: true,
       location: true,
