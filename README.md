@@ -26,6 +26,7 @@ flowchart TD
     end
 
     SocketIO -- "GET /api/auth/get-session" --> NextJS
+    Cron["cron-job.org — keep-warm"] -- "GET /api/health every 4 min" --> NextJS
 
     NextJS --> Neon[("Neon PostgreSQL\nPrisma ORM")]
     NextJS --> UT["UploadThing\npresigned image upload"]
@@ -222,7 +223,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full design. Short version:
 | `MODERATOR` | all USER actions + admin panel for their own college (remove listings, verify/archive stores) |
 | `ADMIN` | all MODERATOR actions across all colleges + moderation log + permanent store deletion |
 
-Roles are set directly in the DB (`User.role`). The admin panel is at `/admin`.
+Roles are set directly in the DB (`User.role`). The admin panel is at `/admin`. Authorization rules live in one place — [src/lib/permissions.ts](src/lib/permissions.ts) (`isAdmin` / `canModerate` / `canModerateCollege` / `canViewStore` / `canViewListing`), shared by pages, route handlers, and server actions.
 
 ---
 
@@ -242,7 +243,9 @@ Roles are set directly in the DB (`User.role`). The admin panel is at `/admin`.
 | [prisma/schema.prisma](prisma/schema.prisma) | source of truth for all DB models |
 | [src/lib/auth.ts](src/lib/auth.ts) | Better Auth server config |
 | [src/lib/auth-client.ts](src/lib/auth-client.ts) | Better Auth browser client |
+| [src/lib/permissions.ts](src/lib/permissions.ts) | central authorization — isAdmin / canModerate / canViewStore / canViewListing |
 | [src/lib/db.ts](src/lib/db.ts) | Prisma singleton (PrismaPg + pg Pool for Neon) |
+| [src/app/api/health/route.ts](src/app/api/health/route.ts) | DB keep-warm ping (hit by cron-job.org) to avoid Neon cold starts |
 | [src/lib/moderation.ts](src/lib/moderation.ts) | Sightengine image moderation wrapper (with retry) |
 | [src/lib/rate-limit.ts](src/lib/rate-limit.ts) | Upstash ratelimit factory functions |
 | [src/lib/socket-client.ts](src/lib/socket-client.ts) | Socket.IO browser client singleton |

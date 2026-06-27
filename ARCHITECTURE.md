@@ -22,6 +22,7 @@ flowchart TD
     end
 
     SocketIO -- "GET /api/auth/get-session" --> NextJS
+    Cron["cron-job.org — keep-warm"] -- "GET /api/health every 4 min" --> NextJS
 
     NextJS --> Neon[("Neon PostgreSQL\nPrisma ORM")]
     NextJS --> UT["UploadThing\npresigned image upload"]
@@ -48,7 +49,7 @@ Two deploy targets because Vercel is serverless and cannot hold long-lived WebSo
 
 ## Security invariants
 
-**College scoping** — `collegeId` is always taken from `session.user.collegeId`, never from the client payload. It is denormalized onto `Listing`, `Store`, and `Conversation` for query performance. Detail handlers return 404 on college mismatch.
+**College scoping** — `collegeId` is always taken from `session.user.collegeId`, never from the client payload. It is denormalized onto `Listing`, `Store`, and `Conversation` for query performance. Detail handlers return 404 on college mismatch. Visibility is decided in one place — `src/lib/permissions.ts` (`canViewStore` / `canViewListing` / `canModerateCollege`): owner always; ADMIN across all colleges; MODERATOR own-college (any status); regular users own-college only (ACTIVE stores; ARCHIVED listings hidden).
 
 **Socket sender trust** — `senderId` is never accepted from the socket client payload. The socket server sets `socket.data.userId` during handshake validation and uses that exclusively.
 
@@ -91,6 +92,8 @@ Better Auth handles sessions (email/password + Google OAuth + username plugin). 
 | `USER` | all app features |
 | `MODERATOR` | + admin panel scoped to their college (remove listings, verify/archive stores) |
 | `ADMIN` | + admin panel across all colleges, moderation log, permanent store deletion |
+
+All role and visibility checks route through one module — `src/lib/permissions.ts` (`isAdmin`, `canModerate`, `canModerateCollege`, `canViewStore`, `canViewListing`) — shared by pages, API route handlers, and server actions so the rules can't drift between surfaces.
 
 `proxy.ts` (the `proxy` function, renamed from `middleware.ts` for Next.js 16) gates `(app)` routes by session cookie presence. Full session validation happens inside handlers/actions. The socket server re-validates the handshake cookie over HTTP against `/api/auth/get-session`.
 
@@ -167,3 +170,9 @@ The socket message limiter **fails open** — if Redis is unavailable, messages 
 Set `NEXT_PUBLIC_SOCKET_URL` to the Render service URL and `BETTER_AUTH_URL` to the Vercel URL on both platforms. Socket server CORS is locked to `BETTER_AUTH_URL`.
 
 > The socket server has its own `.env` file at `socket-server/.env`. It does **not** inherit the root `.env.local`. Both files must contain `DATABASE_URL`, `BETTER_AUTH_SECRET`, and the Upstash vars.
+
+---
+
+## Keep-warm
+
+Neon free-tier suspends compute after ~5 min idle. The next request then cold-starts the DB, and because the first DB call on every page is `getSession`, that wait can exceed the Vercel function limit and crash the server component with a connection timeout. A [cron-job.org](https://cron-job.org) schedule pings `GET /api/health` every 4 minutes to keep the compute warm. The route runs `SELECT 1`, is `force-dynamic` (never cached), and returns `{ ok, db }`. `(app)/error.tsx` is a graceful boundary so any rare cold start shows a "Try again" instead of a raw crash.
