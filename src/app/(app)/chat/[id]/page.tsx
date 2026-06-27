@@ -77,7 +77,7 @@ export default async function ChatThreadPage({
 
         {/* Avatar */}
         <div className="relative shrink-0">
-          <div className="h-10 w-10 rounded-xl overflow-hidden bg-accent-muted">
+          <div className="h-10 w-10 rounded-full overflow-hidden bg-accent-muted">
             {peerImage ? (
               <Image
                 src={peerImage}

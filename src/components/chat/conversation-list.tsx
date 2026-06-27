@@ -72,7 +72,7 @@ export function ConversationList() {
           <div>
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="flex items-start gap-3 px-4 py-4 animate-pulse border-b border-border/50">
-                <div className="h-11 w-11 rounded-xl bg-muted shrink-0 mt-0.5" />
+                <div className="h-11 w-11 rounded-full bg-muted shrink-0 mt-0.5" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-1 mb-1">
                     <div className="h-3.5 bg-muted rounded w-1/3" />

@@ -68,9 +68,9 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
           <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-accent" />
         )}
         <Link href={`/chat/${conversation.id}`} className="flex items-start gap-3 flex-1 min-w-0">
-          {/* Avatar: rounded square with online dot */}
+          {/* Avatar with online dot */}
           <div className="relative shrink-0">
-            <div className="w-11 h-11 rounded-xl overflow-hidden bg-accent-muted">
+            <div className="w-11 h-11 rounded-full overflow-hidden bg-accent-muted">
               {displayImage ? (
                 <Image
                   src={displayImage}
@@ -148,7 +148,7 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
               comes back if they message you again.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="bg-transparent border-t-0 pt-0">
             <Button variant="outline" onClick={() => setConfirmOpen(false)} disabled={isDeleting}>
               Cancel
             </Button>

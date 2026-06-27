@@ -18,7 +18,7 @@ export function MessageBubble({ message, isOwn }: MessageBubbleProps) {
     <div className={cn("flex items-end gap-2", isOwn ? "justify-end" : "justify-start")}>
       {/* Avatar for received messages */}
       {!isOwn && (
-        <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 mb-1 bg-accent-muted">
+        <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 mb-1 bg-accent-muted">
           {message.senderAvatar ? (
             <Image
               src={message.senderAvatar}

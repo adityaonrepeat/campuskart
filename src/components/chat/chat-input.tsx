@@ -56,7 +56,7 @@ export function ChatInput({ onSend, onTyping, disabled, placeholder = "Type a me
       <button
         onClick={handleSend}
         disabled={!value.trim() || sending || disabled}
-        className="w-11 h-11 rounded-xl bg-accent text-white flex items-center justify-center disabled:opacity-50 hover:bg-accent/90 transition-colors shrink-0"
+        className="w-11 h-11 rounded-full bg-accent text-white flex items-center justify-center hover:bg-accent/90 transition-colors shrink-0 disabled:cursor-not-allowed"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <line x1="22" y1="2" x2="11" y2="13" />
