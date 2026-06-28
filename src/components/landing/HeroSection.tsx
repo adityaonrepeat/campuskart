@@ -19,14 +19,37 @@ import {
 } from '@/components/ui/popover';
 
 const COLLEGES = [
-  'IIT Bombay',
-  'IIT Delhi',
-  'IIT Madras',
-  'BITS Pilani',
-  'NIT Agartala',
-  'VIT Vellore',
+  'Amity University Noida',
   'Anna University',
-  'Delhi Technological University'];
+  'BITS Goa',
+  'BITS Hyderabad',
+  'BITS Pilani',
+  'College of Engineering Pune',
+  'Delhi Technological University',
+  'Indian Institute of Science',
+  'Indian Institute of Technology Bombay',
+  'Indian Institute of Technology Delhi',
+  'Indian Institute of Technology Guwahati',
+  'Indian Institute of Technology Hyderabad',
+  'Indian Institute of Technology Kanpur',
+  'Indian Institute of Technology Kharagpur',
+  'Indian Institute of Technology Madras',
+  'Indian Institute of Technology Roorkee',
+  'Jadavpur University',
+  'Manipal Institute of Technology',
+  'National Institute of Technology Agartala',
+  'National Institute of Technology Calicut',
+  'National Institute of Technology Surathkal',
+  'National Institute of Technology Warangal',
+  'Netaji Subhas University of Technology',
+  'PES University',
+  'PSG College of Technology',
+  'Pune Institute of Computer Technology',
+  'RV College of Engineering',
+  'SRM Institute of Science and Technology',
+  'Thapar Institute of Engineering and Technology',
+  'Vellore Institute of Technology',
+];
 
 
 const LIVE_BIDS = [

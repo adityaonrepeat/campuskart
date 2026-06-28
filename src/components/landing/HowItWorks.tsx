@@ -25,7 +25,7 @@ const STEPS = [
       </svg>
     ),
     title: 'List or browse items',
-    description: 'Post anything — textbooks, electronics, sports gear, clothes — with photos and a minimum bid. Or browse what\'s available at your campus.',
+    description: 'Post anything - textbooks, electronics, sports gear, clothes - with photos and a minimum bid. Or browse what\'s available at your campus.',
     detail: 'Free to list, free to browse',
     color: 'bg-indigo-50 text-indigo-500',
   },
@@ -52,7 +52,7 @@ const STEPS = [
       </svg>
     ),
     title: 'Self-pickup on campus',
-    description: 'Coordinate a pickup spot right on campus. No shipping, no strangers off campus — everything stays within your college community.',
+    description: 'Coordinate a pickup spot right on campus. No shipping, no strangers off campus - everything stays within your college community.',
     detail: 'Campus meetup only',
     color: 'bg-emerald-50 text-emerald-600',
   },
@@ -91,7 +91,7 @@ export default function HowItWorks() {
           </div>
           <div className="aos-elem delay-200 max-w-xs">
             <p className="text-muted text-base leading-relaxed border-l-2 border-border pl-4">
-              CampusKart keeps every transaction within your verified college network — safe, fast, and local.
+              CampusKart keeps every transaction within your verified college network - safe, fast, and local.
             </p>
           </div>
         </div>
@@ -141,7 +141,7 @@ export default function HowItWorks() {
             href="/signup"
             className="inline-flex items-center gap-2 text-accent text-sm font-semibold hover:gap-3 transition-all duration-300"
           >
-            Start selling today — it&apos;s free
+            Start selling today - it&apos;s free
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>

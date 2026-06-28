@@ -72,7 +72,7 @@ export default function CampusStores() {
           <div className="aos-elem">
             <span className="text-accent text-xs font-semibold tracking-[0.2em] uppercase block mb-3">Campus Stores</span>
             <h2 className="font-display text-4xl sm:text-5xl font-semibold text-primary leading-tight">
-              Not just students —<br />
+              Not just students<br />
               <span className="italic font-normal">campus businesses too.</span>
             </h2>
           </div>
