@@ -62,6 +62,7 @@ export function LoginForm() {
       toast.error(error.message ?? "Login failed. Please try again.");
       return;
     }
+    toast.success("Welcome back!");
     router.push(callbackUrl);
     router.refresh();
   }
