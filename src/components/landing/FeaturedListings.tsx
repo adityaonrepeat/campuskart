@@ -111,7 +111,7 @@ export default function FeaturedListings() {
           <div className="aos-elem">
             <span className="text-accent text-xs font-semibold tracking-[0.2em] uppercase block mb-3">Live Listings</span>
             <h2 className="font-display text-4xl sm:text-5xl font-semibold text-primary leading-tight">
-              Bids closing<br />
+              Deals closing<br />
               <span className="italic font-normal">right now.</span>
             </h2>
           </div>
