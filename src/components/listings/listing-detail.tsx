@@ -100,8 +100,8 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
       if (json.success) {
         setChatMessage("");
         setChatOpen(false);
-        await queryClient.invalidateQueries({ queryKey: ["conversations"] });
         router.push(`/chat/${json.data.conversationId}`);
+        queryClient.invalidateQueries({ queryKey: ["conversations"] });
         return;
       }
 

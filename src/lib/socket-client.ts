@@ -9,8 +9,9 @@ let socket: AppSocket | null = null;
 export function getSocket(): AppSocket {
   if (!socket) {
     socket = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
-      withCredentials: true, // send session cookie to socket server
-      autoConnect: false,    // connect explicitly via use-socket.ts
+      withCredentials: true,
+      autoConnect: false,
+      transports: ["websocket"],
     });
   }
   return socket;

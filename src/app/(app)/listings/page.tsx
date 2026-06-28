@@ -4,7 +4,10 @@ import ListingsGrid from "@/components/listings/ListingsGrid";
 import { FilterSidebar } from "@/components/listings/filter-sidebar";
 import AppHeader from "@/components/AppHeader";
 import { canModerate } from "@/lib/permissions";
+import { queryListings } from "@/lib/listings";
 import type { ListingFilters } from "@/types/listing";
+import type { PaginatedResponse } from "@/types/api";
+import type { ListingCard } from "@/types/listing";
 
 interface PageProps {
   searchParams: Promise<{
@@ -31,6 +34,20 @@ export default async function ListingsPage({ searchParams }: PageProps) {
     sort,
   };
 
+  let initialListings: PaginatedResponse<ListingCard> | undefined;
+  if (session) {
+    initialListings = await queryListings({
+      collegeId: session.user.collegeId,
+      category: filters.category,
+      search: filters.search,
+      condition: filters.condition,
+      priceMin: filters.priceMin,
+      priceMax: filters.priceMax,
+      sort: filters.sort ?? "newest",
+      tab: "all",
+    });
+  }
+
   return (
     <div className="min-h-screen bg-[#F8F7F4]">
       <AppHeader user={{ name: session?.user.name ?? "User", avatarUrl: session?.user.avatarUrl }} forceScrolled showAdmin={session ? canModerate(session.user) : false} />
@@ -41,7 +58,7 @@ export default async function ListingsPage({ searchParams }: PageProps) {
             <FilterSidebar />
           </div>
           <div className="flex-1 min-w-0">
-            <ListingsGrid filters={filters} />
+            <ListingsGrid filters={filters} initialListings={initialListings} />
           </div>
         </div>
       </div>

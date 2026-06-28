@@ -26,7 +26,7 @@ export function ConversationList() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["conversations"],
     queryFn: fetchConversations,
-    staleTime: 0,
+    staleTime: 30_000,
   });
 
   const filtered = data?.filter((c) => {

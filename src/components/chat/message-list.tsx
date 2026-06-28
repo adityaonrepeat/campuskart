@@ -60,7 +60,7 @@ export function MessageList({ conversationId, currentUserId }: MessageListProps)
       fetchMessages(conversationId, pageParam as string | undefined),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-    staleTime: 0,
+    staleTime: 30_000,
   });
 
   // Scroll to bottom when newest message changes

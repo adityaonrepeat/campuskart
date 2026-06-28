@@ -77,9 +77,9 @@ export function useChat(conversationId: string) {
   const sendMessage = useCallback(
     (content: string): Promise<boolean> =>
       new Promise((resolve) => {
-        if (!socket) { resolve(false); return; }
-        socket.emit("client:send_message", { conversationId, content }, (ack) =>
-          resolve(ack.success)
+        if (!socket || !socket.connected) { resolve(false); return; }
+        socket.timeout(10000).emit("client:send_message", { conversationId, content }, (err, ack) =>
+          resolve(!err && Boolean(ack?.success))
         );
       }),
     [socket, conversationId]

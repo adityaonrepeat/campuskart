@@ -41,8 +41,8 @@ export function StoreChatButton({
       const json = (await res.json()) as ApiResponse<{ conversationId: string }>;
 
       if (json.success) {
-        await queryClient.invalidateQueries({ queryKey: ["conversations"] });
         router.push(`/chat/${json.data.conversationId}`);
+        queryClient.invalidateQueries({ queryKey: ["conversations"] });
         return;
       }
 
