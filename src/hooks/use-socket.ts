@@ -16,6 +16,10 @@ export function useSocket(): void {
 
     const onConnect = () => setConnected(true);
     const onDisconnect = () => setConnected(false);
+    const onConnectError = (err: Error) => {
+      setConnected(false);
+      console.error("[socket] connect_error:", err.message);
+    };
     const onSnapshot = (userIds: string[]) => setOnlineUsers(userIds);
     const onOnline = (userId: string) => addOnlineUser(userId);
     const onOffline = (userId: string) => removeOnlineUser(userId);
@@ -24,6 +28,7 @@ export function useSocket(): void {
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
+    socket.on("connect_error", onConnectError);
     socket.on("server:presence_snapshot", onSnapshot);
     socket.on("server:user_online", onOnline);
     socket.on("server:user_offline", onOffline);
@@ -32,6 +37,7 @@ export function useSocket(): void {
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
+      socket.off("connect_error", onConnectError);
       socket.off("server:presence_snapshot", onSnapshot);
       socket.off("server:user_online", onOnline);
       socket.off("server:user_offline", onOffline);

@@ -1,4 +1,5 @@
 import type { Socket } from "socket.io";
+import { createHmac, timingSafeEqual } from "crypto";
 import type { ClientToServerEvents, ServerToClientEvents, SocketData } from "./types";
 
 type AppSocket = Socket<
@@ -8,43 +9,41 @@ type AppSocket = Socket<
   SocketData
 >;
 
-interface BetterAuthUser {
-  id: string;
-  email: string;
-  name: string;
-  emailVerified: boolean;
+interface TokenPayload {
+  userId: string;
   collegeId: string;
-  avatarUrl: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface BetterAuthSessionResponse {
-  session: { id: string; userId: string; expiresAt: string };
-  user: BetterAuthUser;
+  exp: number;
 }
 
 export async function validateSocketAuth(socket: AppSocket): Promise<void> {
-  const cookieHeader = socket.handshake.headers.cookie;
-  if (!cookieHeader) {
-    throw new Error("No cookie header");
+  const token = socket.handshake.auth?.token;
+  if (typeof token !== "string" || !token) {
+    throw new Error("No auth token");
   }
 
-  const baseUrl = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
-  const response = await fetch(`${baseUrl}/api/auth/get-session`, {
-    headers: { cookie: cookieHeader },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Auth endpoint returned ${response.status}`);
+  const [payload, sig] = token.split(".");
+  if (!payload || !sig) {
+    throw new Error("Malformed token");
   }
 
-  const data = (await response.json()) as BetterAuthSessionResponse | null;
-
-  if (!data?.session || !data?.user?.id || !data?.user?.collegeId) {
-    throw new Error("Invalid or expired session");
+  const secret = process.env.BETTER_AUTH_SECRET ?? "";
+  const expected = createHmac("sha256", secret).update(payload).digest("base64url");
+  const sigBuf = Buffer.from(sig);
+  const expBuf = Buffer.from(expected);
+  if (sigBuf.length !== expBuf.length || !timingSafeEqual(sigBuf, expBuf)) {
+    throw new Error("Invalid token signature");
   }
 
-  socket.data.userId = data.user.id;
-  socket.data.collegeId = data.user.collegeId;
+  const decoded = JSON.parse(
+    Buffer.from(payload, "base64url").toString()
+  ) as TokenPayload;
+  if (!decoded.userId || !decoded.collegeId) {
+    throw new Error("Invalid token payload");
+  }
+  if (Date.now() > decoded.exp) {
+    throw new Error("Token expired");
+  }
+
+  socket.data.userId = decoded.userId;
+  socket.data.collegeId = decoded.collegeId;
 }
