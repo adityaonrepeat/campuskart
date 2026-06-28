@@ -289,17 +289,17 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                   </div>
                 )}
 
-                <div className="grid grid-cols-2 mb-5">
-                  <p className="text-xs text-accent font-semibold uppercase tracking-wider mb-1">Current Price</p>
-                  <p className="text-xs text-muted uppercase tracking-wider mb-1 text-right">Condition</p>
-                  <p className="font-sans text-4xl font-semibold text-accent self-center">
+                <div className="grid grid-cols-2 items-baseline gap-x-4 gap-y-2 mb-5">
+                  <p className="text-xs text-accent font-semibold uppercase tracking-wider">Current Price</p>
+                  <p className="text-xs text-muted uppercase tracking-wider text-right">Condition</p>
+                  <p className="font-sans text-4xl font-semibold text-accent">
                     ₹{listing.price.toLocaleString("en-IN")}
                   </p>
                   <p className="text-lg font-semibold text-foreground text-right self-center">{conditionLabel}</p>
-                  <p className="text-sm font-medium text-muted mt-1">
+                  <p className="text-sm font-medium text-muted">
                     {listing.listingType === "NEGOTIABLE" ? "Negotiable" : "Fixed price"}
                   </p>
-                  <p className="text-xs text-muted mt-1 text-right">{timeAgo(new Date(listing.createdAt))}</p>
+                  <p className="text-xs text-muted text-right">{timeAgo(new Date(listing.createdAt))}</p>
                 </div>
 
                 {isOwner ? (
