@@ -289,36 +289,17 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                   </div>
                 )}
 
-                <div className="flex items-start justify-between gap-4 mb-5">
-                  <div>
-                    <p className="text-xs text-accent font-semibold uppercase tracking-wider mb-1.5">Current Price</p>
-                    <p className="font-sans text-4xl font-semibold text-accent leading-none">
-                      ₹{listing.price.toLocaleString("en-IN")}
-                    </p>
-                    <span
-                      className={cn(
-                        "inline-flex items-center mt-3 tag-pill text-xs",
-                        listing.listingType === "NEGOTIABLE"
-                          ? "bg-amber-100 text-amber-700"
-                          : "bg-emerald-100 text-emerald-700"
-                      )}
-                    >
-                      {listing.listingType === "NEGOTIABLE" ? "Negotiable" : "Fixed price"}
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-end gap-2 shrink-0">
-                    <p className="text-[10px] text-muted uppercase tracking-wider">Condition</p>
-                    <span className={cn("tag-pill text-xs", conditionClass(listing.condition))}>
-                      {conditionLabel}
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-xs text-muted">
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="9" />
-                        <path d="M12 7v5l3 2" />
-                      </svg>
-                      Listed {timeAgo(new Date(listing.createdAt))}
-                    </span>
-                  </div>
+                <div className="grid grid-cols-2 mb-5">
+                  <p className="text-xs text-accent font-semibold uppercase tracking-wider mb-1">Current Price</p>
+                  <p className="text-xs text-muted uppercase tracking-wider mb-1 text-right">Condition</p>
+                  <p className="font-sans text-4xl font-semibold text-accent self-center">
+                    ₹{listing.price.toLocaleString("en-IN")}
+                  </p>
+                  <p className="text-lg font-semibold text-foreground text-right self-center">{conditionLabel}</p>
+                  <p className="text-sm font-medium text-muted mt-1">
+                    {listing.listingType === "NEGOTIABLE" ? "Negotiable" : "Fixed price"}
+                  </p>
+                  <p className="text-xs text-muted mt-1 text-right">{timeAgo(new Date(listing.createdAt))}</p>
                 </div>
 
                 {isOwner ? (
