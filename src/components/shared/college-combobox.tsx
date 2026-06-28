@@ -61,7 +61,7 @@ export function CollegeCombobox({ value, onChange, disabled }: CollegeComboboxPr
       <PopoverContent
         side="bottom"
         align="start"
-        className="p-0"
+        className="p-0 ring-0 border border-border shadow-xl"
         style={{ width: "var(--radix-popover-trigger-width)", minWidth: "18rem" }}
       >
         <Command>
@@ -77,12 +77,12 @@ export function CollegeCombobox({ value, onChange, disabled }: CollegeComboboxPr
                     onChange(college.id);
                     setOpen(false);
                   }}
-                  className="flex items-center gap-2 px-2 py-2"
+                  className="flex items-center gap-2 px-2 py-2 rounded-lg data-selected:bg-accent data-selected:text-white"
                 >
                   <Check
                     className={cn(
-                      "h-4 w-4 shrink-0",
-                      value === college.id ? "opacity-100 text-indigo-600" : "opacity-0"
+                      "h-4 w-4 shrink-0 group-data-[selected=true]/command-item:text-white",
+                      value === college.id ? "opacity-100 text-accent" : "opacity-0"
                     )}
                   />
                   <span className="flex-1 truncate text-sm">{college.name}</span>
