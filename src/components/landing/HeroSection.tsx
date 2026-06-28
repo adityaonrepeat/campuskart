@@ -1,10 +1,24 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { Check } from 'lucide-react';
 import AppImage from '@/components/ui/AppImage';
+import { cn } from '@/lib/utils';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 const COLLEGES = [
-  'Select your college...',
   'IIT Bombay',
   'IIT Delhi',
   'IIT Madras',
@@ -25,6 +39,7 @@ const LIVE_BIDS = [
 
 export default function HeroSection() {
   const [college, setCollege] = useState('');
+  const [collegeOpen, setCollegeOpen] = useState(false);
   const [tickerIdx, setTickerIdx] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const [parallaxY, setParallaxY] = useState(0);
@@ -107,16 +122,43 @@ export default function HeroSection() {
           {/* College Selector + CTA */}
           <div className="hero-cta-row">
             <div className="relative flex-1">
-              <select
-                value={college}
-                onChange={(e) => setCollege(e?.target?.value)}
-                className="w-full bg-white/95 text-foreground text-sm font-medium rounded-xl px-4 py-3.5 outline-none border-none appearance-none cursor-pointer pr-10 shadow-lg"
-                style={{ fontFamily: 'var(--font-body)' }}>
-
-                {COLLEGES?.map((c) =>
-                  <option key={c} value={c === 'Select your college...' ? '' : c}>{c}</option>
-                )}
-              </select>
+              <Popover open={collegeOpen} onOpenChange={setCollegeOpen}>
+                <PopoverTrigger
+                  role="combobox"
+                  aria-expanded={collegeOpen}
+                  className="w-full bg-white/95 text-foreground text-sm font-medium rounded-xl px-4 py-3.5 outline-none border-none cursor-pointer pr-10 shadow-lg flex items-center text-left"
+                  style={{ fontFamily: 'var(--font-body)' }}>
+                  <span className={cn('truncate', !college && 'text-muted')}>
+                    {college || 'Select your college...'}
+                  </span>
+                </PopoverTrigger>
+                <PopoverContent
+                  side="bottom"
+                  align="start"
+                  className="w-(--anchor-width) p-0 ring-0 border border-border shadow-xl">
+                  <Command>
+                    <CommandInput placeholder="Search colleges…" />
+                    <CommandList>
+                      <CommandEmpty>No college found.</CommandEmpty>
+                      <CommandGroup>
+                        {COLLEGES.map((c) => (
+                          <CommandItem
+                            key={c}
+                            value={c}
+                            onSelect={() => {
+                              setCollege(c);
+                              setCollegeOpen(false);
+                            }}
+                            className="flex items-center gap-2 px-2 py-2 rounded-lg data-selected:bg-accent data-selected:text-white">
+                            <Check className={cn('h-4 w-4 shrink-0 group-data-[selected=true]/command-item:text-white', college === c ? 'opacity-100 text-accent' : 'opacity-0')} />
+                            <span className="flex-1 truncate text-sm">{c}</span>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               <svg className="absolute right-3 text-muted pointer-events-none" style={{ top: '50%', transform: 'translateY(-50%)' }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M6 9l6 6 6-6" />
               </svg>
