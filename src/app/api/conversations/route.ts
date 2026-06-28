@@ -137,11 +137,12 @@ export async function POST(request: NextRequest) {
   // Resolve the chat peer (listing seller or store owner) + the conversation anchor.
   let peerId: string;
   let collegeId: string;
+  let contextLabel: string;
 
   if (storeId) {
     const store = await db.store.findUnique({
       where: { id: storeId },
-      select: { status: true, ownerId: true, collegeId: true },
+      select: { status: true, ownerId: true, collegeId: true, name: true },
     });
 
     if (!store) {
@@ -164,10 +165,11 @@ export async function POST(request: NextRequest) {
     }
     peerId = store.ownerId;
     collegeId = store.collegeId;
+    contextLabel = `Re: ${store.name}`;
   } else {
     const listing = await db.listing.findUnique({
       where: { id: listingId },
-      select: { status: true, sellerId: true, collegeId: true },
+      select: { status: true, sellerId: true, collegeId: true, title: true, price: true },
     });
 
     if (!listing) {
@@ -187,21 +189,45 @@ export async function POST(request: NextRequest) {
     }
     peerId = listing.sellerId;
     collegeId = listing.collegeId;
+    contextLabel = `Re: ${listing.title} · ₹${listing.price.toLocaleString("en-IN")}`;
   }
 
-  // Find-or-create the buyer↔peer conversation for this listing/store (dedupe).
+  // One conversation per person: find the existing buyer↔peer thread regardless
+  // of which listing/store it started from.
   const existing = await db.conversation.findFirst({
     where: {
-      ...(storeId ? { storeId } : { listingId }),
+      collegeId,
       participants: { some: { userId: session.user.id } },
+      AND: [{ participants: { some: { userId: peerId } } }],
     },
-    select: { id: true },
+    select: { id: true, listingId: true, storeId: true },
   });
 
   const isNew = !existing;
-  const conversationId =
-    existing?.id ??
-    (
+  let conversationId: string;
+
+  if (existing) {
+    conversationId = existing.id;
+    // Topic changed → repoint the anchor and drop a "Re: <item>" line so the
+    // thread shows what's now being discussed.
+    const itemChanged = storeId
+      ? existing.storeId !== storeId
+      : existing.listingId !== listingId;
+    if (itemChanged) {
+      await db.message.create({
+        data: { conversationId, senderId: session.user.id, content: contextLabel },
+      });
+      await db.conversation.update({
+        where: { id: conversationId },
+        data: {
+          listingId: storeId ? null : listingId,
+          storeId: storeId ?? null,
+          lastMessageAt: new Date(),
+        },
+      });
+    }
+  } else {
+    conversationId = (
       await db.conversation.create({
         data: {
           ...(storeId ? { storeId } : { listingId }),
@@ -213,6 +239,7 @@ export async function POST(request: NextRequest) {
         select: { id: true },
       })
     ).id;
+  }
 
   // Post the buyer's first message (if they wrote one) so it shows for both sides.
   if (message) {
