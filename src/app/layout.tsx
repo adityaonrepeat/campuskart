@@ -45,7 +45,7 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${playfair.variable} ${inter.variable} ${geistMono.variable} ${dmSans.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <Providers>{children}</Providers>
         <Toaster />
       </body>
