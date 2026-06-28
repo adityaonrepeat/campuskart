@@ -84,7 +84,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
   const categoryLabel = CATEGORY_LABEL[listing.category] ?? listing.category;
   const conditionLabel = CONDITION_LABEL[listing.condition] ?? listing.condition;
 
-  async function handleContactSeller() {
+  async function handleContactSeller(message: string) {
     setIsContacting(true);
     try {
       const res = await fetch("/api/conversations", {
@@ -92,7 +92,7 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           listingId: listing.id,
-          message: chatMessage.trim() || undefined,
+          message: message.trim() || undefined,
         }),
       });
       const json = (await res.json()) as ApiResponse<{ conversationId: string }>;
@@ -334,13 +334,14 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                     {isActive && (
                       <button
                         type="button"
-                        onClick={() => setChatOpen(true)}
-                        className="w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-colors border border-accent text-accent hover:bg-accent/5"
+                        onClick={() => handleContactSeller("")}
+                        disabled={isContacting}
+                        className="w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-colors border border-accent text-accent hover:bg-accent/5 disabled:opacity-60"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
                         </svg>
-                        Contact Seller
+                        {isContacting ? "Opening…" : "Contact Seller"}
                       </button>
                     )}
                   </div>
@@ -530,14 +531,14 @@ export function ListingDetailView({ listing, currentUserId }: ListingDetailProps
                 type="text"
                 value={chatMessage}
                 onChange={(e) => setChatMessage(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && !isContacting && handleContactSeller()}
+                onKeyDown={(e) => e.key === "Enter" && !isContacting && handleContactSeller(chatMessage)}
                 placeholder="Hi! Is this still available?"
                 className="input-field text-sm py-2.5"
                 disabled={isContacting}
               />
               <button
                 type="button"
-                onClick={handleContactSeller}
+                onClick={() => handleContactSeller(chatMessage)}
                 disabled={isContacting}
                 className="w-10 h-10 rounded-xl bg-accent text-white flex items-center justify-center hover:bg-accent/90 transition-colors shrink-0 disabled:opacity-50"
                 aria-label="Send message"
