@@ -44,11 +44,23 @@ async function fetchListings(
   return json.data;
 }
 
-interface ListingsGridProps {
-  filters: ListingFilters;
+function sameParams(
+  a: Record<string, string | undefined>,
+  b: Record<string, string | undefined>
+): boolean {
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+  for (const k of keys) {
+    if (a[k] !== b[k]) return false;
+  }
+  return true;
 }
 
-export default function ListingsGrid({ filters }: ListingsGridProps) {
+interface ListingsGridProps {
+  filters: ListingFilters;
+  initialListings?: PaginatedResponse<ListingCardType>;
+}
+
+export default function ListingsGrid({ filters, initialListings }: ListingsGridProps) {
   const [activeTab, setActiveTab] = useState<TabType>(
     (filters.tab as TabType) ?? "all"
   );
@@ -74,6 +86,10 @@ export default function ListingsGrid({ filters }: ListingsGridProps) {
     tab: activeTab,
   };
 
+  const [initialParams] = useState(() => queryParams);
+  const isInitialQuery =
+    initialListings !== undefined && sameParams(queryParams, initialParams);
+
   const {
     data,
     isLoading,
@@ -88,7 +104,9 @@ export default function ListingsGrid({ filters }: ListingsGridProps) {
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     staleTime: 30_000,
-    enabled: true,
+    initialData: isInitialQuery
+      ? { pages: [initialListings!], pageParams: [undefined as string | undefined] }
+      : undefined,
   });
 
   const listings = data?.pages.flatMap((p) => p.items) ?? [];
