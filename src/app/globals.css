@@ -538,7 +538,7 @@ input[type="range"] { accent-color: var(--ck-accent); }
 /* Hero section: 100svh + lift content on mobile only */
 .hero-section {
   min-height: 100svh;
-  padding-bottom: 1rem;
+  padding-bottom: 0;
 }
 @media (min-width: 1024px) {
   .hero-section {

@@ -122,7 +122,7 @@ export default function HeroSection() {
         </div>
       </div>
       {/* Hero Content */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-12 sm:pb-24 pt-28 sm:pt-32">
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-10 sm:pb-24 pt-28 sm:pt-32">
         <div className="max-w-3xl">
           {/* Eyebrow */}
           <div className="hero-eyebrow flex items-center gap-2">
@@ -134,7 +134,7 @@ export default function HeroSection() {
           {/* Headline */}
           <h1 className="hero-h1 font-display text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.95] font-semibold text-white tracking-tight">
             Your campus.<br />
-            <span className="hero-marketplace-line italic font-semibold text-indigo-400 tracking-wide">Your marketplace.</span>
+            <span className="hero-marketplace-line italic font-semibold text-indigo-400 tracking-normal sm:tracking-wide">Your marketplace.</span>
           </h1>
 
           {/* Subheadline */}
