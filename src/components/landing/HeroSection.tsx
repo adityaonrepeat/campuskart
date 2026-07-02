@@ -122,7 +122,7 @@ export default function HeroSection() {
         </div>
       </div>
       {/* Hero Content */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-12 sm:pb-24 pt-20 sm:pt-32">
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-12 sm:pb-24 pt-28 sm:pt-32">
         <div className="max-w-3xl">
           {/* Eyebrow */}
           <div className="hero-eyebrow flex items-center gap-2">
